@@ -1,0 +1,5 @@
+id: "11111111-1111-1111-1111-111111111001"
+name: "Selector (Rotary Dial)"
+description: "Rotary dial selector for numeric global variables."
+supportedTypes:
+  - globalVariable-value
