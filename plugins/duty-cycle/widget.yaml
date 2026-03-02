@@ -1,0 +1,6 @@
+name: "Duty Cycle - Card"
+description: "Built-in duty cycle widget template."
+version: "1.0.0"
+supportedTypes:
+  - dutyCycle
+defaultFor: dutyCycle

@@ -1,0 +1,5 @@
+name: "Generic Widget - Markdown"
+description: "Displays rich markdown content with inline view and edit modes. Supports headings, lists, links, code blocks, tables, and more."
+version: "1.0.0"
+supportedTypes:
+  - generic

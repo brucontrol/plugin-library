@@ -1,0 +1,12 @@
+{
+  "imageUrl": {
+    "type": "text",
+    "default": "",
+    "group": "Image",
+    "description": "Select an uploaded image file.",
+    "format": "file-upload",
+    "title": "Image File",
+    "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
+    "x-picker-title": "Select Widget Image"
+  }
+}

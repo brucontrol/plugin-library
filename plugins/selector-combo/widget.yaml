@@ -1,0 +1,5 @@
+name: "Selector (Combo Box) - Card"
+description: "Dropdown selector for string global variables."
+version: "1.0.0"
+supportedTypes:
+  - globalVariable-string

@@ -1,0 +1,5 @@
+name: "Selector (Rotary Dial) - Card"
+description: "Rotary dial selector for numeric global variables."
+version: "1.0.0"
+supportedTypes:
+  - globalVariable-value

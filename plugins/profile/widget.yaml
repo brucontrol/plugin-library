@@ -1,0 +1,6 @@
+name: "Profile - Card"
+description: "Built-in profile widget template."
+version: "1.0.0"
+supportedTypes:
+  - profile
+defaultFor: profile

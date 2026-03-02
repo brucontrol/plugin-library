@@ -1,0 +1,6 @@
+name: "Counter - Card"
+description: "Built-in counter widget template."
+version: "1.0.0"
+supportedTypes:
+  - counter
+defaultFor: counter

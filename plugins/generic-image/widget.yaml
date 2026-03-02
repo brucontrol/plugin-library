@@ -1,0 +1,5 @@
+name: "Image - Card"
+description: "Built-in image widget template for generic elements."
+version: "1.0.0"
+supportedTypes:
+  - generic

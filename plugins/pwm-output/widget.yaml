@@ -1,0 +1,6 @@
+name: "PWM Output - Card"
+description: "Built-in PWM output widget template."
+version: "1.0.0"
+supportedTypes:
+  - pwmOutput
+defaultFor: pwmOutput

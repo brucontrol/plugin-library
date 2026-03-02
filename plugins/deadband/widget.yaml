@@ -1,0 +1,6 @@
+name: "Deadband - Card"
+description: "Built-in deadband widget template."
+version: "1.0.0"
+supportedTypes:
+  - deadband
+defaultFor: deadband

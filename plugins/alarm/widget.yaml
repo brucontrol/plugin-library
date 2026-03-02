@@ -1,0 +1,6 @@
+name: "Alarm - Card"
+description: "Built-in alarm widget template."
+version: "1.0.0"
+supportedTypes:
+  - alarm
+defaultFor: alarm

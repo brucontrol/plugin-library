@@ -1,0 +1,177 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  background: transparent;
+  color: var(--text-primary, #d4d4d4);
+  height: 100vh;
+  overflow: hidden;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-secondary, #252526);
+  border: 1px solid var(--border-color, #404040);
+  border-radius: 8px;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--bg-tertiary, #2d2d2d);
+  border-bottom: 1px solid var(--border-color, #404040);
+  border-radius: 8px 8px 0 0;
+  min-height: 30px;
+}
+
+.widget-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #9a9a9a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+/* ── Custom select ── */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border: 1px solid var(--border-color, #404040);
+  border-radius: 6px;
+  background-color: var(--bg-primary, #1e1e1e);
+  color: var(--text-primary, #d4d4d4);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  gap: 8px;
+}
+
+.custom-select-trigger:hover:not(:disabled) {
+  border-color: var(--accent-primary, #007acc);
+}
+
+.custom-select-trigger:focus-visible {
+  border-color: var(--accent-primary, #007acc);
+  box-shadow: 0 0 0 1px var(--accent-primary, #007acc);
+}
+
+.custom-select-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-select-value {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select-arrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--text-secondary, #9a9a9a);
+  transition: transform 0.2s ease;
+}
+
+.custom-select.open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select.open .custom-select-trigger {
+  border-color: var(--accent-primary, #007acc);
+  box-shadow: 0 0 0 1px var(--accent-primary, #007acc);
+}
+
+/* ── Dropdown list ── */
+.custom-select-dropdown {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  overflow-y: auto;
+  background-color: var(--bg-primary, #1e1e1e);
+  border: 1px solid var(--accent-primary, #007acc);
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.custom-select.open .custom-select-dropdown {
+  display: block;
+}
+
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+  background-color: var(--border-color, #404040);
+  border-radius: 3px;
+}
+
+/* ── Option items ── */
+.custom-select-option {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-primary, #d4d4d4);
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select-option:hover,
+.custom-select-option.focused {
+  background-color: var(--bg-hover, #2a2d2e);
+}
+
+.custom-select-option.selected {
+  color: var(--accent-primary, #007acc);
+  font-weight: 600;
+  background-color: var(--bg-hover, #2a2d2e);
+}
+
+.custom-select-option.selected::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background-color: var(--accent-primary, #007acc);
+  border-radius: 2px;
+  margin-right: 8px;
+  vertical-align: middle;
+}

@@ -1,0 +1,6 @@
+name: "PID - Card"
+description: "Built-in PID widget template."
+version: "1.0.0"
+supportedTypes:
+  - pid
+defaultFor: pid

@@ -1,0 +1,6 @@
+name: "Toggle Switch - Card"
+description: "Editor-only starter for global variable (Boolean) templates."
+version: "1.0.0"
+supportedTypes:
+  - globalVariable-bool
+defaultFor: globalVariable-bool

@@ -1,0 +1,6 @@
+name: "Button - Card"
+description: "Built-in button widget template."
+version: "1.0.0"
+supportedTypes:
+  - button
+defaultFor: button

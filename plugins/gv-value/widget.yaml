@@ -1,0 +1,10 @@
+name: "Global Variable - Card"
+description: "Built-in widget for displaying global variable value and label (matches widget editor default)."
+version: "1.0.0"
+supportedTypes:
+  - globalVariable-bool
+  - globalVariable-value
+  - globalVariable-string
+  - globalVariable-datetime
+  - globalVariable-timespan
+defaultFor: globalVariable-value
