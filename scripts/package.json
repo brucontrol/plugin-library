@@ -1,0 +1,9 @@
+{
+  "name": "plugin-library-scripts",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "uuid": "^11.0.3",
+    "yaml": "^2.7.0"
+  }
+}
