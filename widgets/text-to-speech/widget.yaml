@@ -1,6 +1,6 @@
 name: "Text to Speech"
 description: "Speaks text using Kokoro TTS. Configure text and speak in widget settings, or set element value to true to trigger. Resets after speaking."
-version: "1.0.3"
+version: "1.0.4"
 supportedTypes:
   - globalVariable-string
   - generic

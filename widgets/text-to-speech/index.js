@@ -1,7 +1,7 @@
 (function () {
   var statusEl = document.getElementById('status');
   var textEl = document.getElementById('text-display');
-  var config = { voice: 'en_US-hfc_female-medium' };
+  var config = { voice: '' };
 
   function setStatus(msg, isError) {
     if (statusEl) {
@@ -15,56 +15,41 @@
       elementType: 'globalVariable',
       text: 'Hello from TTS',
       speak: false,
-      voice: 'en_US-hfc_female-medium'
+      voice: ''
     };
   }
 
-  function initPiper() {
+  function speak(text, voiceId) {
+    if (!window.speechSynthesis) return Promise.resolve(false);
     return new Promise(function (resolve) {
-      if (window.__piperReady) {
-        if (window.__piperReady.error) {
-          resolve(null);
-          return;
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        u.rate = 1;
+        u.pitch = 1;
+        u.volume = 1;
+        var voices = speechSynthesis.getVoices();
+        if (voiceId && voices.length > 0) {
+          var match = voices.find(function (v) {
+            return v.voiceURI === voiceId || v.name === voiceId || (v.lang && voiceId.indexOf(v.lang) === 0);
+          });
+          if (match) u.voice = match;
+        } else if (voices.length > 0) {
+          var en = voices.find(function (v) { return v.lang && v.lang.startsWith('en'); });
+          if (en) u.voice = en;
         }
-        resolve(window.__piperReady.tts);
-        return;
+        u.onend = function () { resolve(true); };
+        u.onerror = function () { resolve(false); };
+        speechSynthesis.speak(u);
+      } catch (e) {
+        console.error('[TTS] speak failed:', e);
+        resolve(false);
       }
-      window.addEventListener('piper-ready', function () {
-        if (window.__piperReady && window.__piperReady.error) {
-          resolve(null);
-          return;
-        }
-        resolve(window.__piperReady ? window.__piperReady.tts : null);
-      }, { once: true });
     });
-  }
-
-  async function speak(text, voiceId) {
-    var tts = window.__piperReady && window.__piperReady.tts;
-    if (!tts || window.__piperReady.error) return false;
-    try {
-      var wav = await tts.predict({
-        text: text,
-        voiceId: voiceId || config.voice || 'en_US-hfc_female-medium'
-      });
-      if (!wav || !(wav instanceof Blob)) return false;
-      var url = URL.createObjectURL(wav);
-      var a = new Audio(url);
-      await new Promise(function (ok, err) {
-        a.onended = function () { URL.revokeObjectURL(url); ok(); };
-        a.onerror = err;
-        a.play().catch(err);
-      });
-      return true;
-    } catch (e) {
-      console.error('[TTS] speak failed:', e);
-      return false;
-    }
   }
 
   function render(data) {
     data = data || {};
-    config.voice = data.voice || 'en_US-hfc_female-medium';
+    config.voice = data.voice || '';
     var text = String(data.text || '').trim();
     var shouldSpeak = data.speak === true;
 
@@ -81,18 +66,12 @@
     }
   }
 
-  function onReady(tts) {
-    if (!tts) {
+  function bootstrap() {
+    if (!window.speechSynthesis) {
       setStatus('TTS unavailable', true);
       return;
     }
     setStatus('Ready', false);
-  }
-
-  function bootstrap() {
-    initPiper().then(function (tts) {
-      onReady(tts);
-    });
 
     if (window.BruControl) {
       if (window.BruControl.getData) {

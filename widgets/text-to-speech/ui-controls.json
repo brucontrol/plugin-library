@@ -14,7 +14,7 @@
   "voice": {
     "type": "text",
     "title": "Voice",
-    "default": "en_US-hfc_female-medium",
-    "description": "Piper voice ID (e.g. en_US-hfc_female-medium, en_US-hfc_male-medium)"
+    "default": "",
+    "description": "Optional: browser voice name or URI (e.g. Microsoft Zira, Google US English). Leave empty for default."
   }
 }

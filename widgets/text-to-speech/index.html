@@ -4,17 +4,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-widget-type="generic">
-  <script type="module">
-    (async function() {
-      try {
-        const tts = await import('https://esm.sh/@mintplex-labs/piper-tts-web@1.0.4');
-        window.__piperReady = { tts };
-      } catch (e) {
-        window.__piperReady = { error: e };
-      }
-      window.dispatchEvent(new Event('piper-ready'));
-    })();
-  </script>
   <div id="widget">
     <div id="status">Loading TTS...</div>
     <div id="text-display"></div>
