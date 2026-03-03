@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-widget-type="generic">
+  <script type="module">
+    (async function() {
+      try {
+        const { KokoroTTS } = await import('https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm');
+        window.__kokoroReady = { KokoroTTS };
+      } catch (e) {
+        window.__kokoroReady = { error: e };
+      }
+      window.dispatchEvent(new Event('kokoro-ready'));
+    })();
+  </script>
+  <div id="widget">
+    <div id="status">Loading TTS...</div>
+    <div id="text-display"></div>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
