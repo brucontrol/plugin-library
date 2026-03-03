@@ -1,0 +1,47 @@
+{
+  "value": {
+    "type": "number",
+    "title": "Value",
+    "default": 50,
+    "min": 0,
+    "max": 100,
+    "description": "Current value to display"
+  },
+  "min": {
+    "type": "number",
+    "title": "Minimum",
+    "default": 0,
+    "description": "Minimum of the range"
+  },
+  "max": {
+    "type": "number",
+    "title": "Maximum",
+    "default": 100,
+    "description": "Maximum of the range"
+  },
+  "liquidColor": {
+    "type": "text",
+    "title": "Liquid Color",
+    "default": "#3b82f6",
+    "format": "color",
+    "description": "Hex color for the liquid"
+  },
+  "levelTransitionMs": {
+    "type": "number",
+    "title": "Level Transition (ms)",
+    "default": 500,
+    "min": 100,
+    "max": 3000,
+    "step": 50,
+    "description": "Duration for water level rise/fall animation"
+  },
+  "bubbleDurationMs": {
+    "type": "number",
+    "title": "Bubble Speed (ms)",
+    "default": 3000,
+    "min": 1000,
+    "max": 8000,
+    "step": 100,
+    "description": "Duration for one bubble float cycle"
+  }
+}
