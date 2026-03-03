@@ -9,7 +9,7 @@ import { parse as parseYaml } from 'yaml';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
-const pluginsDir = join(root, 'plugins');
+const pluginsDir = join(root, 'widgets');
 const distDir = join(root, 'dist', 'manifests');
 
 const NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
@@ -62,7 +62,7 @@ async function main() {
       author: AUTHOR,
       description: manifest.description || '',
       repo: REPO,
-      path: `plugins/${folder}`,
+      path: `widgets/${folder}`,
       version,
       commitHash: COMMIT_HASH,
       official: true,
