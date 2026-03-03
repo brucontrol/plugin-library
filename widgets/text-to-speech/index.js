@@ -39,8 +39,12 @@
         u.volume = 1;
         var voices = speechSynthesis.getVoices();
         if (voiceId && voices.length > 0) {
+          var vq = String(voiceId).trim().toLowerCase();
           var match = voices.find(function (v) {
-            return v.voiceURI === voiceId || v.name === voiceId || (v.lang && voiceId.indexOf(v.lang) === 0);
+            if (v.voiceURI === voiceId || v.name === voiceId) return true;
+            if (v.name && v.name.toLowerCase().indexOf(vq) !== -1) return true;
+            if (v.lang && v.lang.toLowerCase().indexOf(vq) === 0) return true;
+            return false;
           });
           if (match) u.voice = match;
         } else if (voices.length > 0) {

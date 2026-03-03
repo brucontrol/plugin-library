@@ -15,6 +15,6 @@
     "type": "text",
     "title": "Voice",
     "default": "",
-    "description": "Optional: browser voice name or URI (e.g. Microsoft Zira, Google US English). Leave empty for default."
+    "description": "Optional: partial or full voice name (e.g. Microsoft Zira, Microsoft David, Zira). Leave empty for default."
   }
 }
