@@ -84,11 +84,11 @@
     }
   }
 
-  function render(data, metadata) {
-    metadata = metadata || {};
-    config.voice = metadata.voice || 'af_heart';
-    var text = String(metadata.text || '').trim();
-    var shouldSpeak = metadata.speak === true;
+  function render(data) {
+    data = data || {};
+    config.voice = data.voice || 'af_heart';
+    var text = String(data.text || '').trim();
+    var shouldSpeak = data.speak === true;
 
     if (textEl) textEl.textContent = text || '(no text)';
 
@@ -120,24 +120,14 @@
       if (window.BruControl.getData) {
         try {
           var d = window.BruControl.getData();
-          if (d) render(d, window.BruControl.getMetadata ? window.BruControl.getMetadata() : {});
+          if (d) render(d);
         } catch (e) {}
       }
       if (window.BruControl.onData) {
-        window.BruControl.onData(function (data) {
-          var meta = window.BruControl.getMetadata ? window.BruControl.getMetadata() : {};
-          render(data, meta);
-        });
-      }
-      if (window.BruControl.onMetadata) {
-        window.BruControl.onMetadata(function (meta) {
-          var data = window.BruControl.getData ? window.BruControl.getData() : null;
-          render(data || {}, meta);
-        });
+        window.BruControl.onData(render);
       }
     } else {
-      var preview = getPreviewData();
-      render(preview, { text: preview.text, speak: preview.speak, voice: preview.voice });
+      render(getPreviewData());
     }
   }
 
