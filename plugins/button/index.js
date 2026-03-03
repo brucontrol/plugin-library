@@ -206,7 +206,8 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "button":
-        appendRow(primaryRow("State", boolText(asBool(currentData.state)), asBool(currentData.state) ? "value--ok" : "value--warn", "state", hiddenRows));
+        // Per docs: "This state is not visibly indicated by the element"
+        // Button is momentary - no persistent state display
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
@@ -218,8 +219,8 @@
     switch (type) {
       case "button":
         footerEl.appendChild(
-          makeButton(asBool(currentData.state) ? "Release" : "Press", function () {
-            sendPatch({ state: !asBool(currentData.state) });
+          makeButton("Press", function () {
+            sendPatch({ state: true });
           }, false)
         );
         break;
