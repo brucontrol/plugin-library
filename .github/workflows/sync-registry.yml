@@ -53,12 +53,19 @@ jobs:
           mkdir -p registry/color-themes
           cp dist/manifests/color-themes/*.json registry/color-themes/
 
+      - name: Update index and add core flags
+        working-directory: registry/scripts
+        run: |
+          npm ci
+          node validate-and-index.mjs
+          node validate-and-index-color-themes.mjs
+
       - name: Commit and push registry
         working-directory: registry
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add plugins/ color-themes/
+          git add plugins/ color-themes/ plugins.json color-themes.json
           if git diff --cached --quiet; then
             echo "No manifest changes to commit"
           else
