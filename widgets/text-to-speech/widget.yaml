@@ -1,0 +1,6 @@
+name: "Text to Speech"
+description: "Speaks text using Kokoro TTS when speak=true. Set value to {\"text\":\"Hello\",\"speak\":true} to trigger. Resets speak to false after speaking."
+version: "1.0.0"
+supportedTypes:
+  - globalVariable-string
+  - generic
