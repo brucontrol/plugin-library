@@ -19,11 +19,21 @@
     };
   }
 
+  var _activeUtterance = null;
+
   function speak(text, voiceId) {
     if (!window.speechSynthesis) return Promise.resolve(false);
     return new Promise(function (resolve) {
+      var done = false;
+      function finish(ok) {
+        if (done) return;
+        done = true;
+        _activeUtterance = null;
+        resolve(ok);
+      }
       try {
         var u = new SpeechSynthesisUtterance(text);
+        _activeUtterance = u;
         u.rate = 1;
         u.pitch = 1;
         u.volume = 1;
@@ -37,12 +47,22 @@
           var en = voices.find(function (v) { return v.lang && v.lang.startsWith('en'); });
           if (en) u.voice = en;
         }
-        u.onend = function () { resolve(true); };
-        u.onerror = function () { resolve(false); };
+        u.addEventListener('end', function () { finish(true); });
+        u.addEventListener('error', function () { finish(false); });
         speechSynthesis.speak(u);
+        var pollId = setInterval(function () {
+          if (!speechSynthesis.speaking) {
+            clearInterval(pollId);
+            finish(true);
+          }
+        }, 150);
+        setTimeout(function () {
+          clearInterval(pollId);
+          finish(false);
+        }, 120000);
       } catch (e) {
         console.error('[TTS] speak failed:', e);
-        resolve(false);
+        finish(false);
       }
     });
   }
@@ -59,7 +79,7 @@
       setStatus('Speaking...', false);
       speak(text, config.voice).then(function (ok) {
         setStatus(ok ? 'Ready' : 'TTS error', !ok);
-        if (ok && window.BruControl && window.BruControl.updateProperties) {
+        if (window.BruControl && window.BruControl.updateProperties) {
           window.BruControl.updateProperties({ speak: false });
         }
       });
