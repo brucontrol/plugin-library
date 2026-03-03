@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
+import { readdir, readFile, writeFile, mkdir, unlink } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
@@ -41,6 +41,14 @@ function resolvePluginId(manifest, yamlPath, yamlContent) {
 
 async function main() {
   await mkdir(distDir, { recursive: true });
+
+  // Clear existing widget manifests (not color-themes/) so old IDs don't accumulate
+  const existing = await readdir(distDir, { withFileTypes: true });
+  for (const e of existing) {
+    if (e.isFile() && e.name.endsWith('.json')) {
+      await unlink(join(distDir, e.name));
+    }
+  }
 
   const folders = await readdir(pluginsDir, { withFileTypes: true });
   const pluginDirs = folders.filter(d => d.isDirectory()).map(d => d.name);
