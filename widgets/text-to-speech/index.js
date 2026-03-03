@@ -2,7 +2,7 @@
   var statusEl = document.getElementById('status');
   var textEl = document.getElementById('text-display');
   var ttsModel = null;
-  var config = { voice: 'af_heart', device: 'wasm' };
+  var config = { voice: 'af_heart' };
 
   function setStatus(msg, isError) {
     if (statusEl) {
@@ -11,27 +11,12 @@
     }
   }
 
-  function parseValue(val) {
-    if (val == null || val === '') return { text: '', speak: false };
-    var s = String(val).trim();
-    if (!s) return { text: '', speak: false };
-    if (s.startsWith('{')) {
-      try {
-        var o = JSON.parse(s);
-        return { text: String(o.text || ''), speak: o.speak === true };
-      } catch (e) {
-        return { text: s, speak: false };
-      }
-    }
-    return { text: s, speak: false };
-  }
-
   function getPreviewData() {
     return {
       elementType: 'globalVariable',
-      value: '{"text":"Hello from TTS","speak":false}',
-      voice: 'af_heart',
-      device: 'wasm'
+      text: 'Hello from TTS',
+      speak: false,
+      voice: 'af_heart'
     };
   }
 
@@ -55,17 +40,33 @@
     });
   }
 
-  async function speak(text, voice, device) {
+  function pickDevice() {
+    return typeof navigator !== 'undefined' && navigator.gpu ? 'webgpu' : 'wasm';
+  }
+
+  async function speak(text, voice) {
     var ready = window.__kokoroReady;
     if (!ready || ready.error) return false;
     var KokoroTTS = ready.KokoroTTS;
     if (!KokoroTTS) return false;
     try {
       if (!ttsModel) {
-        ttsModel = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
-          dtype: 'q8',
-          device: device || 'wasm'
-        });
+        var device = pickDevice();
+        try {
+          ttsModel = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
+            dtype: 'q8',
+            device: device
+          });
+        } catch (e) {
+          if (device === 'webgpu') {
+            ttsModel = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
+              dtype: 'q8',
+              device: 'wasm'
+            });
+          } else {
+            throw e;
+          }
+        }
       }
       var audio = await ttsModel.generate(text, { voice: voice || 'af_heart' });
       var blob = audio.toBlob();
@@ -84,23 +85,19 @@
   }
 
   function render(data, metadata) {
-    data = data || {};
     metadata = metadata || {};
     config.voice = metadata.voice || 'af_heart';
-    config.device = metadata.device || 'wasm';
+    var text = String(metadata.text || '').trim();
+    var shouldSpeak = metadata.speak === true;
 
-    var val = data.value;
-    var parsed = parseValue(val);
+    if (textEl) textEl.textContent = text || '(no text)';
 
-    if (textEl) textEl.textContent = parsed.text || '(no text)';
-
-    if (parsed.speak && parsed.text) {
+    if (shouldSpeak && text) {
       setStatus('Speaking...', false);
-      speak(parsed.text, config.voice, config.device).then(function (ok) {
+      speak(text, config.voice).then(function (ok) {
         setStatus(ok ? 'Ready' : 'TTS error', !ok);
         if (ok && window.BruControl && window.BruControl.updateProperties) {
-          var nextVal = JSON.stringify({ text: parsed.text, speak: false });
-          window.BruControl.updateProperties({ value: nextVal });
+          window.BruControl.updateProperties({ speak: false });
         }
       });
     }
@@ -139,7 +136,8 @@
         });
       }
     } else {
-      render(getPreviewData(), { voice: 'af_heart', device: 'wasm' });
+      var preview = getPreviewData();
+      render(preview, { text: preview.text, speak: preview.speak, voice: preview.voice });
     }
   }
 
