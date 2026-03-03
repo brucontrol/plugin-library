@@ -4,15 +4,14 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process';
-import { v5 } from 'uuid';
-import { parse as parseYaml } from 'yaml';
+import { v4, validate } from 'uuid';
+import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const pluginsDir = join(root, 'widgets');
 const distDir = join(root, 'dist', 'manifests');
 
-const NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 const REPO = process.env.PLUGIN_REPO || 'brucontrol/plugin-library';
 const AUTHOR = process.env.PLUGIN_AUTHOR || 'BruControl';
 const HEAD_HASH = process.env.COMMIT_HASH
@@ -28,9 +27,16 @@ function getLastCommitForPath(path) {
   }
 }
 
-function normalizeName(name) {
-  if (typeof name !== 'string') return '';
-  return name.toLowerCase().trim().replace(/\s+/g, ' ');
+/** Resolve plugin id: use explicit id from widget.yaml if valid, else generate and persist. */
+function resolvePluginId(manifest, yamlPath, yamlContent) {
+  const existing = manifest.id && String(manifest.id).trim();
+  if (existing && validate(existing)) {
+    return existing;
+  }
+  const id = v4();
+  manifest.id = id;
+  const updated = stringifyYaml(manifest, { lineWidth: -1 });
+  return { id, writeBack: { path: yamlPath, content: updated } };
 }
 
 async function main() {
@@ -39,6 +45,7 @@ async function main() {
   const folders = await readdir(pluginsDir, { withFileTypes: true });
   const pluginDirs = folders.filter(d => d.isDirectory()).map(d => d.name);
   let count = 0;
+  const writeBacks = [];
 
   for (const folder of pluginDirs) {
     const yamlPath = join(pluginsDir, folder, 'widget.yaml');
@@ -55,7 +62,11 @@ async function main() {
       process.exit(1);
     }
 
-    const id = v5(normalizeName(manifest.name), NAMESPACE);
+    const idResult = resolvePluginId(manifest, yamlPath, yamlContent);
+    const id = typeof idResult === 'string' ? idResult : idResult.id;
+    if (typeof idResult !== 'string' && idResult.writeBack) {
+      writeBacks.push(idResult.writeBack);
+    }
 
     let version = manifest.version || '1.0.0';
     const pkgPath = join(pluginsDir, folder, 'package.json');
@@ -87,6 +98,11 @@ async function main() {
     await writeFile(outPath, JSON.stringify(registryManifest, null, 2) + '\n', 'utf8');
     console.log(`  ${folder} → ${id}.json (v${version}${registryManifest.beta ? ' BETA' : ''})`);
     count++;
+  }
+
+  for (const { path: p, content } of writeBacks) {
+    await writeFile(p, content, 'utf8');
+    console.log(`  Assigned new id to ${p.replace(root, '').replace(/^[/\\]/, '')}`);
   }
 
   console.log(`\nGenerated ${count} manifests in dist/manifests/`);

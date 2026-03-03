@@ -1,6 +1,7 @@
-name: "Button - Card"
-description: "Built-in button widget template."
-version: "1.0.0"
+name: Button - Card
+description: Built-in button widget template.
+version: 1.0.0
 supportedTypes:
   - button
 defaultFor: button
+id: a64ba026-7833-492f-8893-672cf530ae76

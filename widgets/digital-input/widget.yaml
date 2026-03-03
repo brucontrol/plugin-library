@@ -1,6 +1,7 @@
-name: "Digital Input - Card"
-description: "Built-in digital input widget template."
-version: "1.0.0"
+name: Digital Input - Card
+description: Built-in digital input widget template.
+version: 1.0.0
 supportedTypes:
   - digitalInput
 defaultFor: digitalInput
+id: 39211543-69fd-421b-9442-fa105a713af2

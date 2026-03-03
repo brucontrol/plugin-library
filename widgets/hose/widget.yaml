@@ -1,5 +1,6 @@
-name: "Liquid Tube 2"
-description: "Animated liquid tube with draggable routing, flow, and bubbles."
-version: "1.0.0"
+name: Liquid Tube 2
+description: Animated liquid tube with draggable routing, flow, and bubbles.
+version: 1.0.0
 supportedTypes:
   - generic
+id: 25eac571-4c1e-4a96-9d87-57d99459f2ec

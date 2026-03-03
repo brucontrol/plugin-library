@@ -11,6 +11,8 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout plugin-library
         uses: actions/checkout@v4
@@ -34,6 +36,18 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}
           PLUGIN_REPO: brucontrol/plugin-library
 
+      - name: Commit assigned plugin IDs
+        run: |
+          if git diff --quiet widgets/; then
+            echo "No widget.yaml changes"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add widgets/
+            git commit -m "chore: assign plugin ids for new widgets"
+            git push
+          fi
+
       - name: Generate color theme manifests
         run: node scripts/generate-color-theme-manifests.mjs
         env:
@@ -49,6 +63,7 @@ jobs:
 
       - name: Copy manifests to registry
         run: |
+          rm -f registry/plugins/*.json
           cp dist/manifests/*.json registry/plugins/
           mkdir -p registry/color-themes
           cp dist/manifests/color-themes/*.json registry/color-themes/

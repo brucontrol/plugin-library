@@ -1,6 +1,7 @@
-name: "Alarm - Card"
-description: "Built-in alarm widget template."
-version: "1.0.0"
+name: Alarm - Card
+description: Built-in alarm widget template.
+version: 1.0.0
 supportedTypes:
   - alarm
 defaultFor: alarm
+id: 9f6c2274-c028-4205-bf8c-31e22fe125cd

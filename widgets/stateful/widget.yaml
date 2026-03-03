@@ -1,6 +1,7 @@
-name: "stateful - Card"
-description: "Built-in stateful element widget template."
-version: "1.0.0"
+name: stateful - Card
+description: Built-in stateful element widget template.
+version: 1.0.0
 supportedTypes:
   - stateful
 defaultFor: stateful
+id: b03b27ce-33d7-4da8-a900-48de00a6c8b3

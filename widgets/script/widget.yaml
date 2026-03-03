@@ -1,6 +1,7 @@
-name: "Script Element - Card"
-description: "Built-in script element widget template."
-version: "1.0.0"
+name: Script Element - Card
+description: Built-in script element widget template.
+version: 1.0.0
 supportedTypes:
   - scriptElement
 defaultFor: scriptElement
+id: 10af8668-d537-4a70-838d-df25c7ba8271
