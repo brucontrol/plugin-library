@@ -1,0 +1,13 @@
+{
+  "id": "72460c83-e051-5f52-bacf-4b3dc6647a9c",
+  "name": "Profile - Card",
+  "author": "BruControl",
+  "description": "Built-in profile widget template.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/profile",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

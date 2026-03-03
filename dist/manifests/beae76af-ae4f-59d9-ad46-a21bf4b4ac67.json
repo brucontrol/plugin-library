@@ -1,0 +1,13 @@
+{
+  "id": "beae76af-ae4f-59d9-ad46-a21bf4b4ac67",
+  "name": "Selector (Combo Box) - Card",
+  "author": "BruControl",
+  "description": "Dropdown selector for string global variables.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/selector-combo",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

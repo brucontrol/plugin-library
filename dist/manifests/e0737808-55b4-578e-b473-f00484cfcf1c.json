@@ -1,0 +1,13 @@
+{
+  "id": "e0737808-55b4-578e-b473-f00484cfcf1c",
+  "name": "PWM Output - Card",
+  "author": "BruControl",
+  "description": "Built-in PWM output widget template.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/pwm-output",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

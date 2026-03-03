@@ -1,0 +1,13 @@
+{
+  "id": "eff3f4b0-2156-5fa9-9b93-ba9c63cf45d3",
+  "name": "Liquid Tube 2",
+  "author": "BruControl",
+  "description": "Animated liquid tube with draggable routing, flow, and bubbles.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/hose",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

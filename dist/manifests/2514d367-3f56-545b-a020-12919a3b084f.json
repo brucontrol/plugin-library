@@ -1,0 +1,13 @@
+{
+  "id": "2514d367-3f56-545b-a020-12919a3b084f",
+  "name": "Digital Output - Card",
+  "author": "BruControl",
+  "description": "Built-in digital output widget template.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/digital-output",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "a4455f60-95e4-55ea-9b17-53f82f8662ae",
+  "name": "Image - Card",
+  "author": "BruControl",
+  "description": "Built-in image widget template for generic elements.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/generic-image",
+  "version": "1.0.0",
+  "commitHash": "5ced75160f7e43da1f575b9000c331cccb934eb9",
+  "official": true,
+  "beta": false,
+  "tags": []
+}

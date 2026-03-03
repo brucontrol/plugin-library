@@ -1,0 +1,13 @@
+{
+  "id": "f73b6960-126b-58a3-bd44-a130e47e75fc",
+  "name": "Text to Speech",
+  "author": "BruControl",
+  "description": "Speaks text using Kokoro TTS when speak=true. Set value to {\"text\":\"Hello\",\"speak\":true} to trigger. Resets speak to false after speaking.",
+  "repo": "brucontrol/plugin-library",
+  "path": "widgets/text-to-speech",
+  "version": "1.0.0",
+  "commitHash": "e6a7b47939d45de046f463ff3b360cd518034fcc",
+  "official": true,
+  "beta": false,
+  "tags": []
+}
