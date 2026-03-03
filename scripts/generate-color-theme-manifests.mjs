@@ -15,8 +15,18 @@ const distDir = join(root, 'dist', 'manifests', 'color-themes');
 const NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c9';
 const REPO = process.env.PLUGIN_REPO || 'brucontrol/plugin-library';
 const AUTHOR = process.env.PLUGIN_AUTHOR || 'BruControl';
-const COMMIT_HASH = process.env.COMMIT_HASH
+const HEAD_HASH = process.env.COMMIT_HASH
   || execSync('git rev-parse HEAD', { cwd: root, encoding: 'utf8' }).trim();
+
+/** Get the last commit that touched the given path. Falls back to HEAD if path has no history. */
+function getLastCommitForPath(path) {
+  try {
+    const hash = execSync(`git log -1 --format=%H -- "${path}"`, { cwd: root, encoding: 'utf8' }).trim();
+    return hash || HEAD_HASH;
+  } catch {
+    return HEAD_HASH;
+  }
+}
 
 function normalizeName(name) {
   if (typeof name !== 'string') return '';
@@ -68,15 +78,18 @@ async function main() {
       if (manifest[field] != null) colors[field] = manifest[field];
     }
 
+    const themePath = `color-themes/${folder}`;
+    const commitHash = getLastCommitForPath(themePath);
+
     const registryManifest = {
       id,
       name: manifest.name,
       author: AUTHOR,
       description: manifest.description || '',
       repo: REPO,
-      path: `color-themes/${folder}`,
+      path: themePath,
       version,
-      commitHash: COMMIT_HASH,
+      commitHash,
       official: true,
       beta: manifest.beta === true,
       tags: Array.isArray(manifest.tags) ? manifest.tags : [],
