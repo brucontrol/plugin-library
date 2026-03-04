@@ -85,7 +85,23 @@
     return currentData ? String(currentData.variableType || "Value") : "Value";
   }
 
-  /* ── Text input flyout (via host) for String, DateTime, TimeSpan ── */
+  /* ── TimeSpan picker (via host) ── */
+  function openTimeSpanPicker() {
+    if (!window.BruControl || !window.BruControl.requestTimeSpanPicker) return;
+    var label = (currentData ? (currentData.displayName || currentData.name) : "Value") || "Set Value";
+    var currentVal = currentData && currentData.value ? String(currentData.value) : "00:00:00";
+    window.BruControl.requestTimeSpanPicker({
+      currentValue: currentVal,
+      label: label,
+      allowDays: true
+    }).then(function(result) {
+      if (result !== null && result !== undefined && window.BruControl) {
+        window.BruControl.updateProperties({ value: String(result) });
+      }
+    });
+  }
+
+  /* ── Text input flyout (via host) for String, DateTime ── */
   function openTextInputFlyout() {
     if (!window.BruControl || !window.BruControl.requestTextInput) return;
 
@@ -102,8 +118,6 @@
         }
       } catch (e) { /* use raw */ }
       placeholder = "YYYY-MM-DDTHH:mm";
-    } else if (vt === "TimeSpan") {
-      placeholder = "hh:mm:ss or d.hh:mm:ss";
     }
 
     window.BruControl.requestTextInput({
@@ -158,7 +172,9 @@
       if (window.BruControl) {
         window.BruControl.updateProperties({ value: isTrue ? "False" : "True" });
       }
-    } else if (vt === "String" || vt === "DateTime" || vt === "TimeSpan") {
+    } else if (vt === "TimeSpan") {
+      openTimeSpanPicker();
+    } else if (vt === "String" || vt === "DateTime") {
       openTextInputFlyout();
     }
   }
