@@ -1,6 +1,5 @@
 (function() {
   var currentData = null;
-  var isEditing = false;
 
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
@@ -40,7 +39,7 @@
     titleEl.style.color = d.labelColor || "";
     titleEl.style.textAlign = "left";
 
-    valueEl.style.display = (d.showValue === false && !isEditing) ? "none" : "";
+    valueEl.style.display = (d.showValue === false) ? "none" : "";
     valueEl.style.fontFamily = d.valueFontFamily || "";
     valueEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
     valueEl.style.fontWeight = d.valueFontWeight || "";
@@ -76,9 +75,7 @@
 
     titleEl.textContent = data.displayName || data.name || "Variable";
 
-    if (!isEditing) {
-      valueEl.textContent = getDisplayValue(data);
-    }
+    valueEl.textContent = getDisplayValue(data);
 
     valueEl.classList.add("editable");
     applyStyles();
@@ -88,69 +85,45 @@
     return currentData ? String(currentData.variableType || "Value") : "Value";
   }
 
-  /* ── Inline editing for String, DateTime, TimeSpan ── */
-  function showInlineEdit() {
-    var valueEl = document.getElementById("valueDisplay");
-    var editInline = document.getElementById("editInline");
-    var editInput = document.getElementById("editInput");
-    if (!editInline || !editInput || !valueEl) return;
-
-    isEditing = true;
-    valueEl.style.display = "none";
-    editInline.style.display = "flex";
+  /* ── Text input flyout (via host) for String, DateTime, TimeSpan ── */
+  function openTextInputFlyout() {
+    if (!window.BruControl || !window.BruControl.requestTextInput) return;
 
     var vt = getVariableType();
+    var label = (currentData ? (currentData.displayName || currentData.name) : "Value") || "Set Value";
+    var currentVal = currentData && currentData.value ? String(currentData.value) : "";
+    var placeholder = "";
+
     if (vt === "DateTime") {
-      editInput.type = "datetime-local";
-      var dateVal = currentData && currentData.value ? currentData.value : "";
       try {
-        var d = new Date(dateVal);
+        var d = new Date(currentVal);
         if (!isNaN(d.getTime())) {
-          editInput.value = d.toISOString().slice(0, 19);
-        } else {
-          editInput.value = dateVal;
+          currentVal = d.toISOString().slice(0, 19);
         }
-      } catch (e) { editInput.value = dateVal; }
+      } catch (e) { /* use raw */ }
+      placeholder = "YYYY-MM-DDTHH:mm";
     } else if (vt === "TimeSpan") {
-      editInput.type = "text";
-      editInput.placeholder = "hh:mm:ss or d.hh:mm:ss";
-      editInput.value = currentData && currentData.value ? currentData.value : "";
-    } else {
-      editInput.type = "text";
-      editInput.value = currentData && currentData.value ? String(currentData.value) : "";
+      placeholder = "hh:mm:ss or d.hh:mm:ss";
     }
 
-    editInput.focus();
-    if (editInput.select) editInput.select();
-  }
-
-  function hideInlineEdit() {
-    var valueEl = document.getElementById("valueDisplay");
-    var editInline = document.getElementById("editInline");
-    if (!editInline || !valueEl) return;
-    isEditing = false;
-    editInline.style.display = "none";
-    valueEl.style.display = "";
-  }
-
-  function confirmInlineEdit() {
-    var editInput = document.getElementById("editInput");
-    if (!editInput || !window.BruControl) return;
-
-    var val = editInput.value;
-    var vt = getVariableType();
-
-    if (vt === "DateTime") {
-      try {
-        var d = new Date(val);
-        if (!isNaN(d.getTime())) {
-          val = d.toISOString();
+    window.BruControl.requestTextInput({
+      currentValue: currentVal,
+      label: label,
+      placeholder: placeholder || undefined
+    }).then(function(result) {
+      if (result !== null && result !== undefined && window.BruControl) {
+        var val = String(result);
+        if (vt === "DateTime") {
+          try {
+            var d2 = new Date(val);
+            if (!isNaN(d2.getTime())) {
+              val = d2.toISOString();
+            }
+          } catch (e) { /* send raw */ }
         }
-      } catch (e) { /* send raw */ }
-    }
-
-    window.BruControl.updateProperties({ value: val });
-    hideInlineEdit();
+        window.BruControl.updateProperties({ value: val });
+      }
+    });
   }
 
   /* ── Numeric keypad (via host) ── */
@@ -186,31 +159,15 @@
         window.BruControl.updateProperties({ value: isTrue ? "False" : "True" });
       }
     } else if (vt === "String" || vt === "DateTime" || vt === "TimeSpan") {
-      showInlineEdit();
+      openTextInputFlyout();
     }
   }
 
   /* ── Wire up events ── */
   function bindEvents() {
     var valueEl = document.getElementById("valueDisplay");
-    var editConfirm = document.getElementById("editConfirm");
-    var editCancel = document.getElementById("editCancel");
-    var editInput = document.getElementById("editInput");
-
     if (valueEl) {
       valueEl.addEventListener("click", handleValueClick);
-    }
-    if (editConfirm) {
-      editConfirm.addEventListener("click", confirmInlineEdit);
-    }
-    if (editCancel) {
-      editCancel.addEventListener("click", hideInlineEdit);
-    }
-    if (editInput) {
-      editInput.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") { e.preventDefault(); confirmInlineEdit(); }
-        if (e.key === "Escape") { e.preventDefault(); hideInlineEdit(); }
-      });
     }
   }
 
