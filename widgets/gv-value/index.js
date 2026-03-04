@@ -101,41 +101,42 @@
     });
   }
 
-  /* ── Text input flyout (via host) for String, DateTime ── */
+  /* ── DateTime picker (via host) ── */
+  function openDateTimePicker() {
+    if (!window.BruControl || !window.BruControl.requestDateTimePicker) return;
+    var label = (currentData ? (currentData.displayName || currentData.name) : "Value") || "Set Value";
+    var currentVal = currentData && currentData.value ? String(currentData.value) : "";
+    try {
+      var d = new Date(currentVal);
+      if (isNaN(d.getTime())) currentVal = new Date().toISOString();
+      else currentVal = d.toISOString();
+    } catch (e) {
+      currentVal = new Date().toISOString();
+    }
+    window.BruControl.requestDateTimePicker({
+      currentValue: currentVal,
+      label: label
+    }).then(function(result) {
+      if (result !== null && result !== undefined && window.BruControl) {
+        window.BruControl.updateProperties({ value: String(result) });
+      }
+    });
+  }
+
+  /* ── Text input flyout (via host) for String ── */
   function openTextInputFlyout() {
     if (!window.BruControl || !window.BruControl.requestTextInput) return;
 
-    var vt = getVariableType();
     var label = (currentData ? (currentData.displayName || currentData.name) : "Value") || "Set Value";
     var currentVal = currentData && currentData.value ? String(currentData.value) : "";
-    var placeholder = "";
-
-    if (vt === "DateTime") {
-      try {
-        var d = new Date(currentVal);
-        if (!isNaN(d.getTime())) {
-          currentVal = d.toISOString().slice(0, 19);
-        }
-      } catch (e) { /* use raw */ }
-      placeholder = "YYYY-MM-DDTHH:mm";
-    }
 
     window.BruControl.requestTextInput({
       currentValue: currentVal,
       label: label,
-      placeholder: placeholder || undefined
+      placeholder: undefined
     }).then(function(result) {
       if (result !== null && result !== undefined && window.BruControl) {
-        var val = String(result);
-        if (vt === "DateTime") {
-          try {
-            var d2 = new Date(val);
-            if (!isNaN(d2.getTime())) {
-              val = d2.toISOString();
-            }
-          } catch (e) { /* send raw */ }
-        }
-        window.BruControl.updateProperties({ value: val });
+        window.BruControl.updateProperties({ value: String(result) });
       }
     });
   }
@@ -174,7 +175,9 @@
       }
     } else if (vt === "TimeSpan") {
       openTimeSpanPicker();
-    } else if (vt === "String" || vt === "DateTime") {
+    } else if (vt === "DateTime") {
+      openDateTimePicker();
+    } else if (vt === "String") {
       openTextInputFlyout();
     }
   }
