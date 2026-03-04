@@ -77,7 +77,11 @@
 
     valueEl.textContent = getDisplayValue(data);
 
-    valueEl.classList.add("editable");
+    if (data.userControl !== false) {
+      valueEl.classList.add("editable");
+    } else {
+      valueEl.classList.remove("editable");
+    }
     applyStyles();
   }
 
@@ -163,7 +167,7 @@
 
   /* ── Click handler ── */
   function handleValueClick() {
-    if (!currentData) return;
+    if (!currentData || currentData.userControl === false) return;
     var vt = getVariableType();
     if (vt === "Value") {
       openNumericKeypad();
