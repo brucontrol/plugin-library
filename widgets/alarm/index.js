@@ -109,7 +109,10 @@
     btn.type = "button";
     btn.textContent = label;
     btn.disabled = !!disabled;
-    btn.addEventListener("click", onClick);
+    btn.addEventListener("click", function () {
+      onClick();
+      btn.blur();
+    });
     return btn;
   }
 
