@@ -5,8 +5,15 @@
   var currentData = null;
   var sourceLiveValue = null;
   var destinationLiveValue = null;
+  var sourceDisplayNameFromFetch = null;
+  var destinationDisplayNameFromFetch = null;
+  var sourceElementTypeResolved = null;
+  var destinationElementTypeResolved = null;
   var subscribedSource = null;
   var subscribedDestination = null;
+
+  var PROFILE_SOURCE_TYPES = ["globalVariable", "analogInput", "owTemp", "spiSensor", "hydrometer", "counter", "timer", "digitalInput", "generic"];
+  var PROFILE_DEST_TYPES = ["globalVariable", "digitalOutput", "dutyCycle", "pwmOutput", "hysteresis", "pid", "deadband", "generic"];
 
   function isFooterActive() {
     return footerEl && footerEl.contains(document.activeElement) &&
@@ -71,16 +78,28 @@
     return fallback || "—";
   }
 
+  function elementDisplayName(el) {
+    if (!el) return null;
+    var n = el.displayName || el.name;
+    return n && String(n).trim() !== "" ? String(n) : null;
+  }
+
+  function idMatches(a, b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return String(a).toLowerCase() === String(b).toLowerCase();
+  }
+
   function handleElementUpdate(payload) {
     var et = payload && payload.elementType;
     var eid = payload && payload.elementId;
     var data = payload && payload.data;
     var val = formatElementValue(data);
-    if (subscribedSource && et === subscribedSource.type && eid === subscribedSource.id) {
+    if (subscribedSource && et === subscribedSource.type && idMatches(eid, subscribedSource.id)) {
       sourceLiveValue = val;
       render(currentData);
     }
-    if (subscribedDestination && et === subscribedDestination.type && eid === subscribedDestination.id) {
+    if (subscribedDestination && et === subscribedDestination.type && idMatches(eid, subscribedDestination.id)) {
       destinationLiveValue = val;
       render(currentData);
     }
@@ -93,20 +112,56 @@
       bc.unsubscribeElement(subscribedSource.type, subscribedSource.id);
       subscribedSource = null;
       sourceLiveValue = null;
+      sourceDisplayNameFromFetch = null;
+      sourceElementTypeResolved = null;
     }
     if (subscribedDestination) {
       bc.unsubscribeElement(subscribedDestination.type, subscribedDestination.id);
       subscribedDestination = null;
       destinationLiveValue = null;
+      destinationDisplayNameFromFetch = null;
+      destinationElementTypeResolved = null;
     }
+  }
+
+  function subscribeOne(type, id, onResolved) {
+    var bc = window.BruControl;
+    if (!bc || !bc.subscribeElement) return;
+    bc.subscribeElement(type, id).then(function (elData) {
+      if (elData && idMatches(elData.id, id)) {
+        onResolved(type, elData);
+      }
+    }).catch(function () {});
+  }
+
+  function subscribeWithTypeDiscovery(types, id, onResolved) {
+    var bc = window.BruControl;
+    if (!bc || !bc.subscribeElement || !bc.unsubscribeElement || !id) return;
+    var i = 0;
+    function tryNext() {
+      if (i >= types.length) return;
+      var t = types[i++];
+      bc.subscribeElement(t, id).then(function (elData) {
+        if (elData && idMatches(elData.id, id)) {
+          onResolved(t, elData);
+          return;
+        }
+        bc.unsubscribeElement(t, id);
+        tryNext();
+      }).catch(function () {
+        bc.unsubscribeElement(t, id);
+        tryNext();
+      });
+    }
+    tryNext();
   }
 
   function setupSubscriptions(data) {
     var bc = window.BruControl;
     if (!bc || !bc.subscribeElement || !bc.unsubscribeElement) return;
-    var srcType = String(data.sourceElementType || "").trim();
+    var srcType = String(data.sourceElementType || sourceElementTypeResolved || "").trim();
     var srcId = data.sourceId != null ? String(data.sourceId) : "";
-    var destType = String(data.destinationElementType || "").trim();
+    var destType = String(data.destinationElementType || destinationElementTypeResolved || "").trim();
     var destId = data.destinationId != null ? String(data.destinationId) : "";
 
     var srcKey = srcType && srcId && !isEmptyRef(srcId) ? srcType + ":" + srcId : null;
@@ -121,23 +176,49 @@
       destinationLiveValue = null;
     }
 
-    if (srcType && srcId && !isEmptyRef(srcId)) {
-      subscribedSource = { type: srcType, id: srcId };
-      bc.subscribeElement(srcType, srcId).then(function (elData) {
-        if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId) {
-          sourceLiveValue = formatElementValue(elData);
-          render(currentData);
-        }
-      });
+    if (srcId && !isEmptyRef(srcId)) {
+      function onSourceResolved(type, elData) {
+        if (!idMatches(currentData.sourceId, srcId)) return;
+        sourceElementTypeResolved = type;
+        subscribedSource = { type: type, id: srcId };
+        sourceLiveValue = formatElementValue(elData);
+        sourceDisplayNameFromFetch = elementDisplayName(elData);
+        render(currentData);
+      }
+      if (srcType) {
+        subscribedSource = { type: srcType, id: srcId };
+        subscribeOne(srcType, srcId, function (_, elData) {
+          if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId && idMatches(currentData.sourceId, srcId)) {
+            sourceLiveValue = formatElementValue(elData);
+            sourceDisplayNameFromFetch = elementDisplayName(elData);
+            render(currentData);
+          }
+        });
+      } else {
+        subscribeWithTypeDiscovery(PROFILE_SOURCE_TYPES, srcId, onSourceResolved);
+      }
     }
-    if (destType && destId && !isEmptyRef(destId)) {
-      subscribedDestination = { type: destType, id: destId };
-      bc.subscribeElement(destType, destId).then(function (elData) {
-        if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId) {
-          destinationLiveValue = formatElementValue(elData);
-          render(currentData);
-        }
-      });
+    if (destId && !isEmptyRef(destId)) {
+      function onDestResolved(type, elData) {
+        if (!idMatches(currentData.destinationId, destId)) return;
+        destinationElementTypeResolved = type;
+        subscribedDestination = { type: type, id: destId };
+        destinationLiveValue = formatElementValue(elData);
+        destinationDisplayNameFromFetch = elementDisplayName(elData);
+        render(currentData);
+      }
+      if (destType) {
+        subscribedDestination = { type: destType, id: destId };
+        subscribeOne(destType, destId, function (_, elData) {
+          if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId && idMatches(currentData.destinationId, destId)) {
+            destinationLiveValue = formatElementValue(elData);
+            destinationDisplayNameFromFetch = elementDisplayName(elData);
+            render(currentData);
+          }
+        });
+      } else {
+        subscribeWithTypeDiscovery(PROFILE_DEST_TYPES, destId, onDestResolved);
+      }
     }
   }
 
@@ -283,8 +364,16 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "profile": {
-        var srcLabel = getLabel(currentData.sourceDisplayName, currentData.sourceId, "Source");
-        var destLabel = getLabel(currentData.destinationDisplayName, currentData.destinationId, "Destination");
+        var srcLabel = getLabel(
+          currentData.sourceDisplayName || sourceDisplayNameFromFetch,
+          currentData.sourceId,
+          "Source"
+        );
+        var destLabel = getLabel(
+          currentData.destinationDisplayName || destinationDisplayNameFromFetch,
+          currentData.destinationId,
+          "Destination"
+        );
         var srcVal = sourceLiveValue !== null ? sourceLiveValue : "—";
         var destVal = destinationLiveValue !== null ? destinationLiveValue : "—";
         appendRow(row(srcLabel, srcVal, "", { key: "source" }, hiddenRows));
