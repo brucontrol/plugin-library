@@ -185,8 +185,25 @@
   }
 
   function render(data) {
+    var type = getType(data);
+    /* Skip full re-render when only state changed for button - prevents flash from DOM recreation */
+    if (type === "button" && currentData && getType(currentData) === "button") {
+      var keysToIgnore = { state: true };
+      var changed = false;
+      for (var k in data) {
+        if (!keysToIgnore[k] && data[k] !== currentData[k]) { changed = true; break; }
+      }
+      if (!changed) {
+        for (var k2 in currentData) {
+          if (!keysToIgnore[k2] && data[k2] !== currentData[k2]) { changed = true; break; }
+        }
+      }
+      if (!changed) {
+        currentData = data || {};
+        return;
+      }
+    }
     currentData = data || {};
-    var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
     var hiddenRows = getHiddenRowsMap();
 
