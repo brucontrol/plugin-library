@@ -47,10 +47,28 @@
     if (data.value !== undefined && data.value !== null) {
       return String(data.value);
     }
+    if (data.variable !== undefined && data.variable !== null) {
+      return String(data.variable);
+    }
     if (data.state !== undefined && data.state !== null) {
       return data.state ? "On" : "Off";
     }
     return null;
+  }
+
+  function isGuid(value) {
+    if (!value || typeof value !== "string") return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  }
+
+  function isEmptyRef(id) {
+    return !id || id === "00000000-0000-0000-0000-000000000000" || String(id).trim() === "";
+  }
+
+  function getLabel(name, id, fallback) {
+    if (name && String(name).trim() !== "" && !isGuid(name)) return String(name);
+    if (isEmptyRef(id)) return "—";
+    return fallback || "—";
   }
 
   function handleElementUpdate(payload) {
@@ -86,13 +104,13 @@
   function setupSubscriptions(data) {
     var bc = window.BruControl;
     if (!bc || !bc.subscribeElement || !bc.unsubscribeElement) return;
-    var srcType = data.sourceElementType;
-    var srcId = data.sourceId;
-    var destType = data.destinationElementType;
-    var destId = data.destinationId;
+    var srcType = String(data.sourceElementType || "").trim();
+    var srcId = data.sourceId != null ? String(data.sourceId) : "";
+    var destType = String(data.destinationElementType || "").trim();
+    var destId = data.destinationId != null ? String(data.destinationId) : "";
 
-    var srcKey = srcType && srcId ? srcType + ":" + srcId : null;
-    var destKey = destType && destId ? destType + ":" + destId : null;
+    var srcKey = srcType && srcId && !isEmptyRef(srcId) ? srcType + ":" + srcId : null;
+    var destKey = destType && destId && !isEmptyRef(destId) ? destType + ":" + destId : null;
     var needUnsubSrc = subscribedSource && (!srcKey || subscribedSource.type + ":" + subscribedSource.id !== srcKey);
     var needUnsubDest = subscribedDestination && (!destKey || subscribedDestination.type + ":" + subscribedDestination.id !== destKey);
     if (needUnsubSrc || needUnsubDest) {
@@ -103,7 +121,7 @@
       destinationLiveValue = null;
     }
 
-    if (srcType && srcId) {
+    if (srcType && srcId && !isEmptyRef(srcId)) {
       subscribedSource = { type: srcType, id: srcId };
       bc.subscribeElement(srcType, srcId).then(function (elData) {
         if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId) {
@@ -112,7 +130,7 @@
         }
       });
     }
-    if (destType && destId) {
+    if (destType && destId && !isEmptyRef(destId)) {
       subscribedDestination = { type: destType, id: destId };
       bc.subscribeElement(destType, destId).then(function (elData) {
         if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId) {
@@ -265,10 +283,10 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "profile": {
-        var srcLabel = currentData.sourceDisplayName || currentData.sourceId || "Source";
-        var destLabel = currentData.destinationDisplayName || currentData.destinationId || "Destination";
-        var srcVal = sourceLiveValue !== null ? sourceLiveValue : "--";
-        var destVal = destinationLiveValue !== null ? destinationLiveValue : "--";
+        var srcLabel = getLabel(currentData.sourceDisplayName, currentData.sourceId, "Source");
+        var destLabel = getLabel(currentData.destinationDisplayName, currentData.destinationId, "Destination");
+        var srcVal = sourceLiveValue !== null ? sourceLiveValue : "—";
+        var destVal = destinationLiveValue !== null ? destinationLiveValue : "—";
         appendRow(row(srcLabel, srcVal, "", { key: "source" }, hiddenRows));
         appendRow(row(destLabel, destVal, "", { key: "destination" }, hiddenRows));
         appendRow(row("Direction", currentData.direction || (currentData.directional ? "Bidirectional" : "Forward"), "", { key: "direction" }, hiddenRows));
