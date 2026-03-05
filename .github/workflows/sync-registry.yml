@@ -30,21 +30,27 @@ jobs:
         run: npm ci
         working-directory: scripts
 
+      - name: Bump versions for changed widgets
+        run: node scripts/bump-widget-versions.mjs
+        env:
+          BEFORE_SHA: ${{ github.event.before || 'HEAD~1' }}
+          AFTER_SHA: ${{ github.sha }}
+
       - name: Generate manifests
         run: node scripts/generate-manifests.mjs
         env:
           COMMIT_HASH: ${{ github.sha }}
           PLUGIN_REPO: brucontrol/plugin-library
 
-      - name: Commit assigned plugin IDs
+      - name: Commit version bumps and assigned plugin IDs
         run: |
           if git diff --quiet widgets/; then
-            echo "No widget.yaml changes"
+            echo "No widget manifest changes"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add widgets/
-            git commit -m "chore: assign plugin ids for new widgets"
+            git commit -m "chore: bump widget versions and assign plugin ids"
             git push
           fi
 
