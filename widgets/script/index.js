@@ -174,6 +174,7 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "scriptElement":
+        appendRow(row("Value", currentData.value != null ? String(currentData.value) : "--", "", { key: "value", primary: true }, hiddenRows));
         appendRow(row("Process", currentData.processId || "--", "", { key: "process" }, hiddenRows));
         appendRow(row("Variable", currentData.variableName || "--", "", { key: "variable" }, hiddenRows));
         break;
@@ -193,7 +194,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      scriptElement: { elementType: "scriptElement", name: "Script", displayName: "Script Variable", processId: "Process-A", variableName: "Temp" }
+      scriptElement: { elementType: "scriptElement", name: "Script", displayName: "Script Variable", processId: "Process-A", variableName: "Temp", value: "42" }
     };
     return map[t] || { elementType: t, displayName: t };
   }
