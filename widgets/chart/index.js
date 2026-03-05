@@ -20,12 +20,15 @@
   var oscillationHintsByChannel = Object.create(null);
   var oscillationHintsLoadedOnce = false;
   var previewTimerHandle = null;
+  var realtimeTickHandle = null;
 
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
   var OSCILLATION_LOW_LEVEL = 8;
   var OSCILLATION_HIGH_LEVEL = 92;
   var OSCILLATION_AXIS_GRACE = "12%";
   var OSCILLATION_ANIMATION_INTERVAL_MS = 60;
+  var REALTIME_TICK_INTERVAL_MS = 1000;
+  var REALTIME_EXTEND_THRESHOLD_MS = 500;
   var TIME_PRESETS = {
     "4s": 4,
     "15s": 15,
@@ -884,6 +887,61 @@
     }, OSCILLATION_ANIMATION_INTERVAL_MS);
   }
 
+  function clearRealtimeTick() {
+    if (realtimeTickHandle) {
+      clearInterval(realtimeTickHandle);
+      realtimeTickHandle = null;
+    }
+  }
+
+  function refreshRealtimeDatasets() {
+    if (!chart || !Array.isArray(chart.data.datasets)) return;
+    var nowMs = Date.now();
+    var updated = false;
+    var datasets = chart.data.datasets;
+
+    for (var i = 0; i < datasets.length; i += 1) {
+      var dataset = datasets[i];
+      if (dataset._oscillation) continue;
+      if (!Array.isArray(dataset.data) || dataset.data.length === 0) continue;
+
+      var last = dataset.data[dataset.data.length - 1];
+      var lastX = pointToTimestamp(last);
+      if (!Number.isFinite(lastX) || !Number.isFinite(last.y)) continue;
+      if (nowMs - lastX < REALTIME_EXTEND_THRESHOLD_MS) continue;
+
+      dataset.data.push({ x: nowMs, y: last.y });
+      updated = true;
+    }
+
+    if (updated || configuredChannels.length > 0) {
+      trimDatasets();
+      applyRealtimeXAxisWindow(configuredChannels);
+      chart.update("none");
+    }
+  }
+
+  function ensureRealtimeTick(channels) {
+    var hasNonOscillation = false;
+    for (var i = 0; i < channels.length; i += 1) {
+      if (channels[i] && channels[i].oscillation !== true) {
+        hasNonOscillation = true;
+        break;
+      }
+    }
+
+    if (!hasNonOscillation || !hasHistoryLoaded) {
+      clearRealtimeTick();
+      return;
+    }
+
+    if (realtimeTickHandle) return;
+
+    realtimeTickHandle = setInterval(function () {
+      refreshRealtimeDatasets();
+    }, REALTIME_TICK_INTERVAL_MS);
+  }
+
   function requestOscillationHintsRefresh(channels) {
     // One-shot fetch of oscillation hints at init time. Never called again after first success.
     if (oscillationHintsLoadedOnce) return;
@@ -1013,6 +1071,7 @@
 
   function applyRealtimeXAxisWindow(channels) {
     if (!chart || !chart.options || !chart.options.scales || !chart.options.scales.x) return;
+    if (!channels || channels.length === 0) return;
 
     var hasOscillationWave = false;
     for (var i = 0; i < channels.length; i += 1) {
@@ -1022,18 +1081,9 @@
       }
     }
 
-    if (!hasOscillationWave) {
-      if (Object.prototype.hasOwnProperty.call(chart.options.scales.x, "min")) {
-        delete chart.options.scales.x.min;
-      }
-      if (Object.prototype.hasOwnProperty.call(chart.options.scales.x, "max")) {
-        delete chart.options.scales.x.max;
-      }
-      return;
-    }
-
     var nowMs = Date.now();
-    chart.options.scales.x.min = nowMs - getSpanSeconds() * 1000;
+    var spanMs = getSpanSeconds() * 1000;
+    chart.options.scales.x.min = nowMs - spanMs;
     chart.options.scales.x.max = nowMs;
   }
 
@@ -1149,6 +1199,7 @@
       trimDatasets();
       pruneOscillationRawPoints(channels);
       ensureOscillationAnimation(channels);
+      ensureRealtimeTick(channels);
       applyRealtimeXAxisWindow(channels);
       chart.update("none");
       updateHeaderMeta(channels.length);
@@ -1194,6 +1245,7 @@
 
     dataset.data.push({ x: sample.timestampUnixMs, y: sample.value });
     trimDatasets();
+    ensureRealtimeTick(configuredChannels);
     applyRealtimeXAxisWindow(configuredChannels);
     chart.update("none");
   }
@@ -1222,6 +1274,7 @@
 
     if (channels.length === 0) {
       clearOscillationAnimation();
+      clearRealtimeTick();
       oscillationHintsByChannel = Object.create(null);
       showOverlay("No channels configured. Open Edit Chart to pick channels.");
       chartInstance.update("none");
@@ -1238,6 +1291,7 @@
     chartInstance.update("none");
     applyRealtimeXAxisWindow(channels);
     ensureOscillationAnimation(channels);
+    ensureRealtimeTick(channels);
 
     // Only load history once (or when config changes, which resets hasHistoryLoaded).
     // After history is loaded, all live updates come through SignalR -- no re-fetching.
@@ -1336,5 +1390,6 @@
   window.addEventListener("beforeunload", function () {
     clearPreviewTimer();
     clearOscillationAnimation();
+    clearRealtimeTick();
   });
 })();
