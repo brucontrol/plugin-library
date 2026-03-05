@@ -82,6 +82,11 @@ body {
   text-align: right;
 }
 
+.widget-row .value.editable:hover {
+  color: var(--accent-primary, #007acc);
+  text-decoration: underline;
+}
+
 .widget-row--primary .label {
   font-size: 10px;
   letter-spacing: 0.06em;

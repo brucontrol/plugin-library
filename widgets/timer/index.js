@@ -110,6 +110,22 @@
     window.BruControl.updateProperties(patch);
   }
 
+  function openTimeSpanPicker() {
+    if (!window.BruControl || !window.BruControl.requestTimeSpanPicker) return;
+    if (currentData && currentData.userControl === false) return;
+    var label = (currentData ? (currentData.displayName || currentData.name) : "Timer") || "Set Value";
+    var currentVal = currentData && currentData.value ? String(currentData.value) : "00:00:00";
+    window.BruControl.requestTimeSpanPicker({
+      currentValue: currentVal,
+      label: label,
+      allowDays: true
+    }).then(function (result) {
+      if (result !== null && result !== undefined && window.BruControl) {
+        window.BruControl.updateProperties({ value: String(result) });
+      }
+    });
+  }
+
   function makeButton(label, onClick, disabled) {
     var btn = document.createElement("button");
     btn.type = "button";
@@ -212,10 +228,20 @@
 
   function renderContentRows(type, hiddenRows) {
     switch (type) {
-      case "timer":
-        appendRow(primaryRow("Value", formatTimerValue(currentData.value), "", "value", hiddenRows));
+      case "timer": {
+        var valueRow = primaryRow("Value", formatTimerValue(currentData.value), "", "value", hiddenRows);
+        if (valueRow && currentData.userControl !== false) {
+          var valueSpan = valueRow.querySelector(".row-value");
+          if (valueSpan) {
+            valueSpan.classList.add("editable");
+            valueSpan.style.cursor = "pointer";
+            valueSpan.addEventListener("click", openTimeSpanPicker);
+          }
+        }
+        appendRow(valueRow);
         appendRow(row("Type", currentData.type || "--", "", { key: "type" }, hiddenRows));
         appendRow(row("Running", boolText(asBool(currentData.isRunning)), asBool(currentData.isRunning) ? "value--ok" : "value--warn", { key: "running" }, hiddenRows));
+        }
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
