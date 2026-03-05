@@ -3,6 +3,10 @@
   var contentEl = document.getElementById("widgetContent");
   var footerEl = document.getElementById("widgetFooter");
   var currentData = null;
+  var sourceLiveValue = null;
+  var destinationLiveValue = null;
+  var subscribedSource = null;
+  var subscribedDestination = null;
 
   function isFooterActive() {
     return footerEl && footerEl.contains(document.activeElement) &&
@@ -36,6 +40,87 @@
 
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
+  }
+
+  function formatElementValue(data) {
+    if (!data) return null;
+    if (data.value !== undefined && data.value !== null) {
+      return String(data.value);
+    }
+    if (data.state !== undefined && data.state !== null) {
+      return data.state ? "On" : "Off";
+    }
+    return null;
+  }
+
+  function handleElementUpdate(payload) {
+    var et = payload && payload.elementType;
+    var eid = payload && payload.elementId;
+    var data = payload && payload.data;
+    var val = formatElementValue(data);
+    if (subscribedSource && et === subscribedSource.type && eid === subscribedSource.id) {
+      sourceLiveValue = val;
+      render(currentData);
+    }
+    if (subscribedDestination && et === subscribedDestination.type && eid === subscribedDestination.id) {
+      destinationLiveValue = val;
+      render(currentData);
+    }
+  }
+
+  function unsubscribeAll() {
+    var bc = window.BruControl;
+    if (!bc || !bc.unsubscribeElement) return;
+    if (subscribedSource) {
+      bc.unsubscribeElement(subscribedSource.type, subscribedSource.id);
+      subscribedSource = null;
+      sourceLiveValue = null;
+    }
+    if (subscribedDestination) {
+      bc.unsubscribeElement(subscribedDestination.type, subscribedDestination.id);
+      subscribedDestination = null;
+      destinationLiveValue = null;
+    }
+  }
+
+  function setupSubscriptions(data) {
+    var bc = window.BruControl;
+    if (!bc || !bc.subscribeElement || !bc.unsubscribeElement) return;
+    var srcType = data.sourceElementType;
+    var srcId = data.sourceId;
+    var destType = data.destinationElementType;
+    var destId = data.destinationId;
+
+    var srcKey = srcType && srcId ? srcType + ":" + srcId : null;
+    var destKey = destType && destId ? destType + ":" + destId : null;
+    var needUnsubSrc = subscribedSource && (!srcKey || subscribedSource.type + ":" + subscribedSource.id !== srcKey);
+    var needUnsubDest = subscribedDestination && (!destKey || subscribedDestination.type + ":" + subscribedDestination.id !== destKey);
+    if (needUnsubSrc || needUnsubDest) {
+      unsubscribeAll();
+      subscribedSource = null;
+      subscribedDestination = null;
+      sourceLiveValue = null;
+      destinationLiveValue = null;
+    }
+
+    if (srcType && srcId) {
+      subscribedSource = { type: srcType, id: srcId };
+      bc.subscribeElement(srcType, srcId).then(function (elData) {
+        if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId) {
+          sourceLiveValue = formatElementValue(elData);
+          render(currentData);
+        }
+      });
+    }
+    if (destType && destId) {
+      subscribedDestination = { type: destType, id: destId };
+      bc.subscribeElement(destType, destId).then(function (elData) {
+        if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId) {
+          destinationLiveValue = formatElementValue(elData);
+          render(currentData);
+        }
+      });
+    }
   }
 
   function row(label, value, cls, options, hiddenRows) {
@@ -154,6 +239,12 @@
     var displayName = currentData.displayName || currentData.name || type;
     var hiddenRows = getHiddenRowsMap();
 
+    if (type === "profile") {
+      setupSubscriptions(currentData);
+    } else {
+      unsubscribeAll();
+    }
+
     if (titleEl) {
       titleEl.textContent = displayName;
     }
@@ -173,11 +264,16 @@
 
   function renderContentRows(type, hiddenRows) {
     switch (type) {
-      case "profile":
-        appendRow(row("Source", currentData.sourceId || "--", "", { key: "source" }, hiddenRows));
-        appendRow(row("Destination", currentData.destinationId || "--", "", { key: "destination" }, hiddenRows));
+      case "profile": {
+        var srcLabel = currentData.sourceDisplayName || currentData.sourceId || "Source";
+        var destLabel = currentData.destinationDisplayName || currentData.destinationId || "Destination";
+        var srcVal = sourceLiveValue !== null ? sourceLiveValue : "--";
+        var destVal = destinationLiveValue !== null ? destinationLiveValue : "--";
+        appendRow(row(srcLabel, srcVal, "", { key: "source" }, hiddenRows));
+        appendRow(row(destLabel, destVal, "", { key: "destination" }, hiddenRows));
         appendRow(row("Direction", currentData.direction || (currentData.directional ? "Bidirectional" : "Forward"), "", { key: "direction" }, hiddenRows));
         break;
+      }
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
         break;
@@ -194,12 +290,15 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      profile: { elementType: "profile", name: "Profile", displayName: "Profile", sourceId: "Source-A", destinationId: "Dest-B", directional: false }
+      profile: { elementType: "profile", name: "Profile", displayName: "Profile", sourceId: "Source-A", destinationId: "Dest-B", sourceDisplayName: "Temp Probe", destinationDisplayName: "Mash Heater PWM", directional: false }
     };
     return map[t] || { elementType: t, displayName: t };
   }
 
   if (window.BruControl) {
+    if (window.BruControl.onElementUpdate) {
+      window.BruControl.onElementUpdate(handleElementUpdate);
+    }
     if (window.BruControl.getData) {
       try {
         var initial = window.BruControl.getData();
