@@ -50,6 +50,23 @@
     contentEl.style.padding = "10px";
   }
 
+  function formatDateTimeLocal(isoOrDateStr) {
+    if (!isoOrDateStr) return "--";
+    try {
+      var d = new Date(isoOrDateStr);
+      if (isNaN(d.getTime())) return String(isoOrDateStr);
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      var h = String(d.getHours()).padStart(2, "0");
+      var min = String(d.getMinutes()).padStart(2, "0");
+      var s = String(d.getSeconds()).padStart(2, "0");
+      return y + "-" + m + "-" + day + " " + h + ":" + min + ":" + s;
+    } catch (e) {
+      return String(isoOrDateStr);
+    }
+  }
+
   function getDisplayValue(data) {
     if (!data) return "--";
     var vt = String(data.variableType || "Value");
@@ -57,8 +74,11 @@
       var low = String(data.value || "").toLowerCase();
       return (low === "true" || low === "1") ? "True" : "False";
     }
-    if (vt === "TimeSpan" || vt === "DateTime") {
+    if (vt === "TimeSpan") {
       return String(data.value ?? "--");
+    }
+    if (vt === "DateTime") {
+      return formatDateTimeLocal(data.value);
     }
     var num = parseFloat(data.value);
     var precision = typeof data.precision === "number" ? data.precision : 0;
