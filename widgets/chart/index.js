@@ -1198,12 +1198,12 @@
 
       trimDatasets();
       pruneOscillationRawPoints(channels);
+      hasHistoryLoaded = true;
       ensureOscillationAnimation(channels);
       ensureRealtimeTick(channels);
       applyRealtimeXAxisWindow(channels);
       chart.update("none");
       updateHeaderMeta(channels.length);
-      hasHistoryLoaded = true;
       if (showLoadingOverlay) {
         showOverlay(null);
       }
