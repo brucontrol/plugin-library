@@ -1,6 +1,6 @@
 name: Timer - Card
 description: Built-in timer widget template.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - timer
 defaultFor: timer
