@@ -5,8 +5,9 @@
   var currentData = null;
 
   function isFooterActive() {
-    return footerEl && footerEl.contains(document.activeElement) &&
-           document.activeElement !== footerEl;
+    if (!footerEl || !footerEl.contains(document.activeElement) || document.activeElement === footerEl) return false;
+    var tag = (document.activeElement.tagName || "").toLowerCase();
+    return tag === "input" || tag === "textarea" || !!document.activeElement.isContentEditable;
   }
 
   function getType(data) {
