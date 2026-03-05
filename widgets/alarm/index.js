@@ -194,7 +194,7 @@
       titleEl.textContent = displayName;
     }
 
-    var footerBusy = isFooterActive();
+    var footerBusy = type === "alarm" ? false : isFooterActive();
 
     clear(contentEl);
     renderContentRows(type, hiddenRows);

@@ -217,7 +217,7 @@
       titleEl.textContent = displayName;
     }
 
-    var footerBusy = isFooterActive();
+    var footerBusy = type === "timer" ? false : isFooterActive();
 
     clear(contentEl);
     renderContentRows(type, hiddenRows);
