@@ -103,12 +103,16 @@
     window.BruControl.updateProperties(patch);
   }
 
-  function makeButton(label, onClick, disabled) {
+  function makeButton(label, onPressStart, onPressEnd, disabled) {
     var btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = label;
     btn.disabled = !!disabled;
-    btn.addEventListener("click", onClick);
+    /* Momentary: pointerdown -> state true, pointerup/leave/cancel -> state false (covers mouse + touch) */
+    btn.addEventListener("pointerdown", onPressStart);
+    btn.addEventListener("pointerup", onPressEnd);
+    btn.addEventListener("pointerleave", onPressEnd);
+    btn.addEventListener("pointercancel", onPressEnd);
     return btn;
   }
 
@@ -208,9 +212,7 @@
       case "button": {
         var label = currentData.displayName || currentData.name || "Press";
         var disabled = currentData.userControl === false;
-        var btn = makeButton(label, function () {
-          sendPatch({ state: true });
-        }, disabled);
+        var btn = makeButton(label, function () { sendPatch({ state: true }); }, function () { sendPatch({ state: false }); }, disabled);
         btn.className = "widget-button-primary";
         contentEl.appendChild(btn);
         break;
