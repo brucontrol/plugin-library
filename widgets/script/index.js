@@ -1,90 +1,16 @@
 (function () {
-  var titleEl = document.getElementById("widgetTitle");
-  var contentEl = document.getElementById("widgetContent");
-  var footerEl = document.getElementById("widgetFooter");
+  var variableLabelEl = document.getElementById("variableLabel");
+  var valueDisplayEl = document.getElementById("valueDisplay");
   var currentData = null;
-
-  function isFooterActive() {
-    return footerEl && footerEl.contains(document.activeElement) &&
-           document.activeElement !== footerEl;
-  }
-
-  function getType(data) {
-    if (data && data.elementType) return String(data.elementType);
-    var fromAttr = document.body.getAttribute("data-widget-type");
-    return fromAttr || "widget";
-  }
-
-  function clear(el) {
-    while (el.firstChild) el.removeChild(el.firstChild);
-  }
-
-  function toRowKey(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-  }
-
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
 
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
-    var d = currentData || {};
-    var opts = options || {};
-    var key = toRowKey(opts.key || label);
-    var isPrimary = !!opts.primary;
-
-    if (isPrimary && d.showValue === false) {
-      return null;
-    }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
-      return null;
-    }
-
-    var r = document.createElement("div");
-    r.className = "widget-row";
-    r.setAttribute("data-row-key", key);
-    if (isPrimary) {
-      r.classList.add("widget-row--primary");
-    }
-
-    var l = document.createElement("span");
-    l.className = "label row-label";
-    l.textContent = label;
-
-    var v = document.createElement("span");
-    v.className = "value row-value" + (cls ? " " + cls : "");
-    v.textContent = String(value);
-
-    r.appendChild(l);
-    r.appendChild(v);
-    return r;
-  }
-
-  function appendRow(rowEl) {
-    if (rowEl) {
-      contentEl.appendChild(rowEl);
-    }
-  }
-
   function applyStyles() {
     var d = currentData || {};
     var widget = document.getElementById("widget");
-    var header = document.querySelector(".widget-header");
-    var content = document.querySelector(".widget-content");
+    var contentEl = document.querySelector(".widget-content");
 
     if (widget) {
       if (d.showBackground === false) {
@@ -94,109 +20,61 @@
         widget.style.background = d.backgroundColor || "";
         widget.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
       }
-
       widget.style.borderRadius = "8px";
     }
 
-    if (header) {
-      header.style.display = d.showHeader === false ? "none" : "";
-      header.style.background = d.headerColor || "";
-      header.style.borderBottom = d.showHeader === false ? "none" : "";
+    if (variableLabelEl) {
+      variableLabelEl.style.display = (d.showLabel === false) ? "none" : "";
+      variableLabelEl.style.fontFamily = d.labelFontFamily || "";
+      variableLabelEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+      variableLabelEl.style.fontWeight = d.labelFontWeight || "";
+      variableLabelEl.style.fontStyle = d.labelFontStyle || "";
+      variableLabelEl.style.color = d.labelColor || "";
     }
 
-    if (content) {
-      content.style.padding = "10px";
+    if (valueDisplayEl) {
+      valueDisplayEl.style.display = (d.showValue === false) ? "none" : "";
+      valueDisplayEl.style.fontFamily = d.valueFontFamily || "";
+      valueDisplayEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      valueDisplayEl.style.fontWeight = d.valueFontWeight || "";
+      valueDisplayEl.style.fontStyle = d.valueFontStyle || "";
+      valueDisplayEl.style.color = d.valueColor || "";
     }
 
-    if (titleEl) {
-      titleEl.style.display = d.showLabel === false ? "none" : "";
-      titleEl.style.fontFamily = d.labelFontFamily || "";
-      titleEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      titleEl.style.fontWeight = d.labelFontWeight || "";
-      titleEl.style.fontStyle = d.labelFontStyle || "";
-      titleEl.style.color = d.labelColor || "";
-      titleEl.style.textAlign = "left";
-    }
-
-    var labelNodes = document.querySelectorAll(".widget-row .row-label");
-    labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
-    });
-
-    var valueNodes = document.querySelectorAll(".widget-row .row-value");
-    valueNodes.forEach(function (node) {
-      var el = node;
-      if (d.rowValueColor) el.style.color = d.rowValueColor;
-      if (d.valueColor) el.style.color = d.valueColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
-      el.style.textAlign = "center";
-    });
-
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
-      footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
+    if (contentEl) {
+      contentEl.style.padding = "10px";
     }
   }
 
   function render(data) {
     currentData = data || {};
-    var type = getType(currentData);
-    var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
+    var variableName = currentData.variableName || currentData.displayName || currentData.name || "--";
+    var value = currentData.value != null ? String(currentData.value) : "--";
 
-    if (titleEl) {
-      titleEl.textContent = displayName;
+    if (variableLabelEl) {
+      variableLabelEl.textContent = variableName;
     }
 
-    var footerBusy = isFooterActive();
-
-    clear(contentEl);
-    renderContentRows(type, hiddenRows);
-
-    if (!footerBusy) {
-      clear(footerEl);
-      renderFooter(type);
+    if (valueDisplayEl) {
+      valueDisplayEl.textContent = value;
+      valueDisplayEl.classList.remove("value--warn", "value--bad");
+      if (typeof currentData.valueClass === "string" && currentData.valueClass) {
+        valueDisplayEl.classList.add("value--" + currentData.valueClass);
+      }
     }
 
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
-    switch (type) {
-      case "scriptElement":
-        appendRow(row("Value", currentData.value != null ? String(currentData.value) : "--", "", { key: "value", primary: true }, hiddenRows));
-        appendRow(row("Process", currentData.processId || "--", "", { key: "process" }, hiddenRows));
-        appendRow(row("Variable", currentData.variableName || "--", "", { key: "variable" }, hiddenRows));
-        break;
-      default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
-        break;
-    }
-  }
-
-  function renderFooter(type) {
-    switch (type) {
-      default:
-        break;
-    }
-  }
-
   function getPreviewData() {
-    var t = getType(null);
-    var map = {
-      scriptElement: { elementType: "scriptElement", name: "Script", displayName: "Script Variable", processId: "Process-A", variableName: "Temp", value: "42" }
+    return {
+      elementType: "scriptElement",
+      name: "Script",
+      displayName: "Script Variable",
+      processId: "Process-A",
+      variableName: "Temp",
+      value: "42"
     };
-    return map[t] || { elementType: t, displayName: t };
   }
 
   if (window.BruControl) {
@@ -204,9 +82,8 @@
       try {
         var initial = window.BruControl.getData();
         if (initial) render(initial);
-      } catch {}
+      } catch (e) {}
     }
-
     window.BruControl.onData(render);
   } else {
     render(getPreviewData());

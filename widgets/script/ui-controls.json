@@ -1,38 +1,20 @@
 {
-  "showHeader": {
+  "showLabel": {
     "type": "boolean",
     "default": true,
-    "description": "Show header bar",
+    "description": "Show variable name label",
+    "group": "Layout"
+  },
+  "showValue": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show value",
     "group": "Layout"
   },
   "showBackground": {
     "type": "boolean",
     "default": true,
     "description": "Show widget background and border",
-    "group": "Layout"
-  },
-  "showLabel": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show title label in header",
-    "group": "Layout"
-  },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "process",
-        "variable"
-      ]
-    }
-  },
-  "showSecondaryRows": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show secondary detail rows",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -43,11 +25,11 @@
   },
   "labelFontSize": {
     "type": "number",
-    "default": 12,
+    "default": 11,
     "group": "Label",
     "format": "font-size",
     "min": 8,
-    "max": 48
+    "max": 24
   },
   "labelFontWeight": {
     "type": "text",
@@ -75,7 +57,7 @@
   },
   "valueFontSize": {
     "type": "number",
-    "default": 14,
+    "default": 40,
     "group": "Value",
     "format": "font-size",
     "min": 10,
@@ -106,32 +88,11 @@
     "description": "Override widget background color",
     "format": "color"
   },
-  "headerColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override header background color",
-    "format": "color"
-  },
   "borderColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color"
-  },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
     "format": "color"
   }
 }
