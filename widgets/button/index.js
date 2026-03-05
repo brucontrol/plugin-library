@@ -205,10 +205,16 @@
 
   function renderContentRows(type, hiddenRows) {
     switch (type) {
-      case "button":
-        // Per docs: "This state is not visibly indicated by the element"
-        // Button is momentary - no persistent state display
+      case "button": {
+        var label = currentData.displayName || currentData.name || "Press";
+        var disabled = currentData.userControl === false;
+        var btn = makeButton(label, function () {
+          sendPatch({ state: true });
+        }, disabled);
+        btn.className = "widget-button-primary";
+        contentEl.appendChild(btn);
         break;
+      }
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
         break;
@@ -218,11 +224,7 @@
   function renderFooter(type) {
     switch (type) {
       case "button":
-        footerEl.appendChild(
-          makeButton("Press", function () {
-            sendPatch({ state: true });
-          }, false)
-        );
+        // Button lives in content area, not footer
         break;
       default:
         break;
