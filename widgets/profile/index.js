@@ -177,6 +177,7 @@
     }
 
     if (srcId && !isEmptyRef(srcId)) {
+      var alreadySubscribedSrc = subscribedSource && idMatches(subscribedSource.id, srcId) && subscribedSource.type === srcType;
       function onSourceResolved(type, elData) {
         if (!idMatches(currentData.sourceId, srcId)) return;
         sourceElementTypeResolved = type;
@@ -186,19 +187,24 @@
         render(currentData);
       }
       if (srcType) {
-        subscribedSource = { type: srcType, id: srcId };
-        subscribeOne(srcType, srcId, function (_, elData) {
-          if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId && idMatches(currentData.sourceId, srcId)) {
-            sourceLiveValue = formatElementValue(elData);
-            sourceDisplayNameFromFetch = elementDisplayName(elData);
-            render(currentData);
-          }
-        });
+        if (!alreadySubscribedSrc) {
+          subscribedSource = { type: srcType, id: srcId };
+          subscribeOne(srcType, srcId, function (_, elData) {
+            if (subscribedSource && subscribedSource.type === srcType && subscribedSource.id === srcId && idMatches(currentData.sourceId, srcId)) {
+              sourceLiveValue = formatElementValue(elData);
+              sourceDisplayNameFromFetch = elementDisplayName(elData);
+              render(currentData);
+            }
+          });
+        }
       } else {
-        subscribeWithTypeDiscovery(PROFILE_SOURCE_TYPES, srcId, onSourceResolved);
+        if (!subscribedSource || !idMatches(subscribedSource.id, srcId)) {
+          subscribeWithTypeDiscovery(PROFILE_SOURCE_TYPES, srcId, onSourceResolved);
+        }
       }
     }
     if (destId && !isEmptyRef(destId)) {
+      var alreadySubscribedDest = subscribedDestination && idMatches(subscribedDestination.id, destId) && subscribedDestination.type === destType;
       function onDestResolved(type, elData) {
         if (!idMatches(currentData.destinationId, destId)) return;
         destinationElementTypeResolved = type;
@@ -208,16 +214,20 @@
         render(currentData);
       }
       if (destType) {
-        subscribedDestination = { type: destType, id: destId };
-        subscribeOne(destType, destId, function (_, elData) {
-          if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId && idMatches(currentData.destinationId, destId)) {
-            destinationLiveValue = formatElementValue(elData);
-            destinationDisplayNameFromFetch = elementDisplayName(elData);
-            render(currentData);
-          }
-        });
+        if (!alreadySubscribedDest) {
+          subscribedDestination = { type: destType, id: destId };
+          subscribeOne(destType, destId, function (_, elData) {
+            if (subscribedDestination && subscribedDestination.type === destType && subscribedDestination.id === destId && idMatches(currentData.destinationId, destId)) {
+              destinationLiveValue = formatElementValue(elData);
+              destinationDisplayNameFromFetch = elementDisplayName(elData);
+              render(currentData);
+            }
+          });
+        }
       } else {
-        subscribeWithTypeDiscovery(PROFILE_DEST_TYPES, destId, onDestResolved);
+        if (!subscribedDestination || !idMatches(subscribedDestination.id, destId)) {
+          subscribeWithTypeDiscovery(PROFILE_DEST_TYPES, destId, onDestResolved);
+        }
       }
     }
   }
