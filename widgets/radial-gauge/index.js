@@ -1,9 +1,8 @@
 (function () {
   var currentData = null;
-  var GAUGE_CX = 100;
-  var GAUGE_CY = 100;
-  var GAUGE_R = 80;
-  var ARC_LENGTH = Math.PI * GAUGE_R;
+  var CX = 100, CY = 98, R = 83, STROKE = 22;
+  var ARC_LEN = Math.PI * R;
+  var ARC_D = 'M ' + (CX - R) + ' ' + CY + ' A ' + R + ' ' + R + ' 0 0 1 ' + (CX + R) + ' ' + CY;
 
   function getType(data) {
     if (data && data.elementType) return String(data.elementType);
@@ -23,16 +22,6 @@
     if (!data) return null;
     var t = getType(data);
     switch (t) {
-      case 'generic':
-        return data.value != null ? toNumber(data.value, null) : null;
-      case 'globalVariable-value':
-        return data.value != null ? toNumber(data.value, null) : null;
-      case 'owTemp':
-      case 'spiSensor':
-      case 'analogInput':
-      case 'pwmOutput':
-      case 'pid':
-        return data.value != null ? toNumber(data.value, null) : null;
       case 'dutyCycle':
         return data.dutyCycle != null ? toNumber(data.dutyCycle, null) : null;
       case 'counter':
@@ -48,121 +37,30 @@
     }
   }
 
-  function getPrefixSuffix(data) {
-    if (!data) return { prefix: '', suffix: '' };
+  function getSuffix(data) {
+    if (!data) return '';
     var t = getType(data);
-    if (t === 'generic' && data.prefix != null) return { prefix: data.prefix || '', suffix: data.suffix || '' };
-    if (t === 'globalVariable-value') return { prefix: data.prefix || '', suffix: data.suffix || '' };
-    if (t === 'owTemp') return { prefix: data.prefix || '', suffix: data.suffix || '°' };
-    if (t === 'spiSensor' || t === 'analogInput' || t === 'pwmOutput')
-      return { prefix: data.prefix || '', suffix: data.suffix || '' };
-    if (t === 'dutyCycle') return { prefix: '', suffix: '%' };
-    if (t === 'pid') return { prefix: data.prefix || '', suffix: data.suffix || '' };
+    if (t === 'dutyCycle') return '%';
     if (t === 'counter') {
-      var pc = data.primaryDisplayChannel;
-      return pc === 1
-        ? { prefix: data.ratePrefix || '', suffix: data.rateSuffix || '' }
-        : { prefix: data.countPrefix || '', suffix: data.countSuffix || '' };
+      return data.primaryDisplayChannel === 1 ? (data.rateSuffix || '') : (data.countSuffix || '');
     }
     if (t === 'hydrometer') {
-      var pc = data.primaryDisplayChannel;
-      return pc === 1
-        ? { prefix: data.sgPrefix || '', suffix: data.sgSuffix || '' }
-        : { prefix: data.tempPrefix || '', suffix: data.tempSuffix || '°' };
+      return data.primaryDisplayChannel === 1 ? (data.sgSuffix || '') : (data.tempSuffix || '°');
     }
-    return { prefix: data.prefix || '', suffix: data.suffix || '' };
+    if (t === 'owTemp') return data.suffix || '°';
+    return (data.suffix != null ? String(data.suffix) : '');
   }
 
   function getPrecision(data) {
     if (!data) return 2;
     var t = getType(data);
-    if (t === 'generic' && data.precision != null) return Math.max(0, Math.min(6, toNumber(data.precision, 2)));
-    if (t === 'owTemp' || t === 'spiSensor' || t === 'analogInput' || t === 'pwmOutput' || t === 'pid')
-      return Math.max(0, Math.min(6, toNumber(data.precision, 2)));
     if (t === 'counter') {
-      var pc = data.primaryDisplayChannel;
-      return pc === 1 ? toNumber(data.ratePrecision, 2) : toNumber(data.countPrecision, 0);
+      return data.primaryDisplayChannel === 1 ? toNumber(data.ratePrecision, 2) : toNumber(data.countPrecision, 0);
     }
     if (t === 'hydrometer') {
-      var pc = data.primaryDisplayChannel;
-      return pc === 1 ? toNumber(data.sgPrecision, 3) : toNumber(data.tempPrecision, 1);
+      return data.primaryDisplayChannel === 1 ? toNumber(data.sgPrecision, 3) : toNumber(data.tempPrecision, 1);
     }
-    return 2;
-  }
-
-  function valueToAngle(value, min, max) {
-    var range = max - min;
-    if (range <= 0) return -90;
-    var t = Math.max(0, Math.min(1, (value - min) / range));
-    return -90 + t * 180;
-  }
-
-  function renderBands(bandsEl, bands, min, max) {
-    if (!bandsEl) return;
-    bandsEl.innerHTML = '';
-    var range = max - min;
-    if (range <= 0) return;
-
-    for (var i = 0; i < bands.length; i++) {
-      var b = bands[i];
-      var from = toNumber(b.from, min);
-      var to = toNumber(b.to, max);
-      if (from >= to || !b.color) continue;
-
-      var fromPct = Math.max(0, Math.min(1, (from - min) / range));
-      var toPct = Math.max(0, Math.min(1, (to - min) / range));
-      var len = (toPct - fromPct) * ARC_LENGTH;
-      var offset = fromPct * ARC_LENGTH;
-
-      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      p.setAttribute('d', 'M 20 100 A 80 80 0 0 1 180 100');
-      p.setAttribute('class', 'band');
-      p.setAttribute('stroke', b.color);
-      p.setAttribute('stroke-dasharray', len + ' ' + (ARC_LENGTH + 10));
-      p.setAttribute('stroke-dashoffset', -offset);
-      bandsEl.appendChild(p);
-    }
-  }
-
-  function renderTicks(ticksEl, min, max) {
-    if (!ticksEl) return;
-    ticksEl.innerHTML = '';
-    var range = max - min;
-    if (range <= 0) return;
-
-    var steps = 5;
-    for (var i = 0; i <= steps; i++) {
-      var v = min + (range * i) / steps;
-      var angle = valueToAngle(v, min, max);
-      var rad = (angle + 90) * Math.PI / 180;
-      var innerR = GAUGE_R - 6;
-      var outerR = GAUGE_R;
-      var x1 = GAUGE_CX + innerR * Math.cos(rad);
-      var y1 = GAUGE_CY - innerR * Math.sin(rad);
-      var x2 = GAUGE_CX + outerR * Math.cos(rad);
-      var y2 = GAUGE_CY - outerR * Math.sin(rad);
-
-      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', x1);
-      line.setAttribute('y1', y1);
-      line.setAttribute('x2', x2);
-      line.setAttribute('y2', y2);
-      line.setAttribute('class', 'tick');
-      ticksEl.appendChild(line);
-
-      if (i === 0 || i === steps) {
-        var labelR = GAUGE_R - 18;
-        var lx = GAUGE_CX + labelR * Math.cos(rad);
-        var ly = GAUGE_CY - labelR * Math.sin(rad);
-        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', lx);
-        text.setAttribute('y', ly);
-        text.setAttribute('class', 'tick-label');
-        text.setAttribute('dy', '0.35em');
-        text.textContent = Number(v) === Math.floor(v) ? String(Math.floor(v)) : v.toFixed(1);
-        ticksEl.appendChild(text);
-      }
-    }
+    return Math.max(0, Math.min(6, toNumber(data.precision, 2)));
   }
 
   function parseBands(d) {
@@ -176,13 +74,78 @@
       }
     }
     if (bands.length === 0) {
+      var defaultMin = toNumber(d.min, 0);
+      var defaultMax = toNumber(d.max, 100);
+      var third = (defaultMax - defaultMin) / 3;
       bands = [
-        { color: '#4ec9b0', from: 0, to: 33 },
-        { color: '#dcdcaa', from: 33, to: 66 },
-        { color: '#f14c4c', from: 66, to: 100 }
+        { color: '#4ec9b0', from: defaultMin, to: defaultMin + third },
+        { color: '#dcdcaa', from: defaultMin + third, to: defaultMin + third * 2 },
+        { color: '#f14c4c', from: defaultMin + third * 2, to: defaultMax }
       ];
     }
     return bands;
+  }
+
+  function renderBands(el, bands, min, max) {
+    if (!el) return;
+    el.innerHTML = '';
+    var range = max - min;
+    if (range <= 0) return;
+    for (var i = 0; i < bands.length; i++) {
+      var b = bands[i];
+      if (!b.color || b.from >= b.to) continue;
+      var fromF = Math.max(0, Math.min(1, (b.from - min) / range));
+      var toF = Math.max(0, Math.min(1, (b.to - min) / range));
+      var len = (toF - fromF) * ARC_LEN;
+      if (len <= 0) continue;
+      var offset = fromF * ARC_LEN;
+      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', ARC_D);
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', b.color);
+      p.setAttribute('stroke-width', String(STROKE));
+      p.setAttribute('stroke-linecap', 'butt');
+      p.setAttribute('stroke-dasharray', len + ' ' + (ARC_LEN + 10));
+      p.setAttribute('stroke-dashoffset', String(-offset));
+      el.appendChild(p);
+    }
+  }
+
+  function renderTicks(el) {
+    if (!el) return;
+    el.innerHTML = '';
+    var NUM_TICKS = 19;
+    var innerR = R - STROKE / 2 + 3;
+    var outerR = R + STROKE / 2 - 3;
+    for (var i = 0; i < NUM_TICKS; i++) {
+      var t = i / (NUM_TICKS - 1);
+      var a = Math.PI * (1 - t);
+      var isMajor = (i % 3 === 0);
+      var rIn = isMajor ? innerR - 1 : innerR + 2;
+      var rOut = isMajor ? outerR + 1 : outerR - 2;
+      var x1 = CX + rIn * Math.cos(a);
+      var y1 = CY - rIn * Math.sin(a);
+      var x2 = CX + rOut * Math.cos(a);
+      var y2 = CY - rOut * Math.sin(a);
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1.toFixed(2));
+      line.setAttribute('y1', y1.toFixed(2));
+      line.setAttribute('x2', x2.toFixed(2));
+      line.setAttribute('y2', y2.toFixed(2));
+      line.setAttribute('stroke', 'white');
+      line.setAttribute('stroke-width', isMajor ? '1.5' : '1');
+      line.setAttribute('opacity', isMajor ? '0.5' : '0.3');
+      el.appendChild(line);
+    }
+  }
+
+  function setNeedle(value, min, max) {
+    var ng = document.getElementById('needle-group');
+    if (!ng) return;
+    var range = max - min;
+    var t = range <= 0 ? 0 : Math.max(0, Math.min(1, (value - min) / range));
+    var cssAngle = -90 + t * 180;
+    ng.style.transform = 'rotate(' + cssAngle + 'deg)';
   }
 
   function applyStyles() {
@@ -190,20 +153,19 @@
     var widget = document.getElementById('widget');
     var header = document.querySelector('.widget-header');
     var titleEl = document.getElementById('widgetTitle');
-    var valueWrap = document.getElementById('gaugeValue');
     var valueNum = document.getElementById('valueNumber');
-    var valueUnit = document.getElementById('valueUnit');
+    var minL = document.getElementById('minLabel');
+    var maxL = document.getElementById('maxLabel');
 
     if (widget) {
       if (d.showBackground === false) {
         widget.style.background = 'transparent';
         widget.style.border = 'none';
       } else {
-        var bg = (d.backgroundColor && String(d.backgroundColor).trim().length > 0)
+        widget.style.background = (d.backgroundColor && String(d.backgroundColor).trim())
           ? String(d.backgroundColor).trim()
           : 'var(--bg-secondary, #252526)';
-        widget.style.background = bg;
-        widget.style.border = (d.borderColor && String(d.borderColor).trim().length > 0)
+        widget.style.border = (d.borderColor && String(d.borderColor).trim())
           ? '1px solid ' + String(d.borderColor).trim()
           : '1px solid var(--border-color, #404040)';
       }
@@ -219,23 +181,27 @@
     if (titleEl) {
       titleEl.style.display = d.showLabel === false ? 'none' : '';
       titleEl.style.fontFamily = d.labelFontFamily || '';
-      titleEl.style.fontSize = (numberOrNull(d.labelFontSize) != null ? numberOrNull(d.labelFontSize) + 'px' : '');
+      titleEl.style.fontSize = numberOrNull(d.labelFontSize) != null ? numberOrNull(d.labelFontSize) + 'px' : '';
       titleEl.style.fontWeight = d.labelFontWeight || '';
       titleEl.style.fontStyle = d.labelFontStyle || '';
       titleEl.style.color = d.labelColor || '';
     }
 
-    if (valueWrap) {
-      valueWrap.style.display = d.showValue === false ? 'none' : '';
+    if (valueNum) {
+      valueNum.style.display = d.showValue === false ? 'none' : '';
+      if (d.valueFontFamily) valueNum.setAttribute('font-family', d.valueFontFamily);
+      if (numberOrNull(d.valueFontSize) != null) valueNum.setAttribute('font-size', String(numberOrNull(d.valueFontSize)));
+      if (d.valueFontWeight) valueNum.setAttribute('font-weight', d.valueFontWeight);
+      if (d.valueColor) valueNum.setAttribute('fill', d.valueColor);
     }
 
-    if (valueNum) {
-      valueNum.style.fontFamily = d.valueFontFamily || '';
-      valueNum.style.fontSize = (numberOrNull(d.valueFontSize) != null ? numberOrNull(d.valueFontSize) + 'px' : '');
-      valueNum.style.fontWeight = d.valueFontWeight || '';
-      valueNum.style.fontStyle = d.valueFontStyle || '';
-      valueNum.style.color = d.valueColor || '';
-    }
+    if (minL) minL.setAttribute('fill', d.labelColor || '#888');
+    if (maxL) maxL.setAttribute('fill', d.labelColor || '#888');
+  }
+
+  function formatLabel(v) {
+    if (v === Math.floor(v)) return String(Math.floor(v));
+    return v.toFixed(2).replace(/\.?0+$/, '');
   }
 
   function render(data) {
@@ -246,35 +212,28 @@
     if (max <= min) max = min + 100;
 
     var rawVal = getValue(d);
-    var value = rawVal != null ? toNumber(rawVal, min) : min;
-    var bands = parseBands(d);
-    var ps = getPrefixSuffix(d);
+    var value = rawVal != null ? rawVal : min;
     var precision = getPrecision(d);
+    var suffix = d.suffix != null ? String(d.suffix) : getSuffix(d);
+    var bands = parseBands(d);
 
     var titleEl = document.getElementById('widgetTitle');
-    var needle = document.getElementById('needle');
     var valueNum = document.getElementById('valueNumber');
     var valueUnit = document.getElementById('valueUnit');
+    var minLabel = document.getElementById('minLabel');
+    var maxLabel = document.getElementById('maxLabel');
     var bandsEl = document.getElementById('gauge-bands');
     var ticksEl = document.getElementById('gauge-ticks');
 
     if (titleEl) titleEl.textContent = d.displayName || d.name || 'Gauge';
-
-    var angle = valueToAngle(value, min, max);
-    if (needle) needle.style.transform = 'rotate(' + angle + 'deg)';
-
-    if (valueNum) {
-      valueNum.textContent = rawVal != null
-        ? (Number.isFinite(value) ? value.toFixed(precision) : '—')
-        : '—';
-    }
-    if (valueUnit) {
-      valueUnit.textContent = ps.suffix || '';
-    }
+    if (valueNum) valueNum.textContent = rawVal != null ? Number(value).toFixed(precision) : '—';
+    if (valueUnit) valueUnit.textContent = suffix;
+    if (minLabel) minLabel.textContent = formatLabel(min);
+    if (maxLabel) maxLabel.textContent = formatLabel(max);
 
     renderBands(bandsEl, bands, min, max);
-    renderTicks(ticksEl, min, max);
-
+    renderTicks(ticksEl);
+    setNeedle(value, min, max);
     applyStyles();
   }
 
@@ -286,7 +245,6 @@
       min: 0,
       max: 4,
       precision: 2,
-      prefix: '',
       suffix: 'kw',
       band1Color: '#4ec9b0',
       band1From: 0,
