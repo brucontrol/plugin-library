@@ -98,6 +98,14 @@
     "group": "Value",
     "format": "color"
   },
+  "decimalPlaces": {
+    "type": "number",
+    "default": 1,
+    "group": "Value",
+    "description": "Number of decimal places for temperature",
+    "min": 0,
+    "max": 5
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",

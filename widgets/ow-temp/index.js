@@ -170,9 +170,12 @@
   }
 
   function renderContentRows(type, hiddenRows) {
+    var decimals = numberOrNull(currentData.decimalPlaces);
+    if (decimals === null) decimals = 1;
+    decimals = Math.max(0, Math.min(5, Math.round(decimals)));
     switch (type) {
       case "owTemp":
-        appendRow(primaryRow("Temperature", toNumber(currentData.value, 0).toFixed(2) + " " + (currentData.unit || currentData.suffix || ""), "", "temperature", hiddenRows));
+        appendRow(primaryRow("Temperature", toNumber(currentData.value, 0).toFixed(decimals) + " " + (currentData.unit || currentData.suffix || ""), "", "temperature", hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
