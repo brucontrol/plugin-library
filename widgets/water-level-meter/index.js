@@ -4,11 +4,20 @@
   var bubbles = [];
   var animId = null;
   var lastSpawn = 0;
+  function getThemeColor(varName, fallback) {
+    try {
+      var val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+      return val || fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
   var config = {
     value: 50,
     min: 0,
     max: 100,
-    liquidColor: '#3b82f6',
+    liquidColor: null,
     levelTransitionMs: 500,
     bubbleDurationMs: 3000,
     bubbleDensity: 8
@@ -135,7 +144,7 @@
     if (isNaN(config.min)) config.min = 0;
     config.max = parseFloat(data.max);
     if (isNaN(config.max)) config.max = 100;
-    config.liquidColor = data.liquidColor || '#3b82f6';
+    config.liquidColor = data.liquidColor || getThemeColor('--accent-blue', '#569cd6');
     config.levelTransitionMs = parseInt(data.levelTransitionMs, 10);
     if (isNaN(config.levelTransitionMs) || config.levelTransitionMs < 0) config.levelTransitionMs = 500;
     config.bubbleDurationMs = parseInt(data.bubbleDurationMs, 10);

@@ -65,6 +65,15 @@
     return "M " + start.x + " " + start.y + " A " + r + " " + r + " 0 " + largeArc + " 1 " + end.x + " " + end.y;
   }
 
+  function getThemeColor(varName, fallback) {
+    try {
+      var val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+      return val || fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
   function buildDial() {
     var svg = document.getElementById("dialSvg");
     if (!svg) return;
@@ -72,28 +81,32 @@
 
     var d = currentData || {};
     var options = getOptions();
-    var dialColor = d.dialColor || "#353535";
-    var needleColor = d.needleColor || "#007acc";
-    var activeColor = d.activeColor || "#4ec9b0";
+    var dialColor = d.dialColor || getThemeColor("--bg-tertiary", "#2d2d2d");
+    var needleColor = d.needleColor || getThemeColor("--accent-primary", "#007acc");
+    var activeColor = d.activeColor || getThemeColor("--accent-green", "#4ec9b0");
+    var trackStroke = getThemeColor("--border-color", "#555555");
+    var textMuted = getThemeColor("--text-secondary", "#888888");
+    var textSecondary = getThemeColor("--text-secondary", "#aaaaaa");
+    var innerFill = getThemeColor("--bg-primary", "#1e1e1e");
     var currentValue = currentData ? parseFloat(currentData.value) : null;
 
     /* Background circle */
     svg.appendChild(svgEl("circle", {
       cx: CX, cy: CY, r: OUTER_R,
-      fill: dialColor, stroke: "#555", "stroke-width": "1.5"
+      fill: dialColor, stroke: trackStroke, "stroke-width": "1.5"
     }));
 
     /* Arc track */
     var trackPath = describeArc(CX, CY, TICK_R, ARC_START, ARC_START + ARC_SPAN);
     svg.appendChild(svgEl("path", {
-      d: trackPath, fill: "none", stroke: "#555", "stroke-width": "3",
+      d: trackPath, fill: "none", stroke: trackStroke, "stroke-width": "3",
       "stroke-linecap": "round"
     }));
 
     /* Inner circle (center) */
     svg.appendChild(svgEl("circle", {
       cx: CX, cy: CY, r: INNER_R,
-      fill: "#1e1e1e", stroke: "#555", "stroke-width": "1"
+      fill: innerFill, stroke: trackStroke, "stroke-width": "1"
     }));
 
     /* Ticks and labels */
@@ -105,7 +118,7 @@
       var isActive = currentValue !== null && options[i] === currentValue;
       var tickStart = polarToCart(CX, CY, TICK_R - 8, angle);
       var tickEnd = polarToCart(CX, CY, TICK_R + 4, angle);
-      var tickColor = isActive ? activeColor : "#888";
+      var tickColor = isActive ? activeColor : textMuted;
 
       svg.appendChild(svgEl("line", {
         x1: tickStart.x, y1: tickStart.y,
@@ -120,7 +133,7 @@
         x: labelPos.x, y: labelPos.y,
         "text-anchor": "middle",
         "dominant-baseline": "central",
-        fill: isActive ? activeColor : "#aaa",
+        fill: isActive ? activeColor : textSecondary,
         "font-size": isActive ? "12" : "11",
         "font-weight": isActive ? "700" : "400",
         style: "cursor:pointer"
@@ -169,7 +182,7 @@
       /* Needle center cap */
       svg.appendChild(svgEl("circle", {
         cx: CX, cy: CY, r: "7",
-        fill: needleColor, stroke: "#1e1e1e", "stroke-width": "1.5"
+        fill: needleColor, stroke: innerFill, "stroke-width": "1.5"
       }));
     }
 

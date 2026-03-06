@@ -157,8 +157,48 @@ body {
   color: var(--text-primary, #d4d4d4);
 }
 
+/* Theme-aware range slider */
 .widget-footer input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 140px;
+  height: 6px;
+  background: transparent;
+}
+
+.widget-footer input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: var(--bg-tertiary, #2d2d2d);
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle, #3a3a3a);
+}
+
+.widget-footer input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent-primary, #0e639c);
+  border: 1px solid var(--border-color, #404040);
+  border-radius: 50%;
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+.widget-footer input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: var(--bg-tertiary, #2d2d2d);
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle, #3a3a3a);
+}
+
+.widget-footer input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent-primary, #0e639c);
+  border: 1px solid var(--border-color, #404040);
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .widget-footer button {
