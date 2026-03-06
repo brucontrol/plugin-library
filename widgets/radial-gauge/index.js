@@ -111,9 +111,10 @@
     }
   }
 
-  function renderTicks(el) {
+  function renderTicks(el, tickColor) {
     if (!el) return;
     el.innerHTML = '';
+    var color = (tickColor && String(tickColor).trim()) ? String(tickColor).trim() : 'white';
     var NUM_TICKS = 19;
     var innerR = R - STROKE / 2 + 3;
     var outerR = R + STROKE / 2 - 3;
@@ -132,7 +133,7 @@
       line.setAttribute('y1', y1.toFixed(2));
       line.setAttribute('x2', x2.toFixed(2));
       line.setAttribute('y2', y2.toFixed(2));
-      line.setAttribute('stroke', 'white');
+      line.setAttribute('stroke', color);
       line.setAttribute('stroke-width', isMajor ? '1.5' : '1');
       line.setAttribute('opacity', isMajor ? '0.5' : '0.3');
       el.appendChild(line);
@@ -214,6 +215,14 @@
 
     if (minL) minL.setAttribute('fill', d.labelColor || '#888');
     if (maxL) maxL.setAttribute('fill', d.labelColor || '#888');
+
+    var needleColor = (d.needleColor && String(d.needleColor).trim()) ? String(d.needleColor).trim() : 'white';
+    var needleArm = document.getElementById('needle-arm');
+    var needleTail = document.getElementById('needle-tail');
+    var needleHub = document.getElementById('needle-hub');
+    if (needleArm) needleArm.setAttribute('stroke', needleColor);
+    if (needleTail) needleTail.setAttribute('stroke', needleColor);
+    if (needleHub) needleHub.setAttribute('stroke', needleColor);
   }
 
   function formatLabel(v) {
@@ -249,7 +258,7 @@
     if (maxLabel) maxLabel.textContent = formatLabel(max);
 
     renderBands(bandsEl, bands, min, max);
-    renderTicks(ticksEl);
+    renderTicks(ticksEl, d.tickColor);
     setNeedle(value, min, max);
     applyStyles();
   }

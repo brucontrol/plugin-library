@@ -255,6 +255,22 @@
     "group": "Background & Border",
     "format": "color"
   },
+  "needleColor": {
+    "type": "text",
+    "title": "Needle Color",
+    "default": "",
+    "description": "Color of the gauge needle arm",
+    "group": "Background & Border",
+    "format": "color"
+  },
+  "tickColor": {
+    "type": "text",
+    "title": "Tick Color",
+    "default": "",
+    "description": "Color of the tick divider marks on the arc",
+    "group": "Background & Border",
+    "format": "color"
+  },
   "headerColor": {
     "type": "text",
     "default": "",
