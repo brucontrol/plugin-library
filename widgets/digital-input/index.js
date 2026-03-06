@@ -1,23 +1,5 @@
 (function () {
-  var titleEl = document.getElementById("widgetTitle");
-  var contentEl = document.getElementById("widgetContent");
-  var footerEl = document.getElementById("widgetFooter");
   var currentData = null;
-
-  function isFooterActive() {
-    return footerEl && footerEl.contains(document.activeElement) &&
-           document.activeElement !== footerEl;
-  }
-
-  function getType(data) {
-    if (data && data.elementType) return String(data.elementType);
-    var fromAttr = document.body.getAttribute("data-widget-type");
-    return fromAttr || "widget";
-  }
-
-  function boolText(value) {
-    return value ? "ON" : "OFF";
-  }
 
   function asBool(value) {
     if (typeof value === "boolean") return value;
@@ -29,73 +11,16 @@
     return !!value;
   }
 
-  function clear(el) {
-    while (el.firstChild) el.removeChild(el.firstChild);
-  }
-
-  function toRowKey(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-  }
-
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  function getStateLabel(isOn) {
     var d = currentData || {};
-    var opts = options || {};
-    var key = toRowKey(opts.key || label);
-    var isPrimary = !!opts.primary;
-
-    if (isPrimary && d.showValue === false) {
-      return null;
+    if (isOn) {
+      return typeof d.onLabel === "string" && d.onLabel.length > 0 ? d.onLabel : "ON";
     }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
-      return null;
-    }
-
-    var r = document.createElement("div");
-    r.className = "widget-row";
-    r.setAttribute("data-row-key", key);
-    if (isPrimary) {
-      r.classList.add("widget-row--primary");
-    }
-
-    var l = document.createElement("span");
-    l.className = "label row-label";
-    l.textContent = label;
-
-    var v = document.createElement("span");
-    v.className = "value row-value" + (cls ? " " + cls : "");
-    v.textContent = String(value);
-
-    r.appendChild(l);
-    r.appendChild(v);
-    return r;
-  }
-
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
-  }
-
-  function appendRow(rowEl) {
-    if (rowEl) {
-      contentEl.appendChild(rowEl);
-    }
+    return typeof d.offLabel === "string" && d.offLabel.length > 0 ? d.offLabel : "OFF";
   }
 
   function applyStyles() {
@@ -103,6 +28,11 @@
     var widget = document.getElementById("widget");
     var header = document.querySelector(".widget-header");
     var content = document.querySelector(".widget-content");
+    var titleEl = document.getElementById("widgetTitle");
+    var toggleLabel = document.getElementById("toggleLabel");
+    var toggleTrack = document.querySelector(".toggle-track");
+    var toggleSwitch = document.getElementById("toggleSwitch");
+    var isOn = currentData ? asBool(currentData.value) : false;
 
     if (widget) {
       if (d.showBackground === false) {
@@ -112,7 +42,6 @@
         widget.style.background = d.backgroundColor || "";
         widget.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
       }
-
       widget.style.borderRadius = "8px";
     }
 
@@ -136,92 +65,82 @@
       titleEl.style.textAlign = "left";
     }
 
-    var labelNodes = document.querySelectorAll(".widget-row .row-label");
-    labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
-    });
+    if (toggleLabel) {
+      toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
+      toggleLabel.style.fontFamily = d.valueFontFamily || "";
+      toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      toggleLabel.style.fontWeight = d.valueFontWeight || "";
+      toggleLabel.style.fontStyle = d.valueFontStyle || "";
+      toggleLabel.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
+      toggleLabel.style.textAlign = "center";
+      toggleLabel.textContent = getStateLabel(isOn);
+      toggleLabel.classList.toggle("on", isOn);
+    }
 
-    var valueNodes = document.querySelectorAll(".widget-row .row-value");
-    valueNodes.forEach(function (node) {
-      var el = node;
-      if (d.rowValueColor) el.style.color = d.rowValueColor;
-      if (d.valueColor) el.style.color = d.valueColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
-      el.style.textAlign = "center";
-    });
+    if (toggleTrack) {
+      if (isOn && d.toggleOnColor) {
+        toggleTrack.style.background = d.toggleOnColor;
+      } else if (!isOn && d.toggleOffColor) {
+        toggleTrack.style.background = d.toggleOffColor;
+      } else {
+        toggleTrack.style.background = "";
+      }
+    }
 
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
-      footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
+    if (toggleSwitch) {
+      toggleSwitch.style.display = d.showValue === false ? "none" : "";
     }
   }
 
-  function render(data) {
-    currentData = data || {};
-    var type = getType(currentData);
-    var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
+  function updateDisplay(data) {
+    currentData = data;
+    var toggleSwitch = document.getElementById("toggleSwitch");
+    var widgetTitle = document.getElementById("widgetTitle");
+    var toggleLabel = document.getElementById("toggleLabel");
+    var activeIndicator = document.getElementById("activeIndicator");
 
-    if (titleEl) {
-      titleEl.textContent = displayName;
+    if (!data || !toggleSwitch || !widgetTitle) return;
+
+    var isOn = asBool(data.value);
+    if (isOn) {
+      toggleSwitch.classList.add("on");
+    } else {
+      toggleSwitch.classList.remove("on");
     }
 
-    var footerBusy = isFooterActive();
+    widgetTitle.textContent = data.displayName || data.name || "Digital In";
 
-    clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    if (toggleLabel) {
+      toggleLabel.textContent = getStateLabel(isOn);
+    }
 
-    if (!footerBusy) {
-      clear(footerEl);
-      renderFooter(type);
+    if (activeIndicator) {
+      var showIndicator = (currentData.showActiveIndicator !== false);
+      activeIndicator.style.display = showIndicator ? "" : "none";
+      activeIndicator.textContent = asBool(currentData.activeLow) ? "Active Low" : "Active High";
+      activeIndicator.classList.toggle("active-low", asBool(currentData.activeLow));
     }
 
     applyStyles();
-  }
-
-  function renderContentRows(type, hiddenRows) {
-    switch (type) {
-      case "digitalInput":
-        appendRow(primaryRow("Input", boolText(asBool(currentData.state || currentData.value)), asBool(currentData.state || currentData.value) ? "value--ok" : "value--warn", "input", hiddenRows));
-        appendRow(row("Active Low", boolText(asBool(currentData.activeLow)), "", { key: "activelow" }, hiddenRows));
-        break;
-      default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
-        break;
-    }
-  }
-
-  function renderFooter() {
-  }
-
-  function getPreviewData() {
-    var t = getType(null);
-    var map = {
-      digitalInput: { elementType: "digitalInput", name: "Digital In", displayName: "Digital In", value: true, activeLow: false, enabled: true, deviceConnected: true }
-    };
-    return map[t] || { elementType: t, displayName: t };
   }
 
   if (window.BruControl) {
     if (window.BruControl.getData) {
       try {
         var initial = window.BruControl.getData();
-        if (initial) render(initial);
-      } catch {}
+        if (initial) updateDisplay(initial);
+      } catch (e) {}
     }
-
-    window.BruControl.onData(render);
+    window.BruControl.onData(updateDisplay);
   } else {
-    render(getPreviewData());
+    updateDisplay({
+      elementType: "digitalInput",
+      name: "Digital In",
+      displayName: "Digital In",
+      value: true,
+      activeLow: false,
+      enabled: true,
+      deviceConnected: true
+    });
   }
 })();

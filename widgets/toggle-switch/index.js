@@ -76,9 +76,10 @@
       toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       toggleLabel.style.fontWeight = d.valueFontWeight || "";
       toggleLabel.style.fontStyle = d.valueFontStyle || "";
-      toggleLabel.style.color = d.valueColor || "";
+      toggleLabel.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
+      toggleLabel.classList.toggle("on", isOn);
     }
 
     if (toggleTrack) {
