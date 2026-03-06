@@ -17,35 +17,49 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "output",
-        "activelow"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
-    "description": "Show primary value rows",
+    "description": "Show toggle control",
     "group": "Layout"
   },
-  "showSecondaryRows": {
+  "showToggleLabel": {
     "type": "boolean",
     "default": true,
-    "description": "Show secondary detail rows",
+    "description": "Show ON/OFF text beside toggle",
     "group": "Layout"
   },
-  "showFooter": {
+  "showActiveIndicator": {
     "type": "boolean",
     "default": true,
-    "description": "Show footer controls",
+    "description": "Show Active Low / Active High indicator",
     "group": "Layout"
+  },
+  "onLabel": {
+    "type": "text",
+    "default": "ON",
+    "group": "Toggle",
+    "description": "Toggle text when on"
+  },
+  "offLabel": {
+    "type": "text",
+    "default": "OFF",
+    "group": "Toggle",
+    "description": "Toggle text when off"
+  },
+  "toggleOnColor": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "description": "Toggle track color when on",
+    "format": "color"
+  },
+  "toggleOffColor": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "description": "Toggle track color when off",
+    "format": "color"
   },
   "labelFontFamily": {
     "type": "text",
@@ -87,7 +101,7 @@
   },
   "valueFontSize": {
     "type": "number",
-    "default": 14,
+    "default": 19,
     "group": "Value",
     "format": "font-size",
     "min": 10,
@@ -130,20 +144,6 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color"
-  },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
     "format": "color"
   }
 }
