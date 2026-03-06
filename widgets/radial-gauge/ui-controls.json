@@ -173,6 +173,13 @@
     "group": "Value Style",
     "format": "color"
   },
+  "showBackground": {
+    "type": "boolean",
+    "title": "Show Dial Background",
+    "default": true,
+    "description": "Show the dark circular dial face behind the gauge",
+    "group": "Gauge Style"
+  },
   "needleColor": {
     "type": "text",
     "title": "Needle Color",

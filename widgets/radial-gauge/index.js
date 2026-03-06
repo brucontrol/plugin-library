@@ -159,6 +159,16 @@
     var dial = document.getElementById('gauge-dial');
     var track = document.getElementById('gauge-track');
     var needleArm = document.getElementById('needle-arm');
+
+    var showBg = d.showBackground !== false;
+    if (dial) {
+      dial.setAttribute('fill', showBg
+        ? ((d.dialColor && String(d.dialColor).trim()) ? String(d.dialColor).trim() : '#1a1a1a')
+        : 'transparent');
+    }
+    if (track) {
+      track.setAttribute('stroke', showBg ? '#2c2c2c' : 'transparent');
+    }
     var needleTail = document.getElementById('needle-tail');
     var needleHub = document.getElementById('needle-hub');
 
