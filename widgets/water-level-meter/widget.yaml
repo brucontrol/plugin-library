@@ -1,6 +1,6 @@
 name: Water Level Meter
 description: Displays a value between min and max as a water level gauge. Water fills from bottom to top with animated bubbles and smooth rise/fall. Supports customizable liquid color and animation speeds.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - generic
 id: ce890220-fd42-4197-9fda-c522e286f0ca
