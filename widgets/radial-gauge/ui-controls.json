@@ -25,21 +25,18 @@
     "title": "Band 1 Color",
     "default": "#4ec9b0",
     "format": "color",
-    "description": "First band color",
     "group": "Bands"
   },
   "band1From": {
     "type": "number",
     "title": "Band 1 From",
     "default": 0,
-    "description": "Start value for band 1",
     "group": "Bands"
   },
   "band1To": {
     "type": "number",
     "title": "Band 1 To",
     "default": 33,
-    "description": "End value for band 1",
     "group": "Bands"
   },
   "band2Color": {
@@ -47,21 +44,18 @@
     "title": "Band 2 Color",
     "default": "#dcdcaa",
     "format": "color",
-    "description": "Second band color",
     "group": "Bands"
   },
   "band2From": {
     "type": "number",
     "title": "Band 2 From",
     "default": 33,
-    "description": "Start value for band 2",
     "group": "Bands"
   },
   "band2To": {
     "type": "number",
     "title": "Band 2 To",
     "default": 66,
-    "description": "End value for band 2",
     "group": "Bands"
   },
   "band3Color": {
@@ -69,21 +63,18 @@
     "title": "Band 3 Color",
     "default": "#f14c4c",
     "format": "color",
-    "description": "Third band color",
     "group": "Bands"
   },
   "band3From": {
     "type": "number",
     "title": "Band 3 From",
     "default": 66,
-    "description": "Start value for band 3",
     "group": "Bands"
   },
   "band3To": {
     "type": "number",
     "title": "Band 3 To",
     "default": 100,
-    "description": "End value for band 3",
     "group": "Bands"
   },
   "band4Color": {
@@ -91,21 +82,19 @@
     "title": "Band 4 Color",
     "default": "",
     "format": "color",
-    "description": "Fourth band color (optional)",
+    "description": "Optional",
     "group": "Bands"
   },
   "band4From": {
     "type": "number",
     "title": "Band 4 From",
     "default": 0,
-    "description": "Start value for band 4",
     "group": "Bands"
   },
   "band4To": {
     "type": "number",
     "title": "Band 4 To",
     "default": 0,
-    "description": "End value for band 4",
     "group": "Bands"
   },
   "band5Color": {
@@ -113,112 +102,61 @@
     "title": "Band 5 Color",
     "default": "",
     "format": "color",
-    "description": "Fifth band color (optional)",
+    "description": "Optional",
     "group": "Bands"
   },
   "band5From": {
     "type": "number",
     "title": "Band 5 From",
     "default": 0,
-    "description": "Start value for band 5",
     "group": "Bands"
   },
   "band5To": {
     "type": "number",
     "title": "Band 5 To",
     "default": 0,
-    "description": "End value for band 5",
     "group": "Bands"
-  },
-  "showHeader": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show header bar",
-    "group": "Layout"
-  },
-  "showBackground": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show widget card background, dial face, and arc track",
-    "group": "Layout"
   },
   "showLabel": {
     "type": "boolean",
+    "title": "Show Label",
     "default": true,
-    "description": "Show title label in header",
-    "group": "Layout"
+    "description": "Show the element name below the gauge",
+    "group": "Display"
   },
   "showValue": {
     "type": "boolean",
+    "title": "Show Value",
     "default": true,
-    "description": "Show value and unit below gauge",
-    "group": "Layout"
+    "description": "Show the numeric value inside the gauge",
+    "group": "Display"
   },
   "precision": {
     "type": "number",
-    "title": "Value Precision",
+    "title": "Precision",
     "default": 2,
     "min": 0,
     "max": 6,
-    "description": "Decimal places for value display (generic only)",
-    "group": "Value"
-  },
-  "prefix": {
-    "type": "text",
-    "title": "Prefix",
-    "default": "",
-    "description": "Unit prefix (generic only)",
-    "group": "Value"
+    "description": "Decimal places",
+    "group": "Display"
   },
   "suffix": {
     "type": "text",
     "title": "Suffix",
     "default": "",
-    "description": "Unit suffix (e.g. kw, °)",
-    "group": "Value"
-  },
-  "labelFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Label",
-    "format": "font-family"
-  },
-  "labelFontSize": {
-    "type": "number",
-    "default": 12,
-    "group": "Label",
-    "format": "font-size",
-    "min": 8,
-    "max": 48
-  },
-  "labelFontWeight": {
-    "type": "text",
-    "default": "500",
-    "group": "Label",
-    "format": "font-weight"
-  },
-  "labelFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Label",
-    "format": "font-style"
-  },
-  "labelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Label",
-    "format": "color"
+    "description": "Unit suffix (e.g. kw, °C)",
+    "group": "Display"
   },
   "valueFontFamily": {
     "type": "text",
     "default": "",
-    "group": "Value",
+    "group": "Value Style",
     "format": "font-family"
   },
   "valueFontSize": {
     "type": "number",
-    "default": 24,
-    "group": "Value",
+    "default": 22,
+    "group": "Value Style",
     "format": "font-size",
     "min": 10,
     "max": 72
@@ -226,61 +164,34 @@
   "valueFontWeight": {
     "type": "text",
     "default": "700",
-    "group": "Value",
+    "group": "Value Style",
     "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
   },
   "valueColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "color"
-  },
-  "backgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "format": "color"
-  },
-  "dialColor": {
-    "type": "text",
-    "title": "Dial Face Color",
-    "default": "",
-    "description": "Color of the circular gauge dial face",
-    "group": "Background & Border",
+    "group": "Value Style",
     "format": "color"
   },
   "needleColor": {
     "type": "text",
     "title": "Needle Color",
     "default": "",
-    "description": "Color of the gauge needle arm",
-    "group": "Background & Border",
-    "format": "color"
+    "format": "color",
+    "group": "Gauge Style"
   },
   "tickColor": {
     "type": "text",
     "title": "Tick Color",
     "default": "",
-    "description": "Color of the tick divider marks on the arc",
-    "group": "Background & Border",
-    "format": "color"
+    "format": "color",
+    "group": "Gauge Style"
   },
-  "headerColor": {
+  "dialColor": {
     "type": "text",
+    "title": "Dial Face Color",
     "default": "",
-    "group": "Background & Border",
-    "format": "color"
-  },
-  "borderColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "format": "color"
+    "format": "color",
+    "group": "Gauge Style"
   }
 }

@@ -48,7 +48,7 @@
       return data.primaryDisplayChannel === 1 ? (data.sgSuffix || '') : (data.tempSuffix || '°');
     }
     if (t === 'owTemp') return data.suffix || '°';
-    return (data.suffix != null ? String(data.suffix) : '');
+    return data.suffix != null ? String(data.suffix) : '';
   }
 
   function getPrecision(data) {
@@ -151,58 +151,19 @@
 
   function applyStyles() {
     var d = currentData || {};
-    var widget = document.getElementById('widget');
-    var header = document.querySelector('.widget-header');
     var titleEl = document.getElementById('widgetTitle');
     var valueNum = document.getElementById('valueNumber');
+    var valueUnit = document.getElementById('valueUnit');
     var minL = document.getElementById('minLabel');
     var maxL = document.getElementById('maxLabel');
     var dial = document.getElementById('gauge-dial');
     var track = document.getElementById('gauge-track');
-
-    var hideBg = d.showBackground === false;
-
-    if (widget) {
-      if (hideBg) {
-        widget.style.background = 'transparent';
-        widget.style.border = 'none';
-      } else {
-        widget.style.background = (d.backgroundColor && String(d.backgroundColor).trim())
-          ? String(d.backgroundColor).trim()
-          : 'var(--bg-secondary, #252526)';
-        widget.style.border = (d.borderColor && String(d.borderColor).trim())
-          ? '1px solid ' + String(d.borderColor).trim()
-          : '1px solid var(--border-color, #404040)';
-      }
-      widget.style.borderRadius = '8px';
-    }
-
-    if (dial) {
-      if (hideBg) {
-        dial.setAttribute('fill', 'transparent');
-      } else {
-        var dialColor = (d.dialColor && String(d.dialColor).trim()) ? String(d.dialColor).trim() : '#1a1a1a';
-        dial.setAttribute('fill', dialColor);
-      }
-    }
-
-    if (track) {
-      track.setAttribute('stroke', hideBg ? 'transparent' : '#2c2c2c');
-    }
-
-    if (header) {
-      header.style.display = d.showHeader === false ? 'none' : '';
-      header.style.background = d.headerColor || '';
-      header.style.borderBottom = d.showHeader === false ? 'none' : '';
-    }
+    var needleArm = document.getElementById('needle-arm');
+    var needleTail = document.getElementById('needle-tail');
+    var needleHub = document.getElementById('needle-hub');
 
     if (titleEl) {
       titleEl.style.display = d.showLabel === false ? 'none' : '';
-      titleEl.style.fontFamily = d.labelFontFamily || '';
-      titleEl.style.fontSize = numberOrNull(d.labelFontSize) != null ? numberOrNull(d.labelFontSize) + 'px' : '';
-      titleEl.style.fontWeight = d.labelFontWeight || '';
-      titleEl.style.fontStyle = d.labelFontStyle || '';
-      titleEl.style.color = d.labelColor || '';
     }
 
     if (valueNum) {
@@ -210,16 +171,14 @@
       if (d.valueFontFamily) valueNum.setAttribute('font-family', d.valueFontFamily);
       if (numberOrNull(d.valueFontSize) != null) valueNum.setAttribute('font-size', String(numberOrNull(d.valueFontSize)));
       if (d.valueFontWeight) valueNum.setAttribute('font-weight', d.valueFontWeight);
-      if (d.valueColor) valueNum.setAttribute('fill', d.valueColor);
+      valueNum.setAttribute('fill', (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : 'white');
     }
 
-    if (minL) minL.setAttribute('fill', d.labelColor || '#888');
-    if (maxL) maxL.setAttribute('fill', d.labelColor || '#888');
+    if (valueUnit) {
+      valueUnit.style.display = d.showValue === false ? 'none' : '';
+    }
 
     var needleColor = (d.needleColor && String(d.needleColor).trim()) ? String(d.needleColor).trim() : 'white';
-    var needleArm = document.getElementById('needle-arm');
-    var needleTail = document.getElementById('needle-tail');
-    var needleHub = document.getElementById('needle-hub');
     if (needleArm) needleArm.setAttribute('stroke', needleColor);
     if (needleTail) needleTail.setAttribute('stroke', needleColor);
     if (needleHub) needleHub.setAttribute('stroke', needleColor);
@@ -251,7 +210,7 @@
     var bandsEl = document.getElementById('gauge-bands');
     var ticksEl = document.getElementById('gauge-ticks');
 
-    if (titleEl) titleEl.textContent = d.displayName || d.name || 'Gauge';
+    if (titleEl) titleEl.textContent = d.displayName || d.name || '';
     if (valueNum) valueNum.textContent = rawVal != null ? Number(value).toFixed(precision) : '—';
     if (valueUnit) valueUnit.textContent = suffix;
     if (minLabel) minLabel.textContent = formatLabel(min);
@@ -266,7 +225,7 @@
   function getPreviewData() {
     return {
       elementType: 'generic',
-      displayName: 'Gauge',
+      displayName: 'Total Energy',
       value: 1.42,
       min: 0,
       max: 4,
@@ -281,8 +240,6 @@
       band3Color: '#f14c4c',
       band3From: 3,
       band3To: 4,
-      showHeader: true,
-      showBackground: true,
       showLabel: true,
       showValue: true
     };
