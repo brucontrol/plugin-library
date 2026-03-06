@@ -1,0 +1,262 @@
+{
+  "value": {
+    "type": "number",
+    "title": "Value",
+    "default": 50,
+    "description": "Current value (required for generic elements)",
+    "group": "Scale"
+  },
+  "min": {
+    "type": "number",
+    "title": "Minimum",
+    "default": 0,
+    "description": "Minimum of the gauge scale",
+    "group": "Scale"
+  },
+  "max": {
+    "type": "number",
+    "title": "Maximum",
+    "default": 100,
+    "description": "Maximum of the gauge scale",
+    "group": "Scale"
+  },
+  "band1Color": {
+    "type": "text",
+    "title": "Band 1 Color",
+    "default": "#4ec9b0",
+    "format": "color",
+    "description": "First band color",
+    "group": "Bands"
+  },
+  "band1From": {
+    "type": "number",
+    "title": "Band 1 From",
+    "default": 0,
+    "description": "Start value for band 1",
+    "group": "Bands"
+  },
+  "band1To": {
+    "type": "number",
+    "title": "Band 1 To",
+    "default": 33,
+    "description": "End value for band 1",
+    "group": "Bands"
+  },
+  "band2Color": {
+    "type": "text",
+    "title": "Band 2 Color",
+    "default": "#dcdcaa",
+    "format": "color",
+    "description": "Second band color",
+    "group": "Bands"
+  },
+  "band2From": {
+    "type": "number",
+    "title": "Band 2 From",
+    "default": 33,
+    "description": "Start value for band 2",
+    "group": "Bands"
+  },
+  "band2To": {
+    "type": "number",
+    "title": "Band 2 To",
+    "default": 66,
+    "description": "End value for band 2",
+    "group": "Bands"
+  },
+  "band3Color": {
+    "type": "text",
+    "title": "Band 3 Color",
+    "default": "#f14c4c",
+    "format": "color",
+    "description": "Third band color",
+    "group": "Bands"
+  },
+  "band3From": {
+    "type": "number",
+    "title": "Band 3 From",
+    "default": 66,
+    "description": "Start value for band 3",
+    "group": "Bands"
+  },
+  "band3To": {
+    "type": "number",
+    "title": "Band 3 To",
+    "default": 100,
+    "description": "End value for band 3",
+    "group": "Bands"
+  },
+  "band4Color": {
+    "type": "text",
+    "title": "Band 4 Color",
+    "default": "",
+    "format": "color",
+    "description": "Fourth band color (optional)",
+    "group": "Bands"
+  },
+  "band4From": {
+    "type": "number",
+    "title": "Band 4 From",
+    "default": 0,
+    "description": "Start value for band 4",
+    "group": "Bands"
+  },
+  "band4To": {
+    "type": "number",
+    "title": "Band 4 To",
+    "default": 0,
+    "description": "End value for band 4",
+    "group": "Bands"
+  },
+  "band5Color": {
+    "type": "text",
+    "title": "Band 5 Color",
+    "default": "",
+    "format": "color",
+    "description": "Fifth band color (optional)",
+    "group": "Bands"
+  },
+  "band5From": {
+    "type": "number",
+    "title": "Band 5 From",
+    "default": 0,
+    "description": "Start value for band 5",
+    "group": "Bands"
+  },
+  "band5To": {
+    "type": "number",
+    "title": "Band 5 To",
+    "default": 0,
+    "description": "End value for band 5",
+    "group": "Bands"
+  },
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show header bar",
+    "group": "Layout"
+  },
+  "showBackground": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show widget background and border",
+    "group": "Layout"
+  },
+  "showLabel": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show title label in header",
+    "group": "Layout"
+  },
+  "showValue": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show value and unit below gauge",
+    "group": "Layout"
+  },
+  "precision": {
+    "type": "number",
+    "title": "Value Precision",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for value display (generic only)",
+    "group": "Value"
+  },
+  "prefix": {
+    "type": "text",
+    "title": "Prefix",
+    "default": "",
+    "description": "Unit prefix (generic only)",
+    "group": "Value"
+  },
+  "suffix": {
+    "type": "text",
+    "title": "Suffix",
+    "default": "",
+    "description": "Unit suffix (e.g. kw, °)",
+    "group": "Value"
+  },
+  "labelFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-family"
+  },
+  "labelFontSize": {
+    "type": "number",
+    "default": 12,
+    "group": "Label",
+    "format": "font-size",
+    "min": 8,
+    "max": 48
+  },
+  "labelFontWeight": {
+    "type": "text",
+    "default": "500",
+    "group": "Label",
+    "format": "font-weight"
+  },
+  "labelFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Label",
+    "format": "font-style"
+  },
+  "labelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "color"
+  },
+  "valueFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-family"
+  },
+  "valueFontSize": {
+    "type": "number",
+    "default": 24,
+    "group": "Value",
+    "format": "font-size",
+    "min": 10,
+    "max": 72
+  },
+  "valueFontWeight": {
+    "type": "text",
+    "default": "700",
+    "group": "Value",
+    "format": "font-weight"
+  },
+  "valueFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Value",
+    "format": "font-style"
+  },
+  "valueColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color"
+  },
+  "backgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "format": "color"
+  },
+  "headerColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "format": "color"
+  },
+  "borderColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "format": "color"
+  }
+}
