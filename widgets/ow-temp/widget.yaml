@@ -1,6 +1,6 @@
 name: OW Temperature - Card
 description: Built-in one-wire temperature widget template.
-version: 1.0.0
+version: 1.0.1
 supportedTypes:
   - owTemp
 defaultFor: owTemp
