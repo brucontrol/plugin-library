@@ -35,32 +35,32 @@ html, body { height: 100%; }
 
 #flask-outline-path {
   fill: url(#flask-glass-fill);
-  stroke: rgba(255, 255, 255, 0.24);
+  stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 1.5;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
 #flask-rim-back {
-  fill: rgba(255, 255, 255, 0.12);
+  fill: rgba(255, 255, 255, 0.1);
 }
 
 #flask-rim-front {
-  fill: rgba(255, 255, 255, 0.06);
-  stroke: rgba(255, 255, 255, 0.3);
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: rgba(255, 255, 255, 0.25);
   stroke-width: 1;
 }
 
 #flask-highlight-main {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.24);
-  stroke-width: 2.6;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 2.3;
   stroke-linecap: round;
 }
 
 #flask-highlight-soft {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.1);
-  stroke-width: 1.8;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1.6;
   stroke-linecap: round;
 }
 
