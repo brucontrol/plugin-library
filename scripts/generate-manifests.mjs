@@ -100,6 +100,7 @@ async function main() {
       official: true,
       beta: manifest.beta === true,
       tags: Array.isArray(manifest.tags) ? manifest.tags : [],
+      supportedTypes: Array.isArray(manifest.supportedTypes) ? manifest.supportedTypes : [],
     };
 
     const outPath = join(distDir, `${id}.json`);
