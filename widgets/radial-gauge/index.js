@@ -199,8 +199,13 @@
         widget.style.background = 'transparent';
         widget.style.border = 'none';
       } else {
-        widget.style.background = d.backgroundColor || '';
-        widget.style.border = d.borderColor ? '1px solid ' + d.borderColor : '';
+        var bg = (d.backgroundColor && String(d.backgroundColor).trim().length > 0)
+          ? String(d.backgroundColor).trim()
+          : 'var(--bg-secondary, #252526)';
+        widget.style.background = bg;
+        widget.style.border = (d.borderColor && String(d.borderColor).trim().length > 0)
+          ? '1px solid ' + String(d.borderColor).trim()
+          : '1px solid var(--border-color, #404040)';
       }
       widget.style.borderRadius = '8px';
     }
