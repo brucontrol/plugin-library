@@ -161,8 +161,9 @@
 
     document.documentElement.style.setProperty('--wave-duration', '2.8s');
 
-    stopBubbles();
-    if (pct > 2) startBubbles();
+    /* Only stop bubbles when water is empty; keep them running during level changes so water animates smoothly */
+    if (pct <= 2) stopBubbles();
+    else startBubbles();
   }
 
   if (window.BruControl) {
