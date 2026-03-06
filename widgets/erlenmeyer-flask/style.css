@@ -35,32 +35,32 @@ html, body { height: 100%; }
 
 #flask-outline-path {
   fill: url(#flask-glass-fill);
-  stroke: rgba(255, 255, 255, 0.2);
+  stroke: rgba(255, 255, 255, 0.26);
   stroke-width: 1.5;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
 #flask-rim-back {
-  fill: rgba(255, 255, 255, 0.1);
+  fill: rgba(255, 255, 255, 0.14);
 }
 
 #flask-rim-front {
-  fill: rgba(255, 255, 255, 0.05);
-  stroke: rgba(255, 255, 255, 0.25);
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.32);
   stroke-width: 1;
 }
 
 #flask-highlight-main {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.2);
-  stroke-width: 2.3;
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 2.5;
   stroke-linecap: round;
 }
 
 #flask-highlight-soft {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 1.6;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1.7;
   stroke-linecap: round;
 }
 
@@ -70,7 +70,7 @@ html, body { height: 100%; }
   left: 0;
   right: 0;
   height: 0%;
-  clip-path: polygon(39.4% 8.5%, 39.4% 17.7%, 31.9% 29.2%, 15% 81.5%, 26.9% 91.2%, 73.1% 91.2%, 85% 81.5%, 68.1% 29.2%, 60.6% 17.7%, 60.6% 8.5%);
+  clip-path: polygon(38.8% 8.5%, 38.8% 17.7%, 30.6% 28.5%, 12% 81.9%, 22% 91.5%, 78% 91.5%, 88% 81.9%, 69.4% 28.5%, 61.2% 17.7%, 61.2% 8.5%);
   clip-path: url(#flask-liquid-clip);
   transition: height 500ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
