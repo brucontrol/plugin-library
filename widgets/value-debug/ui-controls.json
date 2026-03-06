@@ -1,0 +1,16 @@
+{
+  "value": {
+    "type": "text",
+    "title": "Value",
+    "default": "",
+    "description": "First value to display (bind to element property)",
+    "group": "Debug"
+  },
+  "value2": {
+    "type": "text",
+    "title": "Value 2",
+    "default": "",
+    "description": "Second value to display (bind to element property)",
+    "group": "Debug"
+  }
+}
