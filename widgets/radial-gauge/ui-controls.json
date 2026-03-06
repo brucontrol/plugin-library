@@ -139,7 +139,7 @@
   "showBackground": {
     "type": "boolean",
     "default": true,
-    "description": "Show widget background and border",
+    "description": "Show widget card background, dial face, and arc track",
     "group": "Layout"
   },
   "showLabel": {
@@ -244,6 +244,14 @@
   "backgroundColor": {
     "type": "text",
     "default": "",
+    "group": "Background & Border",
+    "format": "color"
+  },
+  "dialColor": {
+    "type": "text",
+    "title": "Dial Face Color",
+    "default": "",
+    "description": "Color of the circular gauge dial face",
     "group": "Background & Border",
     "format": "color"
   },

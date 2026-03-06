@@ -156,9 +156,13 @@
     var valueNum = document.getElementById('valueNumber');
     var minL = document.getElementById('minLabel');
     var maxL = document.getElementById('maxLabel');
+    var dial = document.getElementById('gauge-dial');
+    var track = document.getElementById('gauge-track');
+
+    var hideBg = d.showBackground === false;
 
     if (widget) {
-      if (d.showBackground === false) {
+      if (hideBg) {
         widget.style.background = 'transparent';
         widget.style.border = 'none';
       } else {
@@ -170,6 +174,19 @@
           : '1px solid var(--border-color, #404040)';
       }
       widget.style.borderRadius = '8px';
+    }
+
+    if (dial) {
+      if (hideBg) {
+        dial.setAttribute('fill', 'transparent');
+      } else {
+        var dialColor = (d.dialColor && String(d.dialColor).trim()) ? String(d.dialColor).trim() : '#1a1a1a';
+        dial.setAttribute('fill', dialColor);
+      }
+    }
+
+    if (track) {
+      track.setAttribute('stroke', hideBg ? 'transparent' : '#2c2c2c');
     }
 
     if (header) {
