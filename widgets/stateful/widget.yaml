@@ -1,6 +1,6 @@
 name: stateful - Card
 description: Built-in stateful element widget template.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - stateful
 defaultFor: stateful
