@@ -22,7 +22,10 @@
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
 
+  // Fallback palette when theme is unavailable (VS Code Dark–style)
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
+  // Theme keys for channel line colors (order matches palette: green, yellow, blue, purple, orange, red)
+  var THEME_CHANNEL_KEYS = ["accent-green", "accent-yellow", "accent-blue", "accent-purple", "accent-orange", "accent-red"];
   var OSCILLATION_LOW_LEVEL = 8;
   var OSCILLATION_HIGH_LEVEL = 92;
   var OSCILLATION_AXIS_GRACE = "12%";
@@ -400,6 +403,19 @@
     return normalizeHexColor(currentData.oscilloscopeColor, "#66FF99");
   }
 
+  function getThemeChannelPalette() {
+    var theme = (window.BruControl && window.BruControl.getTheme) ? window.BruControl.getTheme() : {};
+    var palette = [];
+    for (var i = 0; i < THEME_CHANNEL_KEYS.length; i += 1) {
+      var color = theme[THEME_CHANNEL_KEYS[i]];
+      if (typeof color === "string" && color.trim()) {
+        var normalized = normalizeHexColor(color, null);
+        if (normalized) palette.push(normalized);
+      }
+    }
+    return palette.length >= 3 ? palette : null;
+  }
+
   function getChannelColor(channelIndex, channel) {
     var metaColor = currentData["channel" + String(channelIndex + 1) + "Color"];
     if (typeof metaColor === "string" && metaColor.trim()) {
@@ -410,7 +426,14 @@
     if (appearanceColor) return appearanceColor;
 
     if (isOscilloscopeMode()) return getPhosphorColor();
-    return COLOR_PALETTE[channelIndex % COLOR_PALETTE.length];
+
+    var themePalette = getThemeChannelPalette();
+    var fallback = COLOR_PALETTE[channelIndex % COLOR_PALETTE.length];
+    if (themePalette && themePalette.length > 0) {
+      var themeColor = themePalette[channelIndex % themePalette.length];
+      if (themeColor) return themeColor;
+    }
+    return fallback;
   }
 
   function getConfiguredChannels() {
