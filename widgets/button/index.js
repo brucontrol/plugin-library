@@ -132,6 +132,14 @@
       }
 
       widget.style.borderRadius = "8px";
+
+      if (d.buttonColor) {
+        widget.style.setProperty("--button-primary-bg", d.buttonColor);
+        widget.style.setProperty("--button-primary-hover", d.buttonColor);
+      } else {
+        widget.style.removeProperty("--button-primary-bg");
+        widget.style.removeProperty("--button-primary-hover");
+      }
     }
 
     if (header) {

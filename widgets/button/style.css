@@ -62,7 +62,7 @@ body {
   font-weight: 600;
   border: none;
   border-radius: 10px;
-  background: var(--accent-primary, #0e639c);
+  background: var(--button-primary-bg, var(--accent-primary, #0e639c));
   color: var(--text-on-accent, #ffffff);
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -70,7 +70,7 @@ body {
 }
 
 .widget-content .widget-button-primary:hover:not(:disabled) {
-  background: var(--accent-primary-hover, #1177bb);
+  background: var(--button-primary-hover, var(--accent-primary-hover, #1177bb));
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 

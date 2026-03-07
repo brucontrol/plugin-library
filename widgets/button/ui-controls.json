@@ -17,6 +17,14 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
+  "buttonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Button",
+    "description": "Primary button color",
+    "format": "color",
+    "x-theme-default": "accentPrimary"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
