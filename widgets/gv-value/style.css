@@ -55,7 +55,7 @@ body {
 }
 
 .value-display {
-  font-size: 1em;
+  font-size: 1.6em;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--accent-green, #4ec9b0);
