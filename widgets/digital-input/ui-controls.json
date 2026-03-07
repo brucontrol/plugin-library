@@ -52,14 +52,16 @@
     "default": "",
     "group": "Display",
     "description": "Toggle track color when on",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "accentGreen"
   },
   "toggleOffColor": {
     "type": "text",
     "default": "",
     "group": "Display",
     "description": "Toggle track color when off",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "bgTertiary"
   },
   "labelFontFamily": {
     "type": "text",
@@ -91,7 +93,8 @@
     "type": "text",
     "default": "",
     "group": "Label",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
     "type": "text",
@@ -123,27 +126,31 @@
     "type": "text",
     "default": "",
     "group": "Value",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override widget background color",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "bgSecondary"
   },
   "headerColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override header background color",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "bgTertiary"
   },
   "borderColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "borderColor"
   }
 }

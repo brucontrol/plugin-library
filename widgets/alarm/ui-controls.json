@@ -41,7 +41,8 @@
     "type": "text",
     "default": "",
     "group": "Label",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
     "type": "text",
@@ -61,20 +62,23 @@
     "type": "text",
     "default": "",
     "group": "Value",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override widget background color",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "bgSecondary"
   },
   "borderColor": {
     "type": "text",
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color"
+    "format": "color",
+    "x-theme-default": "borderColor"
   }
 }

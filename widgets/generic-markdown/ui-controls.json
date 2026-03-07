@@ -18,7 +18,8 @@
     "group": "Appearance",
     "description": "Override widget background color",
     "format": "color",
-    "title": "Background Color"
+    "title": "Background Color",
+    "x-theme-default": "bgSecondary"
   },
   "textColor": {
     "type": "text",
@@ -26,6 +27,7 @@
     "group": "Appearance",
     "description": "Override text color",
     "format": "color",
-    "title": "Text Color"
+    "title": "Text Color",
+    "x-theme-default": "textPrimary"
   }
 }

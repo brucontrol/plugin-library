@@ -190,13 +190,15 @@
     "default": "",
     "format": "color",
     "description": "Widget background override",
-    "group": "Appearance"
+    "group": "Appearance",
+    "x-theme-default": "bgSecondary"
   },
   "borderColor": {
     "type": "text",
     "default": "",
     "format": "color",
     "description": "Widget border color override",
-    "group": "Appearance"
+    "group": "Appearance",
+    "x-theme-default": "borderColor"
   }
 }
