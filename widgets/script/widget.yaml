@@ -1,6 +1,6 @@
 name: Script Element - Card
 description: Built-in script element widget template.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - scriptElement
 defaultFor: scriptElement

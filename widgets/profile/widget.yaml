@@ -1,6 +1,6 @@
 name: Profile - Card
 description: Built-in profile widget template.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - profile
 defaultFor: profile
