@@ -1,65 +1,48 @@
 {
-  "showHeader": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show header bar",
-    "group": "Layout"
-  },
-  "showBackground": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show widget background and border",
-    "group": "Layout"
-  },
-  "showLabel": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show title label in header",
-    "group": "Layout"
-  },
   "buttonColor": {
     "type": "text",
     "default": "",
     "group": "Button",
-    "description": "Primary button color",
+    "description": "Button background color",
     "format": "color",
     "x-theme-default": "accentPrimary"
   },
-  "labelFontFamily": {
+  "buttonFontFamily": {
     "type": "text",
     "default": "",
-    "group": "Label",
+    "group": "Button",
+    "description": "Font family for button text",
     "format": "font-family"
   },
-  "labelFontSize": {
+  "buttonFontSize": {
     "type": "number",
-    "default": 12,
-    "group": "Label",
+    "default": 15,
+    "group": "Button",
+    "description": "Font size for button text",
     "format": "font-size",
     "min": 8,
-    "max": 48
+    "max": 120
   },
-  "labelColor": {
+  "buttonFontWeight": {
+    "type": "text",
+    "default": "600",
+    "group": "Button",
+    "description": "Font weight for button text",
+    "format": "font-weight"
+  },
+  "buttonFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Button",
+    "description": "Font style for button text",
+    "format": "font-style"
+  },
+  "buttonTextColor": {
     "type": "text",
     "default": "",
-    "group": "Label",
+    "group": "Button",
+    "description": "Text color for button label",
     "format": "color",
-    "x-theme-default": "textPrimary"
-  },
-  "backgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override widget background color",
-    "format": "color",
-    "x-theme-default": "bgSecondary"
-  },
-  "borderColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override border color",
-    "format": "color",
-    "x-theme-default": "borderColor"
+    "x-theme-default": "textOnAccent"
   }
 }

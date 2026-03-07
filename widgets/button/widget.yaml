@@ -1,6 +1,6 @@
-name: Button - Card
-description: Momentary button. Sends state true on press (pointerdown) and state false on release (pointerup/leave). Scripts can use wait "Button" State == true without resetting.
-version: 1.1.6
+name: Button
+description: Momentary button. Sends state true on press (pointerdown) and state false on release (pointerup/leave). Scripts can use wait "Button" State == true without resetting. Stretches to widget size.
+version: 2.0.0
 supportedTypes:
   - button
 defaultFor: button

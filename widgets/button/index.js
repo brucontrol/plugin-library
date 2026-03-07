@@ -1,13 +1,6 @@
 (function () {
-  var titleEl = document.getElementById("widgetTitle");
-  var contentEl = document.getElementById("widgetContent");
-  var footerEl = document.getElementById("widgetFooter");
+  var btnEl = document.getElementById("widgetButton");
   var currentData = null;
-
-  function isFooterActive() {
-    return footerEl && footerEl.contains(document.activeElement) &&
-           document.activeElement !== footerEl;
-  }
 
   function getType(data) {
     if (data && data.elementType) return String(data.elementType);
@@ -15,87 +8,8 @@
     return fromAttr || "widget";
   }
 
-  function boolText(value) {
-    return value ? "ON" : "OFF";
-  }
-
-  function asBool(value) {
-    if (typeof value === "boolean") return value;
-    if (typeof value === "number") return value !== 0;
-    if (typeof value === "string") {
-      var lowered = value.toLowerCase();
-      return lowered === "true" || lowered === "1" || lowered === "on";
-    }
-    return !!value;
-  }
-
-  function clear(el) {
-    while (el.firstChild) el.removeChild(el.firstChild);
-  }
-
-  function toRowKey(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-  }
-
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
-  }
-
-  function row(label, value, cls, options, hiddenRows) {
-    var d = currentData || {};
-    var opts = options || {};
-    var key = toRowKey(opts.key || label);
-    var isPrimary = !!opts.primary;
-
-    if (isPrimary && d.showValue === false) {
-      return null;
-    }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
-      return null;
-    }
-
-    var r = document.createElement("div");
-    r.className = "widget-row";
-    r.setAttribute("data-row-key", key);
-    if (isPrimary) {
-      r.classList.add("widget-row--primary");
-    }
-
-    var l = document.createElement("span");
-    l.className = "label row-label";
-    l.textContent = label;
-
-    var v = document.createElement("span");
-    v.className = "value row-value" + (cls ? " " + cls : "");
-    v.textContent = String(value);
-
-    r.appendChild(l);
-    r.appendChild(v);
-    return r;
-  }
-
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
-  }
-
-  function appendRow(rowEl) {
-    if (rowEl) {
-      contentEl.appendChild(rowEl);
-    }
   }
 
   function sendPatch(patch) {
@@ -103,98 +17,27 @@
     window.BruControl.updateProperties(patch);
   }
 
-  function makeButton(label, onPressStart, onPressEnd, disabled) {
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = label;
-    btn.disabled = !!disabled;
-    /* Momentary: pointerdown -> state true, pointerup/leave/cancel -> state false (covers mouse + touch) */
-    btn.addEventListener("pointerdown", onPressStart);
-    btn.addEventListener("pointerup", onPressEnd);
-    btn.addEventListener("pointerleave", onPressEnd);
-    btn.addEventListener("pointercancel", onPressEnd);
-    return btn;
-  }
-
   function applyStyles() {
     var d = currentData || {};
-    var widget = document.getElementById("widget");
-    var header = document.querySelector(".widget-header");
-    var content = document.querySelector(".widget-content");
+    if (!btnEl) return;
 
-    if (widget) {
-      if (d.showBackground === false) {
-        widget.style.background = "transparent";
-        widget.style.border = "none";
-      } else {
-        widget.style.background = d.backgroundColor || "";
-        widget.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
-      }
-
-      widget.style.borderRadius = "8px";
-
-      if (d.buttonColor) {
-        widget.style.setProperty("--button-primary-bg", d.buttonColor);
-        widget.style.setProperty("--button-primary-hover", d.buttonColor);
-      } else {
-        widget.style.removeProperty("--button-primary-bg");
-        widget.style.removeProperty("--button-primary-hover");
-      }
-    }
-
-    if (header) {
-      header.style.display = d.showHeader === false ? "none" : "";
-      header.style.background = d.headerColor || "";
-      header.style.borderBottom = d.showHeader === false ? "none" : "";
-    }
-
-    if (content) {
-      content.style.padding = "10px";
-    }
-
-    if (titleEl) {
-      titleEl.style.display = d.showLabel === false ? "none" : "";
-      titleEl.style.fontFamily = d.labelFontFamily || "";
-      titleEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      titleEl.style.fontWeight = d.labelFontWeight || "";
-      titleEl.style.fontStyle = d.labelFontStyle || "";
-      titleEl.style.color = d.labelColor || "";
-      titleEl.style.textAlign = "left";
-    }
-
-    var labelNodes = document.querySelectorAll(".widget-row .row-label");
-    labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
-    });
-
-    var valueNodes = document.querySelectorAll(".widget-row .row-value");
-    valueNodes.forEach(function (node) {
-      var el = node;
-      if (d.rowValueColor) el.style.color = d.rowValueColor;
-      if (d.valueColor) el.style.color = d.valueColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
-      el.style.textAlign = "center";
-    });
-
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
-      footerEl.style.display = "none";
+    if (d.buttonColor) {
+      document.body.style.setProperty("--button-primary-bg", d.buttonColor);
+      document.body.style.setProperty("--button-primary-hover", d.buttonColor);
     } else {
-      footerEl.style.display = "flex";
+      document.body.style.removeProperty("--button-primary-bg");
+      document.body.style.removeProperty("--button-primary-hover");
     }
+
+    btnEl.style.fontFamily = d.buttonFontFamily || "";
+    btnEl.style.fontSize = numberOrNull(d.buttonFontSize) !== null ? numberOrNull(d.buttonFontSize) + "px" : "";
+    btnEl.style.fontWeight = d.buttonFontWeight || "";
+    btnEl.style.fontStyle = d.buttonFontStyle || "";
+    btnEl.style.color = d.buttonTextColor || "";
   }
 
   function render(data) {
     var type = getType(data);
-    /* Skip full re-render when only state changed for button - prevents flash from DOM recreation */
     if (type === "button" && currentData && getType(currentData) === "button") {
       var keysToIgnore = { state: true };
       var changed = false;
@@ -213,49 +56,21 @@
     }
     currentData = data || {};
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
-    if (titleEl) {
-      titleEl.textContent = displayName;
-    }
-
-    var footerBusy = isFooterActive();
-
-    clear(contentEl);
-    renderContentRows(type, hiddenRows);
-
-    if (!footerBusy) {
-      clear(footerEl);
-      renderFooter(type);
+    if (btnEl) {
+      btnEl.textContent = displayName;
+      btnEl.disabled = currentData.userControl === false;
     }
 
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
-    switch (type) {
-      case "button": {
-        var label = currentData.displayName || currentData.name || "Press";
-        var disabled = currentData.userControl === false;
-        var btn = makeButton(label, function () { sendPatch({ state: true }); }, function () { sendPatch({ state: false }); }, disabled);
-        btn.className = "widget-button-primary";
-        contentEl.appendChild(btn);
-        break;
-      }
-      default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
-        break;
-    }
-  }
-
-  function renderFooter(type) {
-    switch (type) {
-      case "button":
-        // Button lives in content area, not footer
-        break;
-      default:
-        break;
-    }
+  function setupButton() {
+    if (!btnEl) return;
+    btnEl.addEventListener("pointerdown", function () { sendPatch({ state: true }); });
+    btnEl.addEventListener("pointerup", function () { sendPatch({ state: false }); });
+    btnEl.addEventListener("pointerleave", function () { sendPatch({ state: false }); });
+    btnEl.addEventListener("pointercancel", function () { sendPatch({ state: false }); });
   }
 
   function getPreviewData() {
@@ -265,6 +80,8 @@
     };
     return map[t] || { elementType: t, displayName: t };
   }
+
+  setupButton();
 
   if (window.BruControl) {
     if (window.BruControl.getData) {
