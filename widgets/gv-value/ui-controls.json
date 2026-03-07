@@ -52,7 +52,7 @@
   },
   "valueFontSize": {
     "type": "number",
-    "default": 26,
+    "default": 16,
     "group": "Value",
     "format": "font-size",
     "min": 10,
