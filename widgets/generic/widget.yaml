@@ -1,6 +1,6 @@
 name: Generic Widget - Card
 description: Built-in default widget for generic elements. Shows the element name.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - generic
 defaultFor: generic
