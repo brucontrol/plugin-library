@@ -41,20 +41,6 @@
     "group": "Toggle",
     "description": "Toggle text when false"
   },
-  "toggleOnColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Toggle track color when on",
-    "format": "color"
-  },
-  "toggleOffColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Toggle track color when off",
-    "format": "color"
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -68,18 +54,6 @@
     "format": "font-size",
     "min": 8,
     "max": 48
-  },
-  "labelFontWeight": {
-    "type": "text",
-    "default": "500",
-    "group": "Label",
-    "format": "font-weight"
-  },
-  "labelFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Label",
-    "format": "font-style"
   },
   "labelColor": {
     "type": "text",
@@ -101,18 +75,6 @@
     "min": 10,
     "max": 120
   },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
   "valueColor": {
     "type": "text",
     "default": "",
@@ -124,13 +86,6 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override widget background color",
-    "format": "color"
-  },
-  "headerColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override header background color",
     "format": "color"
   },
   "borderColor": {

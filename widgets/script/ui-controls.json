@@ -1,4 +1,10 @@
 {
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show header bar",
+    "group": "Layout"
+  },
   "showLabel": {
     "type": "boolean",
     "default": true,
@@ -31,18 +37,6 @@
     "min": 8,
     "max": 24
   },
-  "labelFontWeight": {
-    "type": "text",
-    "default": "500",
-    "group": "Label",
-    "format": "font-weight"
-  },
-  "labelFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Label",
-    "format": "font-style"
-  },
   "labelColor": {
     "type": "text",
     "default": "",
@@ -62,18 +56,6 @@
     "format": "font-size",
     "min": 10,
     "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
   },
   "valueColor": {
     "type": "text",

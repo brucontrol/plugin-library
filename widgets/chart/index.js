@@ -4,7 +4,6 @@
   var headerEl = document.getElementById("widgetHeader");
   var contentEl = document.getElementById("widgetContent");
   var overlayEl = document.getElementById("chartOverlay");
-  var oscilloscopeOverlayEl = document.getElementById("oscilloscopeOverlay");
   var widgetEl = document.getElementById("widget");
   var canvasEl = document.getElementById("chartCanvas");
 
@@ -14,11 +13,7 @@
   var historyRefreshHandle = null;
   var hasHistoryLoaded = false;
   var lastHistorySignature = "";
-  var oscillationAnimationHandle = null;
   var configuredChannels = [];
-  var oscillationRawPointsByChannel = Object.create(null);
-  var oscillationHintsByChannel = Object.create(null);
-  var oscillationHintsLoadedOnce = false;
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
 
@@ -26,10 +21,6 @@
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
   // Theme keys for channel line colors (order matches palette: green, yellow, blue, purple, orange, red)
   var THEME_CHANNEL_KEYS = ["accent-green", "accent-yellow", "accent-blue", "accent-purple", "accent-orange", "accent-red"];
-  var OSCILLATION_LOW_LEVEL = 8;
-  var OSCILLATION_HIGH_LEVEL = 92;
-  var OSCILLATION_AXIS_GRACE = "12%";
-  var OSCILLATION_ANIMATION_INTERVAL_MS = 60;
   var REALTIME_TICK_INTERVAL_MS = 1000;
   var REALTIME_EXTEND_THRESHOLD_MS = 500;
   var TIME_PRESETS = {
@@ -112,46 +103,9 @@
     return null;
   }
 
-  var oscilloscopePersistencePlugin = {
-    id: "bruOscilloscopePersistence",
-    beforeDraw: function (chartInstance, args, options) {
-      if (!options || !options.enabled) return;
-      var area = chartInstance.chartArea;
-      if (!area) return;
-      var ctx = chartInstance.ctx;
-      ctx.save();
-      ctx.fillStyle = "rgba(0, 0, 0, " + clamp(options.persistence || 0.2, 0, 0.95).toFixed(3) + ")";
-      ctx.fillRect(area.left, area.top, area.right - area.left, area.bottom - area.top);
-      ctx.restore();
-    },
-    afterDraw: function (chartInstance, args, options) {
-      if (!options || !options.enabled) return;
-      var noise = clamp(options.noise || 0, 0, 0.2);
-      if (noise <= 0) return;
-      var area = chartInstance.chartArea;
-      if (!area) return;
-      var ctx = chartInstance.ctx;
-      var count = Math.floor((area.right - area.left) * (area.bottom - area.top) * noise * 0.0025);
-      if (count <= 0) return;
-      ctx.save();
-      for (var i = 0; i < count; i += 1) {
-        var x = Math.floor(area.left + Math.random() * (area.right - area.left));
-        var y = Math.floor(area.top + Math.random() * (area.bottom - area.top));
-        var brightness = Math.floor(90 + Math.random() * 100);
-        ctx.fillStyle = "rgba(" + brightness + ", 255, " + brightness + ", 0.06)";
-        ctx.fillRect(x, y, 1, 1);
-      }
-      ctx.restore();
-    }
-  };
-
   function ensureChartCtor() {
     var ChartCtor = getChartCtor();
     if (!ChartCtor) return null;
-    if (ChartCtor.register && !ChartCtor.__bruOscilloscopeRegistered) {
-      ChartCtor.register(oscilloscopePersistencePlugin);
-      ChartCtor.__bruOscilloscopeRegistered = true;
-    }
     return ChartCtor;
   }
 
@@ -178,229 +132,12 @@
     return Math.round(clamp(toNumber(currentData.maxPoints, 1000), 100, 5000));
   }
 
-  function getOscillationChannelSet() {
-    var set = Object.create(null);
-    var source = currentData && Array.isArray(currentData.oscillationChannelKeys) ? currentData.oscillationChannelKeys : [];
-    for (var i = 0; i < source.length; i += 1) {
-      var key = normalizeChannelKey(source[i]);
-      if (key) set[key] = true;
-    }
-    return set;
-  }
-
-  function getOscillationPeriodMap() {
-    var map = Object.create(null);
-    var source = currentData && currentData.oscillationPeriodMsByChannel;
-    if (!source || typeof source !== "object" || Array.isArray(source)) {
-      return map;
-    }
-
-    var keys = Object.keys(source);
-    for (var i = 0; i < keys.length; i += 1) {
-      var key = normalizeChannelKey(keys[i]);
-      var numeric = toNumber(source[keys[i]], NaN);
-      if (!key || !Number.isFinite(numeric) || numeric <= 0) continue;
-      map[key] = clamp(Math.round(numeric), 20, 60000);
-    }
-
-    return map;
-  }
-
-  function getOscillationModeMap() {
-    var map = Object.create(null);
-    var source = currentData && currentData.oscillationModeByChannel;
-    if (!source || typeof source !== "object" || Array.isArray(source)) {
-      return map;
-    }
-
-    var keys = Object.keys(source);
-    for (var i = 0; i < keys.length; i += 1) {
-      var key = normalizeChannelKey(keys[i]);
-      var mode = String(source[keys[i]] || "").trim();
-      if (!key || !mode) continue;
-      map[key] = mode;
-    }
-
-    return map;
-  }
-
-  function getOscillationDutyMap() {
-    var map = Object.create(null);
-    var source = currentData && currentData.oscillationDutyPercentByChannel;
-    if (!source || typeof source !== "object" || Array.isArray(source)) {
-      return map;
-    }
-
-    var keys = Object.keys(source);
-    for (var i = 0; i < keys.length; i += 1) {
-      var key = normalizeChannelKey(keys[i]);
-      var numeric = toNumber(source[keys[i]], NaN);
-      if (!key || !Number.isFinite(numeric)) continue;
-      map[key] = clamp(numeric, 0, 100);
-    }
-
-    return map;
-  }
-
-  function getOscillationHint(channelKey) {
-    var key = normalizeChannelKey(channelKey);
-    if (!key) return null;
-    var hint = oscillationHintsByChannel[key];
-    return hint && typeof hint === "object" ? hint : null;
-  }
-
-  function getOscillationPeriodMs(channelKey) {
-    var map = getOscillationPeriodMap();
-    var key = normalizeChannelKey(channelKey);
-    if (key && Number.isFinite(map[key])) {
-      return map[key];
-    }
-
-    var hint = getOscillationHint(channelKey);
-    if (hint && Number.isFinite(hint.periodMs)) {
-      return clamp(Math.round(hint.periodMs), 20, 60000);
-    }
-
-    return 1000;
-  }
-
-  function getOscillationMode(channelKey) {
-    var map = getOscillationModeMap();
-    var key = normalizeChannelKey(channelKey);
-    if (key && typeof map[key] === "string" && map[key].length > 0) {
-      return map[key];
-    }
-
-    var hint = getOscillationHint(channelKey);
-    if (hint && typeof hint.mode === "string" && hint.mode.length > 0) {
-      return hint.mode;
-    }
-
-    return "sample01";
-  }
-
-  function getOscillationDutyPercent(channelKey) {
-    var hint = getOscillationHint(channelKey);
-    if (hint && Number.isFinite(hint.dutyPercent)) {
-      return clamp(hint.dutyPercent, 0, 100);
-    }
-    return null;
-  }
-
-  function normalizeDutyRatio(value) {
-    if (!Number.isFinite(value)) return 0;
-    var abs = Math.abs(value);
-    if (abs <= 1) return clamp(abs, 0, 1);
-    return clamp(abs / 100, 0, 1);
-  }
-
-  function resolveOscillationDutyRatio(channel, rawValue) {
-    var mode = String(channel && channel.oscillationMode || "sample01");
-
-    if (mode === "fixedDuty") {
-      if (Number.isFinite(channel && channel.oscillationDutyPercent)) {
-        return clamp(channel.oscillationDutyPercent / 100, 0, 1);
-      }
-      return 0.5;
-    }
-
-    if (mode === "pwm255") {
-      return clamp(rawValue / 255, 0, 1);
-    }
-
-    if (mode === "sample100") {
-      return clamp(Math.abs(rawValue) / 100, 0, 1);
-    }
-
-    return normalizeDutyRatio(rawValue);
-  }
-
-  function buildOscillationPoints(rawPoints, channel) {
-    var sourcePoints = Array.isArray(rawPoints) ? rawPoints : [];
-    if (sourcePoints.length === 0) return [];
-
-    var points = sourcePoints.slice().sort(function (left, right) {
-      return toNumber(left && left.x, 0) - toNumber(right && right.x, 0);
-    });
-    var waveform = [];
-    var windowEnd = Date.now();
-    var windowStart = windowEnd - getSpanSeconds() * 1000;
-    var period = clamp(toNumber(channel && channel.oscillationPeriodMs, 1000), 20, 60000);
-    var maxGeneratedPoints = Math.max(2000, getMaxPoints() * 6);
-    var phaseAnchor = 0;
-
-    function pushWavePoint(x, y) {
-      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
-      var last = waveform.length > 0 ? waveform[waveform.length - 1] : null;
-      if (last && last.x === x && last.y === y) return;
-      waveform.push({ x: x, y: y });
-    }
-
-    function cycleStartForTimestamp(timestamp) {
-      var cycles = Math.floor((timestamp - phaseAnchor) / period);
-      return phaseAnchor + cycles * period;
-    }
-
-    for (var i = 0; i < points.length && waveform.length < maxGeneratedPoints; i += 1) {
-      var current = points[i];
-      var currentTs = toNumber(current && current.x, NaN);
-      if (!Number.isFinite(currentTs)) continue;
-
-      var duty = clamp(resolveOscillationDutyRatio(channel, toNumber(current && current.y, 0)), 0, 1);
-      var nextTs = i + 1 < points.length ? toNumber(points[i + 1] && points[i + 1].x, NaN) : windowEnd;
-      if (!Number.isFinite(nextTs) || nextTs <= currentTs) {
-        nextTs = currentTs + period;
-      }
-
-      var intervalStart = Math.max(currentTs, windowStart);
-      var intervalEnd = Math.min(nextTs, windowEnd);
-      if (intervalEnd <= intervalStart) continue;
-
-      var cycleStart = cycleStartForTimestamp(intervalStart);
-      while (cycleStart < intervalEnd && waveform.length < maxGeneratedPoints) {
-        var cycleEnd = cycleStart + period;
-        var highEnd = cycleStart + period * duty;
-        var segmentStart = Math.max(intervalStart, cycleStart);
-        var segmentEnd = Math.min(intervalEnd, cycleEnd);
-        if (segmentEnd <= segmentStart) {
-          cycleStart = cycleEnd;
-          continue;
-        }
-
-        var startsHigh = duty > 0 && segmentStart < highEnd;
-        var startLevel = startsHigh ? OSCILLATION_HIGH_LEVEL : OSCILLATION_LOW_LEVEL;
-        pushWavePoint(segmentStart, startLevel);
-
-        if (duty > 0 && duty < 1 && highEnd > segmentStart && highEnd < segmentEnd) {
-          pushWavePoint(highEnd, OSCILLATION_LOW_LEVEL);
-        }
-
-        var endLevel = duty >= 1
-          ? OSCILLATION_HIGH_LEVEL
-          : (segmentEnd <= highEnd ? OSCILLATION_HIGH_LEVEL : OSCILLATION_LOW_LEVEL);
-        pushWavePoint(segmentEnd, endLevel);
-
-        cycleStart = cycleEnd;
-      }
-    }
-
-    return waveform;
-  }
-
   function getChartStyle() {
     var style = String(currentData.chartStyle || "line").toLowerCase();
-    if (style === "step" || style === "area" || style === "bar") {
+    if (style === "area" || style === "bar") {
       return style;
     }
     return "line";
-  }
-
-  function isOscilloscopeMode() {
-    return toBool(currentData.oscilloscopeMode, false);
-  }
-
-  function getPhosphorColor() {
-    return normalizeHexColor(currentData.oscilloscopeColor, "#66FF99");
   }
 
   function getThemeChannelPalette() {
@@ -425,8 +162,6 @@
     var appearanceColor = colorFromInt(channel.appearanceLineColor);
     if (appearanceColor) return appearanceColor;
 
-    if (isOscilloscopeMode()) return getPhosphorColor();
-
     var themePalette = getThemeChannelPalette();
     var fallback = COLOR_PALETTE[channelIndex % COLOR_PALETTE.length];
     if (themePalette && themePalette.length > 0) {
@@ -439,9 +174,6 @@
   function getConfiguredChannels() {
     var sourceChannels = Array.isArray(currentData && currentData.channels) ? currentData.channels : [];
     var result = [];
-    var oscillationSet = getOscillationChannelSet();
-    var oscillationModeMap = getOscillationModeMap();
-    var oscillationDutyMap = getOscillationDutyMap();
 
     var ZERO_GUID = "00000000-0000-0000-0000-000000000000";
 
@@ -454,7 +186,6 @@
       var index = Math.round(toNumber(option.channelID.index, 0));
       var key = buildChannelKey(elementId, index);
       var label = currentData["channel" + String(i + 1) + "Label"];
-      var liveDutyPercent = getOscillationDutyPercent(key);
 
       result.push({
         elementId: elementId,
@@ -465,13 +196,7 @@
         axisMin: toNumber(option.axisYMin, NaN),
         axisMax: toNumber(option.axisYMax, NaN),
         appearanceLineColor: option.appearance ? option.appearance.lineColor : null,
-        appearanceAxisColor: option.appearance ? option.appearance.axisColor : null,
-        oscillation: oscillationSet[key] === true,
-        oscillationPeriodMs: getOscillationPeriodMs(key),
-        oscillationMode: typeof oscillationModeMap[key] === "string" ? oscillationModeMap[key] : getOscillationMode(key),
-        oscillationDutyPercent: Number.isFinite(liveDutyPercent)
-          ? liveDutyPercent
-          : (Number.isFinite(oscillationDutyMap[key]) ? clamp(oscillationDutyMap[key], 0, 100) : null)
+        appearanceAxisColor: option.appearance ? option.appearance.axisColor : null
       });
     }
 
@@ -480,8 +205,6 @@
 
   function buildDataset(channel, channelIndex) {
     var style = getChartStyle();
-    var osc = isOscilloscopeMode();
-    var oscillation = channel && channel.oscillation === true;
     var color = getChannelColor(channelIndex, channel);
     var smoothing = clamp(toNumber(currentData.smoothing, 0.25), 0, 0.95);
     var lineWidth = clamp(toNumber(currentData.lineWidth, 2), 1, 8);
@@ -490,23 +213,22 @@
     var rightAxisEnabled = toBool(currentData.rightAxisEnabled, true);
 
     var baseType = style === "bar" ? "bar" : "line";
-    var stepped = style === "step" || osc || oscillation;
+    var stepped = style === "step";
     var yAxis = rightAxisEnabled && channelIndex % 2 === 1 ? "y1" : "y";
 
     return {
       _channelKey: channel.key,
-      _oscillation: oscillation,
-      label: oscillation ? channel.label + " (osc)" : channel.label,
+      label: channel.label,
       yAxisID: yAxis,
       type: baseType,
       borderColor: color,
-      backgroundColor: fillArea && !osc ? withAlpha(color, 0.2) : withAlpha(color, 0.08),
-      pointRadius: osc ? 0 : pointRadius,
-      pointHoverRadius: osc ? 0 : Math.max(pointRadius + 1, 2),
-      borderWidth: osc ? Math.max(lineWidth, 2) : lineWidth,
+      backgroundColor: fillArea ? withAlpha(color, 0.2) : withAlpha(color, 0.08),
+      pointRadius: pointRadius,
+      pointHoverRadius: Math.max(pointRadius + 1, 2),
+      borderWidth: lineWidth,
       tension: stepped ? 0 : smoothing,
       stepped: stepped,
-      fill: baseType === "line" ? (fillArea && !osc ? "origin" : false) : false,
+      fill: baseType === "line" ? (fillArea ? "origin" : false) : false,
       data: []
     };
   }
@@ -532,36 +254,19 @@
   }
 
   function buildChartOptions(channels) {
-    var osc = isOscilloscopeMode();
-    var phosphor = getPhosphorColor();
     var showLegend = toBool(currentData.showLegend, true);
     var showGrid = toBool(currentData.showGrid, true);
     var showAxes = toBool(currentData.showAxes, true);
     var showTooltip = toBool(currentData.showTooltip, true);
     var rightAxisEnabled = toBool(currentData.rightAxisEnabled, true);
     var axisLocks = getAxisLocks(channels);
-    var hasOscillationWave = false;
-    var yHasOscillation = false;
-    var y1HasOscillation = false;
-
-    for (var i = 0; i < channels.length; i += 1) {
-      var channel = channels[i];
-      if (!channel || channel.oscillation !== true) continue;
-      hasOscillationWave = true;
-
-      if (rightAxisEnabled && i % 2 === 1) {
-        y1HasOscillation = true;
-      } else {
-        yHasOscillation = true;
-      }
-    }
 
     var theme = (window.BruControl && window.BruControl.getTheme) ? window.BruControl.getTheme() : {};
     var themeTextPrimary = theme["text-primary"] || theme["text-secondary"];
     var themeGridColor = themeTextPrimary ? withAlpha(themeTextPrimary, 0.15) : null;
-    var axisColor = osc ? withAlpha(phosphor, 0.85) : (currentData.axisColor || themeTextPrimary || "rgba(212, 212, 212, 0.78)");
-    var gridColor = osc ? withAlpha(phosphor, 0.18) : (currentData.gridLineColor || themeGridColor || "rgba(212, 212, 212, 0.14)");
-    var legendColor = osc ? phosphor : (currentData.legendColor || themeTextPrimary || "rgba(212, 212, 212, 0.9)");
+    var axisColor = currentData.axisColor || themeTextPrimary || "rgba(212, 212, 212, 0.78)";
+    var gridColor = currentData.gridLineColor || themeGridColor || "rgba(212, 212, 212, 0.14)";
+    var legendColor = currentData.legendColor || themeTextPrimary || "rgba(212, 212, 212, 0.9)";
 
     var options = {
       responsive: true,
@@ -596,11 +301,6 @@
               return new Date(timestamp).toLocaleString();
             }
           }
-        },
-        bruOscilloscopePersistence: {
-          enabled: osc,
-          persistence: clamp(toNumber(currentData.oscilloscopePersistence, 0.22), 0, 0.95),
-          noise: clamp(toNumber(currentData.oscilloscopeNoise, 0.03), 0, 0.2)
         }
       },
       scales: {
@@ -612,7 +312,7 @@
             color: gridColor
           },
           ticks: {
-            display: showAxes && !hasOscillationWave,
+            display: showAxes,
             color: axisColor,
             maxTicksLimit: 8
           },
@@ -639,7 +339,7 @@
             text: currentData.leftAxisLabel || "",
             color: axisColor
           },
-          grace: yHasOscillation ? OSCILLATION_AXIS_GRACE : 0
+          grace: 0
         },
         y1: {
           type: "linear",
@@ -661,7 +361,7 @@
             text: currentData.rightAxisLabel || "",
             color: axisColor
           },
-          grace: y1HasOscillation ? OSCILLATION_AXIS_GRACE : 0
+          grace: 0
         }
       }
     };
@@ -736,11 +436,6 @@
 
     var showHeader = toBool(currentData.showHeader, true);
     var showBackground = toBool(currentData.showBackground, true);
-    var padding = 8;
-    var osc = isOscilloscopeMode();
-    var phosphor = getPhosphorColor();
-    var scanlineOpacity = clamp(toNumber(currentData.oscilloscopeScanlineOpacity, 0.12), 0, 0.35);
-    var glow = clamp(toNumber(currentData.oscilloscopeGlow, 16), 0, 40);
 
     if (headerEl) {
       headerEl.classList.toggle("hidden", !showHeader);
@@ -759,17 +454,7 @@
       widgetEl.style.background = "transparent";
       widgetEl.style.border = "none";
     }
-
-    if (oscilloscopeOverlayEl) {
-      oscilloscopeOverlayEl.style.opacity = osc ? String(scanlineOpacity) : "0";
-    }
-
-    widgetEl.classList.toggle("oscilloscope-mode", osc);
-    if (osc) {
-      canvasEl.style.filter = "drop-shadow(0 0 " + String(Math.round(glow)) + "px " + withAlpha(phosphor, 0.65) + ")";
-    } else {
-      canvasEl.style.filter = "";
-    }
+    canvasEl.style.filter = "";
   }
 
   function toSamplePoints(samples) {
@@ -793,123 +478,6 @@
     return points;
   }
 
-  function trimOscillationRawPoints(points) {
-    if (!Array.isArray(points) || points.length === 0) return;
-    var spanMs = getSpanSeconds() * 1000;
-    var cutoff = Date.now() - Math.max(spanMs + 2000, 10000);
-    while (points.length > 0 && toNumber(points[0] && points[0].x, NaN) < cutoff) {
-      points.shift();
-    }
-
-    var maxKeep = Math.max(getMaxPoints() * 2, 200);
-    while (points.length > maxKeep) {
-      points.shift();
-    }
-  }
-
-  function upsertOscillationRawPoint(channelKey, timestampUnixMs, value) {
-    var key = normalizeChannelKey(channelKey);
-    if (!key || !Number.isFinite(timestampUnixMs) || !Number.isFinite(value)) return;
-
-    var points = oscillationRawPointsByChannel[key];
-    if (!Array.isArray(points)) {
-      points = [];
-      oscillationRawPointsByChannel[key] = points;
-    }
-
-    if (points.length === 0 || toNumber(points[points.length - 1] && points[points.length - 1].x, NaN) <= timestampUnixMs) {
-      points.push({ x: timestampUnixMs, y: value });
-    } else {
-      points.push({ x: timestampUnixMs, y: value });
-      points.sort(function (left, right) {
-        return left.x - right.x;
-      });
-    }
-
-    trimOscillationRawPoints(points);
-  }
-
-  function pruneOscillationRawPoints(channels) {
-    var keep = Object.create(null);
-    for (var i = 0; i < channels.length; i += 1) {
-      var channel = channels[i];
-      if (!channel || !channel.oscillation) continue;
-      keep[normalizeChannelKey(channel.key)] = true;
-    }
-
-    var keys = Object.keys(oscillationRawPointsByChannel);
-    for (var j = 0; j < keys.length; j += 1) {
-      if (keep[keys[j]] === true) continue;
-      delete oscillationRawPointsByChannel[keys[j]];
-    }
-  }
-
-  function refreshOscillationDatasetsFromCache() {
-    if (!chart) return;
-    var updated = false;
-    for (var i = 0; i < configuredChannels.length; i += 1) {
-      var channel = configuredChannels[i];
-      if (!channel || channel.oscillation !== true) continue;
-
-      var dataset = datasetByChannelKey(channel.key);
-      if (!dataset) continue;
-
-      var key = normalizeChannelKey(channel.key);
-      var rawPoints = oscillationRawPointsByChannel[key];
-      if (!Array.isArray(rawPoints) || rawPoints.length === 0) continue;
-
-      // Re-read live oscillation hints so the waveform reflects the latest
-      // duty cycle percentage and period values received via SignalR samples,
-      // rather than the stale values captured when configuredChannels was built.
-      var liveHint = getOscillationHint(key);
-      if (liveHint) {
-        if (Number.isFinite(liveHint.dutyPercent)) {
-          channel.oscillationDutyPercent = clamp(liveHint.dutyPercent, 0, 100);
-        }
-        if (Number.isFinite(liveHint.periodMs)) {
-          channel.oscillationPeriodMs = clamp(Math.round(liveHint.periodMs), 20, 60000);
-        }
-      }
-
-      trimOscillationRawPoints(rawPoints);
-      dataset.data = buildOscillationPoints(rawPoints, channel);
-      updated = true;
-    }
-
-    if (updated) {
-      trimDatasets();
-      applyRealtimeXAxisWindow(configuredChannels);
-      chart.update("none");
-    }
-  }
-
-  function clearOscillationAnimation() {
-    if (!oscillationAnimationHandle) return;
-    clearInterval(oscillationAnimationHandle);
-    oscillationAnimationHandle = null;
-  }
-
-  function ensureOscillationAnimation(channels) {
-    var hasOscillation = false;
-    for (var i = 0; i < channels.length; i += 1) {
-      if (channels[i] && channels[i].oscillation === true) {
-        hasOscillation = true;
-        break;
-      }
-    }
-
-    if (!hasOscillation) {
-      clearOscillationAnimation();
-      return;
-    }
-
-    if (oscillationAnimationHandle) return;
-
-    oscillationAnimationHandle = setInterval(function () {
-      refreshOscillationDatasetsFromCache();
-    }, OSCILLATION_ANIMATION_INTERVAL_MS);
-  }
-
   function clearRealtimeTick() {
     if (realtimeTickHandle) {
       clearInterval(realtimeTickHandle);
@@ -925,7 +493,6 @@
 
     for (var i = 0; i < datasets.length; i += 1) {
       var dataset = datasets[i];
-      if (dataset._oscillation) continue;
       if (!Array.isArray(dataset.data) || dataset.data.length === 0) continue;
 
       var last = dataset.data[dataset.data.length - 1];
@@ -945,15 +512,7 @@
   }
 
   function ensureRealtimeTick(channels) {
-    var hasNonOscillation = false;
-    for (var i = 0; i < channels.length; i += 1) {
-      if (channels[i] && channels[i].oscillation !== true) {
-        hasNonOscillation = true;
-        break;
-      }
-    }
-
-    if (!hasNonOscillation || !hasHistoryLoaded) {
+    if (!hasHistoryLoaded) {
       clearRealtimeTick();
       return;
     }
@@ -965,66 +524,6 @@
     }, REALTIME_TICK_INTERVAL_MS);
   }
 
-  function requestOscillationHintsRefresh(channels) {
-    // One-shot fetch of oscillation hints at init time. Never called again after first success.
-    if (oscillationHintsLoadedOnce) return;
-
-    var trackedKeys = Object.create(null);
-    for (var i = 0; i < channels.length; i += 1) {
-      var tracked = channels[i];
-      if (!tracked || tracked.oscillation !== true) continue;
-      var trackedKey = normalizeChannelKey(tracked.key);
-      if (!trackedKey) continue;
-      trackedKeys[trackedKey] = true;
-    }
-
-    if (Object.keys(trackedKeys).length === 0) {
-      if (Object.keys(oscillationHintsByChannel).length > 0) {
-        oscillationHintsByChannel = Object.create(null);
-      }
-      return;
-    }
-
-    if (!window.BruControl || !window.BruControl.fetchChartChannels) {
-      return;
-    }
-
-    window.BruControl.fetchChartChannels()
-      .then(function (items) {
-        if (!Array.isArray(items)) return;
-        oscillationHintsLoadedOnce = true;
-
-        var nextHints = Object.create(null);
-        for (var j = 0; j < items.length; j += 1) {
-          var item = items[j];
-          if (!item || typeof item !== "object") continue;
-
-          var rawChannelKey = typeof item.channelKey === "string"
-            ? item.channelKey
-            : (item.elementId ? buildChannelKey(item.elementId, Math.round(toNumber(item.channelIndex, 0))) : "");
-          var key = normalizeChannelKey(rawChannelKey);
-          if (!key || trackedKeys[key] !== true) continue;
-
-          var mode = typeof item.oscillationMode === "string" ? item.oscillationMode.trim() : "";
-          var duty = toNumber(item.oscillationDutyPercent, NaN);
-          var period = toNumber(item.oscillationPeriodMs, NaN);
-
-          nextHints[key] = {
-            mode: mode || null,
-            dutyPercent: Number.isFinite(duty) ? clamp(duty, 0, 100) : null,
-            periodMs: Number.isFinite(period) && period > 0 ? clamp(Math.round(period), 20, 60000) : null
-          };
-        }
-
-        oscillationHintsByChannel = nextHints;
-        configuredChannels = getConfiguredChannels();
-        rebuildDatasets(configuredChannels);
-        refreshOscillationDatasetsFromCache();
-      })
-      .catch(function () {
-        // Ignore hint refresh failures; waveform keeps current settings.
-      });
-  }
 
   function pointToTimestamp(point) {
     if (!point) return NaN;
@@ -1096,14 +595,6 @@
     if (!chart || !chart.options || !chart.options.scales || !chart.options.scales.x) return;
     if (!channels || channels.length === 0) return;
 
-    var hasOscillationWave = false;
-    for (var i = 0; i < channels.length; i += 1) {
-      if (channels[i] && channels[i].oscillation === true) {
-        hasOscillationWave = true;
-        break;
-      }
-    }
-
     var nowMs = Date.now();
     var spanMs = getSpanSeconds() * 1000;
     chart.options.scales.x.min = nowMs - spanMs;
@@ -1118,13 +609,7 @@
     ];
     for (var i = 0; i < channels.length; i += 1) {
       var channel = channels[i];
-      parts.push([
-        channel.key,
-        channel.oscillation ? "osc" : "raw",
-        channel.oscillationPeriodMs,
-        channel.oscillationMode,
-        channel.oscillationDutyPercent
-      ].join("|"));
+      parts.push(channel.key);
     }
     return parts.join("||");
   }
@@ -1147,7 +632,6 @@
     configuredChannels = channels;
     if (channels.length === 0) {
       hasHistoryLoaded = false;
-      oscillationHintsByChannel = Object.create(null);
       showOverlay("No channels configured. Open Edit Chart to pick channels.");
       chart.data.datasets = [];
       chart.update("none");
@@ -1166,27 +650,12 @@
     var points = getMaxPoints();
 
     var requests = channels.map(function (channel, channelIndex) {
-      // Oscillation channels don't need historical sample data -- their waveform is
-      // synthesized client-side from the live value arriving via SignalR.
-      if (channel.oscillation === true) {
-        var seedPoint = { x: Date.now(), y: 0 };
-        return Promise.resolve({
-          channelIndex: channelIndex,
-          channelKey: channel.key,
-          channel: channel,
-          rawPoints: [seedPoint],
-          points: buildOscillationPoints([seedPoint], channel)
-        });
-      }
-
       return window.BruControl.fetchSamples(channel.elementId, channel.index, since, points)
         .then(function (samples) {
           var basePoints = toSamplePoints(samples);
           return {
             channelIndex: channelIndex,
             channelKey: channel.key,
-            channel: channel,
-            rawPoints: basePoints,
             points: basePoints
           };
         })
@@ -1194,8 +663,6 @@
           return {
             channelIndex: channelIndex,
             channelKey: channel.key,
-            channel: channel,
-            rawPoints: [],
             points: []
           };
         });
@@ -1208,21 +675,11 @@
         var result = results[i];
         var dataset = datasetByChannelKey(result.channelKey);
         if (!dataset) continue;
-
-        var normalizedKey = normalizeChannelKey(result.channelKey);
-        if (result.channel && result.channel.oscillation === true) {
-          oscillationRawPointsByChannel[normalizedKey] = result.rawPoints.slice();
-        } else {
-          delete oscillationRawPointsByChannel[normalizedKey];
-        }
-
         dataset.data = result.points;
       }
 
       trimDatasets();
-      pruneOscillationRawPoints(channels);
       hasHistoryLoaded = true;
-      ensureOscillationAnimation(channels);
       ensureRealtimeTick(channels);
       applyRealtimeXAxisWindow(channels);
       chart.update("none");
@@ -1243,29 +700,6 @@
     if (!dataset) return;
     if (!Number.isFinite(sample.timestampUnixMs) || typeof sample.value !== "number" || !Number.isFinite(sample.value)) return;
 
-    if (dataset._oscillation) {
-      // For oscillation channels, animate locally using latest duty/period hints.
-      upsertOscillationRawPoint(sample.channelKey, sample.timestampUnixMs, sample.value);
-
-      // Accept oscillation hints piggybacked on the SignalR sample event.
-      var sampleHintKey = normalizeChannelKey(sample.channelKey);
-      if (sampleHintKey) {
-        var dutyFromSample = toNumber(sample.oscillationDutyPercent, NaN);
-        var periodFromSample = toNumber(sample.oscillationPeriodMs, NaN);
-        if (Number.isFinite(dutyFromSample) || Number.isFinite(periodFromSample)) {
-          var existingHint = oscillationHintsByChannel[sampleHintKey] || {};
-          oscillationHintsByChannel[sampleHintKey] = {
-            mode: existingHint.mode || null,
-            dutyPercent: Number.isFinite(dutyFromSample) ? clamp(dutyFromSample, 0, 100) : (existingHint.dutyPercent || null),
-            periodMs: Number.isFinite(periodFromSample) && periodFromSample > 0 ? clamp(Math.round(periodFromSample), 20, 60000) : (existingHint.periodMs || null)
-          };
-        }
-      }
-
-      refreshOscillationDatasetsFromCache();
-      return;
-    }
-
     dataset.data.push({ x: sample.timestampUnixMs, y: sample.value });
     trimDatasets();
     ensureRealtimeTick(configuredChannels);
@@ -1278,12 +712,10 @@
 
     var channels = getConfiguredChannels();
     configuredChannels = channels;
-    pruneOscillationRawPoints(channels);
     var historySignature = buildHistorySignature(channels);
     if (historySignature !== lastHistorySignature) {
       lastHistorySignature = historySignature;
       hasHistoryLoaded = false;
-      oscillationHintsLoadedOnce = false;
     }
     var chartInstance = ensureChart(channels);
     if (!chartInstance) return;
@@ -1296,15 +728,11 @@
     updateHeaderMeta(channels.length);
 
     if (channels.length === 0) {
-      clearOscillationAnimation();
       clearRealtimeTick();
-      oscillationHintsByChannel = Object.create(null);
       showOverlay("No channels configured. Open Edit Chart to pick channels.");
       chartInstance.update("none");
       return;
     }
-
-    requestOscillationHintsRefresh(channels);
 
     if (!hasHistoryLoaded) {
       showOverlay("Loading chart history...");
@@ -1313,7 +741,6 @@
     }
     chartInstance.update("none");
     applyRealtimeXAxisWindow(channels);
-    ensureOscillationAnimation(channels);
     ensureRealtimeTick(channels);
 
     // Only load history once (or when config changes, which resets hasHistoryLoaded).
@@ -1354,7 +781,6 @@
       chartStyle: "line",
       timeRangePreset: "5m",
       maxPoints: 800,
-      oscilloscopeMode: false,
       channels: [
         {
           channelID: { elementID: "00000000-0000-0000-0000-000000000101", index: 0 },
@@ -1412,7 +838,6 @@
 
   window.addEventListener("beforeunload", function () {
     clearPreviewTimer();
-    clearOscillationAnimation();
     clearRealtimeTick();
   });
 })();

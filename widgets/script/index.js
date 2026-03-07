@@ -1,4 +1,6 @@
 (function () {
+  var headerEl = document.getElementById("widgetHeader");
+  var titleEl = document.getElementById("widgetTitle");
   var variableLabelEl = document.getElementById("variableLabel");
   var valueDisplayEl = document.getElementById("valueDisplay");
   var currentData = null;
@@ -21,6 +23,10 @@
         widget.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
       }
       widget.style.borderRadius = "8px";
+    }
+
+    if (headerEl) {
+      headerEl.style.display = d.showHeader === false ? "none" : "";
     }
 
     if (variableLabelEl) {
@@ -50,6 +56,10 @@
     currentData = data || {};
     var variableName = currentData.variableName || currentData.displayName || currentData.name || "--";
     var value = currentData.value != null ? String(currentData.value) : "--";
+
+    if (titleEl) {
+      titleEl.textContent = currentData.displayName || currentData.name || "Script";
+    }
 
     if (variableLabelEl) {
       variableLabelEl.textContent = variableName;

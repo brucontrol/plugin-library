@@ -25,6 +25,25 @@ body {
   overflow: hidden;
 }
 
+.widget-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-tertiary, #2d2d2d);
+  border-bottom: 1px solid var(--border-color, #404040);
+  min-height: 32px;
+  flex-shrink: 0;
+}
+
+.widget-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary, #d4d4d4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .widget-content {
   flex: 1;
   display: flex;

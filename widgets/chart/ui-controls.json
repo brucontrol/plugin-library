@@ -22,7 +22,6 @@
     "default": "line",
     "enum": [
       "line",
-      "step",
       "area",
       "bar"
     ],
@@ -119,7 +118,6 @@
     "type": "text",
     "default": "5m",
     "enum": [
-      "4s",
       "15s",
       "30s",
       "1m",
@@ -187,27 +185,6 @@
     "description": "Right axis label",
     "group": "Axes"
   },
-  "axisColor": {
-    "type": "text",
-    "default": "",
-    "format": "color",
-    "description": "Axis and tick color override",
-    "group": "Appearance"
-  },
-  "legendColor": {
-    "type": "text",
-    "default": "",
-    "format": "color",
-    "description": "Legend text color override",
-    "group": "Appearance"
-  },
-  "headerColor": {
-    "type": "text",
-    "default": "",
-    "format": "color",
-    "description": "Header background override",
-    "group": "Appearance"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -221,57 +198,5 @@
     "format": "color",
     "description": "Widget border color override",
     "group": "Appearance"
-  },
-  "oscilloscopeMode": {
-    "type": "boolean",
-    "default": false,
-    "description": "Enable CRT oscilloscope rendering mode",
-    "group": "Oscilloscope"
-  },
-  "oscilloscopeColor": {
-    "type": "text",
-    "default": "#66FF99",
-    "format": "color",
-    "description": "Primary phosphor line color",
-    "group": "Oscilloscope"
-  },
-  "oscilloscopeGlow": {
-    "type": "number",
-    "default": 16,
-    "min": 0,
-    "max": 40,
-    "format": "range",
-    "description": "Line glow radius",
-    "group": "Oscilloscope"
-  },
-  "oscilloscopeScanlineOpacity": {
-    "type": "number",
-    "default": 0.12,
-    "min": 0,
-    "max": 0.35,
-    "step": 0.01,
-    "format": "range",
-    "description": "Scanline overlay opacity",
-    "group": "Oscilloscope"
-  },
-  "oscilloscopePersistence": {
-    "type": "number",
-    "default": 0.22,
-    "min": 0,
-    "max": 0.95,
-    "step": 0.01,
-    "format": "range",
-    "description": "Phosphor persistence trail amount",
-    "group": "Oscilloscope"
-  },
-  "oscilloscopeNoise": {
-    "type": "number",
-    "default": 0.03,
-    "min": 0,
-    "max": 0.2,
-    "step": 0.01,
-    "format": "range",
-    "description": "CRT noise grain intensity",
-    "group": "Oscilloscope"
   }
 }
