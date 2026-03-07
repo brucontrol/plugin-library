@@ -1,6 +1,6 @@
 name: Global Variable - Card
 description: Built-in widget for displaying global variable value and label (matches widget editor default).
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - globalVariable-bool
   - globalVariable-value
