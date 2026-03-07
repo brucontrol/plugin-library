@@ -1,6 +1,6 @@
 name: Digital Input - Card
 description: Built-in digital input widget template.
-version: 1.2.0
+version: 1.2.1
 supportedTypes:
   - digitalInput
 defaultFor: digitalInput
