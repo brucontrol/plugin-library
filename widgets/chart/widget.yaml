@@ -1,6 +1,6 @@
 name: Chart - Card
 description: Built-in chart widget template with history, live streaming, and oscilloscope mode.
-version: 1.0.2
+version: 1.0.3
 supportedTypes:
   - chart
 defaultFor: chart
