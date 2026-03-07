@@ -20,13 +20,7 @@
   "showValue": {
     "type": "boolean",
     "default": true,
-    "description": "Show toggle display",
-    "group": "Layout"
-  },
-  "showToggleLabel": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show ON/OFF text beside toggle",
+    "description": "Show ON/OFF value text",
     "group": "Layout"
   },
   "showActiveIndicator": {
@@ -46,22 +40,6 @@
     "default": "OFF",
     "group": "Display",
     "description": "Label text when input is low"
-  },
-  "toggleOnColor": {
-    "type": "text",
-    "default": "",
-    "group": "Display",
-    "description": "Toggle track color when on",
-    "format": "color",
-    "x-theme-default": "accentGreen"
-  },
-  "toggleOffColor": {
-    "type": "text",
-    "default": "",
-    "group": "Display",
-    "description": "Toggle track color when off",
-    "format": "color",
-    "x-theme-default": "bgTertiary"
   },
   "labelFontFamily": {
     "type": "text",

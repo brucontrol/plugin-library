@@ -29,9 +29,7 @@
     var header = document.querySelector(".widget-header");
     var content = document.querySelector(".widget-content");
     var titleEl = document.getElementById("widgetTitle");
-    var toggleLabel = document.getElementById("toggleLabel");
-    var toggleTrack = document.querySelector(".toggle-track");
-    var toggleSwitch = document.getElementById("toggleSwitch");
+    var valueText = document.getElementById("valueText");
     var isOn = currentData ? asBool(currentData.value) : false;
 
     if (widget) {
@@ -65,54 +63,32 @@
       titleEl.style.textAlign = "left";
     }
 
-    if (toggleLabel) {
-      toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
-      toggleLabel.style.fontFamily = d.valueFontFamily || "";
-      toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      toggleLabel.style.fontWeight = d.valueFontWeight || "";
-      toggleLabel.style.fontStyle = d.valueFontStyle || "";
-      toggleLabel.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
-      toggleLabel.style.textAlign = "center";
-      toggleLabel.textContent = getStateLabel(isOn);
-      toggleLabel.classList.toggle("on", isOn);
-    }
-
-    if (toggleTrack) {
-      if (isOn && d.toggleOnColor) {
-        toggleTrack.style.background = d.toggleOnColor;
-      } else if (!isOn && d.toggleOffColor) {
-        toggleTrack.style.background = d.toggleOffColor;
-      } else {
-        toggleTrack.style.background = "";
-      }
-    }
-
-    if (toggleSwitch) {
-      toggleSwitch.style.display = d.showValue === false ? "none" : "";
+    if (valueText) {
+      valueText.style.display = d.showValue === false ? "none" : "";
+      valueText.style.fontFamily = d.valueFontFamily || "";
+      valueText.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      valueText.style.fontWeight = d.valueFontWeight || "";
+      valueText.style.fontStyle = d.valueFontStyle || "";
+      valueText.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
+      valueText.style.textAlign = "center";
+      valueText.textContent = getStateLabel(isOn);
+      valueText.classList.toggle("on", isOn);
     }
   }
 
   function updateDisplay(data) {
     currentData = data;
-    var toggleSwitch = document.getElementById("toggleSwitch");
+    var valueText = document.getElementById("valueText");
     var widgetTitle = document.getElementById("widgetTitle");
-    var toggleLabel = document.getElementById("toggleLabel");
     var activeIndicator = document.getElementById("activeIndicator");
 
-    if (!data || !toggleSwitch || !widgetTitle) return;
+    if (!data || !valueText || !widgetTitle) return;
 
     var isOn = asBool(data.value);
-    if (isOn) {
-      toggleSwitch.classList.add("on");
-    } else {
-      toggleSwitch.classList.remove("on");
-    }
+    valueText.textContent = getStateLabel(isOn);
+    valueText.classList.toggle("on", isOn);
 
     widgetTitle.textContent = data.displayName || data.name || "Digital In";
-
-    if (toggleLabel) {
-      toggleLabel.textContent = getStateLabel(isOn);
-    }
 
     if (activeIndicator) {
       var showIndicator = (currentData.showActiveIndicator !== false);
