@@ -64,6 +64,7 @@
     "type": "text",
     "default": "",
     "group": "Internal",
-    "description": "Persisted anchor positions (JSON, managed by widget)"
+    "description": "Persisted anchor positions (JSON, managed by widget)",
+    "hidden": true
   }
 }
