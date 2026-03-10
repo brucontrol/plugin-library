@@ -658,7 +658,7 @@
     });
 
     Promise.all(requests).then(function (results) {
-      if (!chart || requestVersion !== historyRequestVersion) return;
+      if (!chart || requestVersion !== initialRequestVersion) return;
 
       for (var i = 0; i < results.length; i += 1) {
         var result = results[i];
