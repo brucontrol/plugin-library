@@ -1,6 +1,7 @@
 (function () {
   var titleEl = document.getElementById("widgetTitle");
   var metaEl = document.getElementById("widgetMeta");
+  var refreshBtnEl = document.getElementById("chartRefreshBtn");
   var headerEl = document.getElementById("widgetHeader");
   var contentEl = document.getElementById("widgetContent");
   var overlayEl = document.getElementById("chartOverlay");
@@ -16,6 +17,7 @@
   var configuredChannels = [];
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
+  var historyLoadTime = null;
 
   // Fallback palette when theme is unavailable (VS Code Dark–style)
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
@@ -130,6 +132,22 @@
 
   function getMaxPoints() {
     return Math.round(clamp(toNumber(currentData.maxPoints, 1000), 100, 5000));
+  }
+
+  function getTimeRangeMode() {
+    var mode = String(currentData && currentData.timeRangeMode || "realtime").trim().toLowerCase();
+    return mode === "history" ? "history" : "realtime";
+  }
+
+  function downsampleToMaxPoints(data, maxPoints) {
+    if (!Array.isArray(data) || data.length <= maxPoints) return data;
+    var result = [];
+    var step = (data.length - 1) / (maxPoints - 1);
+    for (var i = 0; i < maxPoints; i += 1) {
+      var idx = Math.round(i * step);
+      result.push(data[idx]);
+    }
+    return result;
   }
 
   function getChartStyle() {
@@ -413,6 +431,12 @@
     }
   }
 
+  function updateRefreshButton() {
+    if (!refreshBtnEl) return;
+    var show = getTimeRangeMode() === "history" && configuredChannels.length > 0;
+    refreshBtnEl.classList.toggle("hidden", !show);
+  }
+
   function updateHeaderMeta(channelCount) {
     if (!metaEl) return;
     var span = getSpanSeconds();
@@ -429,6 +453,7 @@
       value = Math.round((span / 60) * 10) / 10;
     }
     metaEl.textContent = String(channelCount) + " ch • " + String(value) + units + " window";
+    updateRefreshButton();
   }
 
   function applyWidgetStyles() {
@@ -486,6 +511,7 @@
   }
 
   function refreshRealtimeDatasets() {
+    if (getTimeRangeMode() === "history") return;
     if (!chart || !Array.isArray(chart.data.datasets)) return;
     var nowMs = Date.now();
     var updated = false;
@@ -512,6 +538,10 @@
   }
 
   function ensureRealtimeTick(channels) {
+    if (getTimeRangeMode() === "history") {
+      clearRealtimeTick();
+      return;
+    }
     if (!hasHistoryLoaded) {
       clearRealtimeTick();
       return;
@@ -534,7 +564,9 @@
 
   function trimDatasets() {
     if (!chart) return;
-    var cutoff = Date.now() - getSpanSeconds() * 1000;
+    var mode = getTimeRangeMode();
+    var spanMs = getSpanSeconds() * 1000;
+    var cutoff = Date.now() - spanMs;
     var maxPoints = getMaxPoints();
     var datasets = chart.data.datasets || [];
 
@@ -542,14 +574,22 @@
       var dataset = datasets[i];
       if (!Array.isArray(dataset.data)) continue;
 
-      while (dataset.data.length > 0) {
-        var firstTs = pointToTimestamp(dataset.data[0]);
-        if (!Number.isFinite(firstTs) || firstTs >= cutoff) break;
-        dataset.data.shift();
+      if (mode === "realtime") {
+        while (dataset.data.length > 0) {
+          var firstTs = pointToTimestamp(dataset.data[0]);
+          if (!Number.isFinite(firstTs) || firstTs >= cutoff) break;
+          dataset.data.shift();
+        }
       }
 
-      while (dataset.data.length > maxPoints) {
-        dataset.data.shift();
+      if (dataset.data.length > maxPoints) {
+        if (mode === "history") {
+          dataset.data = downsampleToMaxPoints(dataset.data, maxPoints);
+        } else {
+          while (dataset.data.length > maxPoints) {
+            dataset.data.shift();
+          }
+        }
       }
     }
   }
@@ -595,17 +635,24 @@
     if (!chart || !chart.options || !chart.options.scales || !chart.options.scales.x) return;
     if (!channels || channels.length === 0) return;
 
-    var nowMs = Date.now();
     var spanMs = getSpanSeconds() * 1000;
-    chart.options.scales.x.min = nowMs - spanMs;
-    chart.options.scales.x.max = nowMs;
+    var mode = getTimeRangeMode();
+    var endMs;
+    if (mode === "history" && historyLoadTime != null) {
+      endMs = historyLoadTime;
+    } else {
+      endMs = Date.now();
+    }
+    chart.options.scales.x.min = endMs - spanMs;
+    chart.options.scales.x.max = endMs;
   }
 
   function buildHistorySignature(channels) {
     var parts = [
       normalizeChannelKey(currentData && currentData.id),
       String(getSpanSeconds()),
-      String(getMaxPoints())
+      String(getMaxPoints()),
+      getTimeRangeMode()
     ];
     for (var i = 0; i < channels.length; i += 1) {
       var channel = channels[i];
@@ -678,6 +725,9 @@
         dataset.data = result.points;
       }
 
+      if (getTimeRangeMode() === "history") {
+        historyLoadTime = Date.now();
+      }
       trimDatasets();
       hasHistoryLoaded = true;
       ensureRealtimeTick(channels);
@@ -702,8 +752,10 @@
 
     dataset.data.push({ x: sample.timestampUnixMs, y: sample.value });
     trimDatasets();
-    ensureRealtimeTick(configuredChannels);
-    applyRealtimeXAxisWindow(configuredChannels);
+    if (getTimeRangeMode() === "realtime") {
+      ensureRealtimeTick(configuredChannels);
+      applyRealtimeXAxisWindow(configuredChannels);
+    }
     chart.update("none");
   }
 
@@ -716,6 +768,7 @@
     if (historySignature !== lastHistorySignature) {
       lastHistorySignature = historySignature;
       hasHistoryLoaded = false;
+      historyLoadTime = null;
     }
     var chartInstance = ensureChart(channels);
     if (!chartInstance) return;
@@ -818,6 +871,14 @@
         value: 34 + Math.cos(previewPhase * 0.6) * 11
       });
     }, 1000);
+  }
+
+  if (refreshBtnEl) {
+    refreshBtnEl.addEventListener("click", function () {
+      if (getTimeRangeMode() === "history") {
+        refreshHistory();
+      }
+    });
   }
 
   if (window.BruControl) {
