@@ -114,6 +114,13 @@
     "description": "Override channel 4 color",
     "group": "Series"
   },
+  "timeRangeMode": {
+    "type": "text",
+    "default": "realtime",
+    "enum": ["realtime", "history"],
+    "description": "Realtime = sliding window. History = fixed window at load (no left-side erosion).",
+    "group": "Time"
+  },
   "timeRangePreset": {
     "type": "text",
     "default": "5m",
