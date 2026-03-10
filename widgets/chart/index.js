@@ -111,13 +111,58 @@
 
   function downsampleToMaxPoints(data, maxPoints) {
     if (!Array.isArray(data) || data.length <= maxPoints) return data;
-    var result = [];
-    var step = (data.length - 1) / (maxPoints - 1);
-    for (var i = 0; i < maxPoints; i += 1) {
-      var idx = Math.round(i * step);
-      result.push(data[idx]);
+    var dataLength = data.length;
+    if (maxPoints <= 2) return [data[0], data[dataLength - 1]];
+
+    var sampled = [data[0]];
+    var bucketSize = (dataLength - 2) / (maxPoints - 2);
+    var a = 0;
+
+    for (var i = 0; i < maxPoints - 2; i += 1) {
+      var avgX = 0;
+      var avgY = 0;
+      var avgRangeStart = Math.floor((i + 1) * bucketSize) + 1;
+      var avgRangeEnd = Math.min(Math.floor((i + 2) * bucketSize) + 1, dataLength);
+      var avgRangeLength = avgRangeEnd - avgRangeStart;
+
+      for (var j = avgRangeStart; j < avgRangeEnd; j += 1) {
+        var px = typeof data[j].x === "number" ? data[j].x : new Date(data[j].x).getTime();
+        avgX += px;
+        avgY += data[j].y;
+      }
+      if (avgRangeLength > 0) {
+        avgX /= avgRangeLength;
+        avgY /= avgRangeLength;
+      } else if (avgRangeStart < dataLength) {
+        avgX = typeof data[avgRangeStart].x === "number" ? data[avgRangeStart].x : new Date(data[avgRangeStart].x).getTime();
+        avgY = data[avgRangeStart].y;
+      }
+
+      var rangeStart = Math.floor(i * bucketSize) + 1;
+      var rangeEnd = Math.floor((i + 1) * bucketSize) + 1;
+      var pointAX = typeof data[a].x === "number" ? data[a].x : new Date(data[a].x).getTime();
+
+      var maxArea = -1;
+      var maxAreaPoint = rangeStart;
+
+      for (var k = rangeStart; k < rangeEnd; k += 1) {
+        var kx = typeof data[k].x === "number" ? data[k].x : new Date(data[k].x).getTime();
+        var area = Math.abs(
+          (pointAX - avgX) * (data[k].y - data[a].y) -
+          (pointAX - kx) * (avgY - data[a].y)
+        ) * 0.5;
+        if (area > maxArea) {
+          maxArea = area;
+          maxAreaPoint = k;
+        }
+      }
+
+      sampled.push(data[maxAreaPoint]);
+      a = maxAreaPoint;
     }
-    return result;
+
+    sampled.push(data[dataLength - 1]);
+    return sampled;
   }
 
   function getChartStyle() {
