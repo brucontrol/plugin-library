@@ -16,6 +16,7 @@
   var configuredChannels = [];
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
+  var isRefreshing = false;
 
   // Fallback palette when theme is unavailable (VS Code Dark–style)
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
@@ -23,6 +24,7 @@
   var THEME_CHANNEL_KEYS = ["accent-green", "accent-yellow", "accent-blue", "accent-purple", "accent-orange", "accent-red"];
   var REALTIME_TICK_INTERVAL_MS = 1000;
   var REALTIME_EXTEND_THRESHOLD_MS = 500;
+  var BUFFER_OVER_MAX = 500;
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -109,60 +111,8 @@
     return Math.round(clamp(toNumber(currentData.maxPoints, 1000), 100, 5000));
   }
 
-  function downsampleToMaxPoints(data, maxPoints) {
-    if (!Array.isArray(data) || data.length <= maxPoints) return data;
-    var dataLength = data.length;
-    if (maxPoints <= 2) return [data[0], data[dataLength - 1]];
-
-    var sampled = [data[0]];
-    var bucketSize = (dataLength - 2) / (maxPoints - 2);
-    var a = 0;
-
-    for (var i = 0; i < maxPoints - 2; i += 1) {
-      var avgX = 0;
-      var avgY = 0;
-      var avgRangeStart = Math.floor((i + 1) * bucketSize) + 1;
-      var avgRangeEnd = Math.min(Math.floor((i + 2) * bucketSize) + 1, dataLength);
-      var avgRangeLength = avgRangeEnd - avgRangeStart;
-
-      for (var j = avgRangeStart; j < avgRangeEnd; j += 1) {
-        var px = typeof data[j].x === "number" ? data[j].x : new Date(data[j].x).getTime();
-        avgX += px;
-        avgY += data[j].y;
-      }
-      if (avgRangeLength > 0) {
-        avgX /= avgRangeLength;
-        avgY /= avgRangeLength;
-      } else if (avgRangeStart < dataLength) {
-        avgX = typeof data[avgRangeStart].x === "number" ? data[avgRangeStart].x : new Date(data[avgRangeStart].x).getTime();
-        avgY = data[avgRangeStart].y;
-      }
-
-      var rangeStart = Math.floor(i * bucketSize) + 1;
-      var rangeEnd = Math.floor((i + 1) * bucketSize) + 1;
-      var pointAX = typeof data[a].x === "number" ? data[a].x : new Date(data[a].x).getTime();
-
-      var maxArea = -1;
-      var maxAreaPoint = rangeStart;
-
-      for (var k = rangeStart; k < rangeEnd; k += 1) {
-        var kx = typeof data[k].x === "number" ? data[k].x : new Date(data[k].x).getTime();
-        var area = Math.abs(
-          (pointAX - avgX) * (data[k].y - data[a].y) -
-          (pointAX - kx) * (avgY - data[a].y)
-        ) * 0.5;
-        if (area > maxArea) {
-          maxArea = area;
-          maxAreaPoint = k;
-        }
-      }
-
-      sampled.push(data[maxAreaPoint]);
-      a = maxAreaPoint;
-    }
-
-    sampled.push(data[dataLength - 1]);
-    return sampled;
+  function getRefreshCap() {
+    return getMaxPoints() + BUFFER_OVER_MAX;
   }
 
   function getChartStyle() {
@@ -566,24 +516,17 @@
   }
 
   function trimDatasets() {
-    if (!chart) return;
-    var spanMs = getSpanSeconds() * 1000;
-    var cutoff = Date.now() - spanMs;
-    var maxPoints = getMaxPoints();
+    if (!chart || isRefreshing) return;
+    var cap = getRefreshCap();
     var datasets = chart.data.datasets || [];
 
     for (var i = 0; i < datasets.length; i += 1) {
       var dataset = datasets[i];
       if (!Array.isArray(dataset.data)) continue;
-
-      while (dataset.data.length > 0) {
-        var firstTs = pointToTimestamp(dataset.data[0]);
-        if (!Number.isFinite(firstTs) || firstTs >= cutoff) break;
-        dataset.data.shift();
-      }
-
-      if (dataset.data.length > maxPoints) {
-        dataset.data = downsampleToMaxPoints(dataset.data, maxPoints);
+      if (dataset.data.length >= cap) {
+        isRefreshing = true;
+        loadInitialData();
+        return;
       }
     }
   }
@@ -660,11 +603,15 @@
   }
 
   function loadInitialData() {
-    if (!window.BruControl || !window.BruControl.fetchSamples || !chart) return;
+    if (!window.BruControl || !window.BruControl.fetchSamples || !chart) {
+      isRefreshing = false;
+      return;
+    }
 
     var channels = getConfiguredChannels();
     configuredChannels = channels;
     if (channels.length === 0) {
+      isRefreshing = false;
       hasInitialDataLoaded = false;
       showOverlay("No channels configured. Open Edit Chart to pick channels.");
       chart.data.datasets = [];
@@ -703,7 +650,10 @@
     });
 
     Promise.all(requests).then(function (results) {
-      if (!chart || requestVersion !== initialRequestVersion) return;
+      if (!chart || requestVersion !== initialRequestVersion) {
+        isRefreshing = false;
+        return;
+      }
 
       for (var i = 0; i < results.length; i += 1) {
         var result = results[i];
@@ -712,6 +662,7 @@
         dataset.data = result.points;
       }
 
+      isRefreshing = false;
       trimDatasets();
       hasInitialDataLoaded = true;
       ensureRealtimeTick(channels);
@@ -721,6 +672,8 @@
       if (showLoadingOverlay) {
         showOverlay(null);
       }
+    }).catch(function () {
+      isRefreshing = false;
     });
   }
 
