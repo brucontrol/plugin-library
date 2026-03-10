@@ -1,7 +1,6 @@
 (function () {
   var titleEl = document.getElementById("widgetTitle");
   var metaEl = document.getElementById("widgetMeta");
-  var refreshBtnEl = document.getElementById("chartRefreshBtn");
   var headerEl = document.getElementById("widgetHeader");
   var contentEl = document.getElementById("widgetContent");
   var overlayEl = document.getElementById("chartOverlay");
@@ -10,14 +9,13 @@
 
   var currentData = null;
   var chart = null;
-  var historyRequestVersion = 0;
-  var historyRefreshHandle = null;
-  var hasHistoryLoaded = false;
-  var lastHistorySignature = "";
+  var initialRequestVersion = 0;
+  var initialRefreshHandle = null;
+  var hasInitialDataLoaded = false;
+  var lastConfigSignature = "";
   var configuredChannels = [];
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
-  var historyLoadTime = null;
 
   // Fallback palette when theme is unavailable (VS Code Dark–style)
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
@@ -25,18 +23,6 @@
   var THEME_CHANNEL_KEYS = ["accent-green", "accent-yellow", "accent-blue", "accent-purple", "accent-orange", "accent-red"];
   var REALTIME_TICK_INTERVAL_MS = 1000;
   var REALTIME_EXTEND_THRESHOLD_MS = 500;
-  var TIME_PRESETS = {
-    "4s": 4,
-    "15s": 15,
-    "30s": 30,
-    "1m": 60,
-    "5m": 300,
-    "15m": 900,
-    "1h": 3600,
-    "6h": 21600,
-    "24h": 86400,
-    "7d": 604800
-  };
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -112,31 +98,15 @@
   }
 
   function getSpanSeconds() {
-    var presetRaw = String(currentData.timeRangePreset || "").trim().toLowerCase();
-    if (presetRaw && presetRaw !== "custom" && Object.prototype.hasOwnProperty.call(TIME_PRESETS, presetRaw)) {
-      return TIME_PRESETS[presetRaw];
+    var span = toNumber(currentData && currentData.spanSeconds, NaN);
+    if (Number.isFinite(span) && span >= 4) {
+      return span;
     }
-
-    var custom = toNumber(currentData.customSpanSeconds, NaN);
-    if (Number.isFinite(custom) && custom >= 4) {
-      return custom;
-    }
-
-    var fromElement = toNumber(currentData && currentData.spanSeconds, NaN);
-    if (Number.isFinite(fromElement) && fromElement >= 4) {
-      return fromElement;
-    }
-
     return 300;
   }
 
   function getMaxPoints() {
     return Math.round(clamp(toNumber(currentData.maxPoints, 1000), 100, 5000));
-  }
-
-  function getTimeRangeMode() {
-    var mode = String(currentData && currentData.timeRangeMode || "realtime").trim().toLowerCase();
-    return mode === "history" ? "history" : "realtime";
   }
 
   function downsampleToMaxPoints(data, maxPoints) {
@@ -431,12 +401,6 @@
     }
   }
 
-  function updateRefreshButton() {
-    if (!refreshBtnEl) return;
-    var show = getTimeRangeMode() === "history" && configuredChannels.length > 0;
-    refreshBtnEl.classList.toggle("hidden", !show);
-  }
-
   function updateHeaderMeta(channelCount) {
     if (!metaEl) return;
     var span = getSpanSeconds();
@@ -453,7 +417,6 @@
       value = Math.round((span / 60) * 10) / 10;
     }
     metaEl.textContent = String(channelCount) + " ch • " + String(value) + units + " window";
-    updateRefreshButton();
   }
 
   function applyWidgetStyles() {
@@ -511,7 +474,6 @@
   }
 
   function refreshRealtimeDatasets() {
-    if (getTimeRangeMode() === "history") return;
     if (!chart || !Array.isArray(chart.data.datasets)) return;
     var nowMs = Date.now();
     var updated = false;
@@ -538,11 +500,7 @@
   }
 
   function ensureRealtimeTick(channels) {
-    if (getTimeRangeMode() === "history") {
-      clearRealtimeTick();
-      return;
-    }
-    if (!hasHistoryLoaded) {
+    if (!hasInitialDataLoaded) {
       clearRealtimeTick();
       return;
     }
@@ -564,7 +522,6 @@
 
   function trimDatasets() {
     if (!chart) return;
-    var mode = getTimeRangeMode();
     var spanMs = getSpanSeconds() * 1000;
     var cutoff = Date.now() - spanMs;
     var maxPoints = getMaxPoints();
@@ -574,22 +531,14 @@
       var dataset = datasets[i];
       if (!Array.isArray(dataset.data)) continue;
 
-      if (mode === "realtime") {
-        while (dataset.data.length > 0) {
-          var firstTs = pointToTimestamp(dataset.data[0]);
-          if (!Number.isFinite(firstTs) || firstTs >= cutoff) break;
-          dataset.data.shift();
-        }
+      while (dataset.data.length > 0) {
+        var firstTs = pointToTimestamp(dataset.data[0]);
+        if (!Number.isFinite(firstTs) || firstTs >= cutoff) break;
+        dataset.data.shift();
       }
 
       if (dataset.data.length > maxPoints) {
-        if (mode === "history") {
-          dataset.data = downsampleToMaxPoints(dataset.data, maxPoints);
-        } else {
-          while (dataset.data.length > maxPoints) {
-            dataset.data.shift();
-          }
-        }
+        dataset.data = downsampleToMaxPoints(dataset.data, maxPoints);
       }
     }
   }
@@ -636,23 +585,16 @@
     if (!channels || channels.length === 0) return;
 
     var spanMs = getSpanSeconds() * 1000;
-    var mode = getTimeRangeMode();
-    var endMs;
-    if (mode === "history" && historyLoadTime != null) {
-      endMs = historyLoadTime;
-    } else {
-      endMs = Date.now();
-    }
+    var endMs = Date.now();
     chart.options.scales.x.min = endMs - spanMs;
     chart.options.scales.x.max = endMs;
   }
 
-  function buildHistorySignature(channels) {
+  function buildConfigSignature(channels) {
     var parts = [
       normalizeChannelKey(currentData && currentData.id),
       String(getSpanSeconds()),
-      String(getMaxPoints()),
-      getTimeRangeMode()
+      String(getMaxPoints())
     ];
     for (var i = 0; i < channels.length; i += 1) {
       var channel = channels[i];
@@ -661,24 +603,24 @@
     return parts.join("||");
   }
 
-  function requestHistoryRefresh() {
-    if (historyRefreshHandle) {
-      clearTimeout(historyRefreshHandle);
-      historyRefreshHandle = null;
+  function requestInitialLoad() {
+    if (initialRefreshHandle) {
+      clearTimeout(initialRefreshHandle);
+      initialRefreshHandle = null;
     }
-    historyRefreshHandle = setTimeout(function () {
-      historyRefreshHandle = null;
-      refreshHistory();
+    initialRefreshHandle = setTimeout(function () {
+      initialRefreshHandle = null;
+      loadInitialData();
     }, 60);
   }
 
-  function refreshHistory() {
+  function loadInitialData() {
     if (!window.BruControl || !window.BruControl.fetchSamples || !chart) return;
 
     var channels = getConfiguredChannels();
     configuredChannels = channels;
     if (channels.length === 0) {
-      hasHistoryLoaded = false;
+      hasInitialDataLoaded = false;
       showOverlay("No channels configured. Open Edit Chart to pick channels.");
       chart.data.datasets = [];
       chart.update("none");
@@ -686,12 +628,12 @@
       return;
     }
 
-    var showLoadingOverlay = !hasHistoryLoaded;
+    var showLoadingOverlay = !hasInitialDataLoaded;
     if (showLoadingOverlay) {
       showOverlay("Loading chart history...");
     }
-    var requestVersion = historyRequestVersion + 1;
-    historyRequestVersion = requestVersion;
+    var requestVersion = initialRequestVersion + 1;
+    initialRequestVersion = requestVersion;
 
     var since = new Date(Date.now() - getSpanSeconds() * 1000).toISOString();
     var points = getMaxPoints();
@@ -725,11 +667,8 @@
         dataset.data = result.points;
       }
 
-      if (getTimeRangeMode() === "history") {
-        historyLoadTime = Date.now();
-      }
       trimDatasets();
-      hasHistoryLoaded = true;
+      hasInitialDataLoaded = true;
       ensureRealtimeTick(channels);
       applyRealtimeXAxisWindow(channels);
       chart.update("none");
@@ -752,10 +691,8 @@
 
     dataset.data.push({ x: sample.timestampUnixMs, y: sample.value });
     trimDatasets();
-    if (getTimeRangeMode() === "realtime") {
-      ensureRealtimeTick(configuredChannels);
-      applyRealtimeXAxisWindow(configuredChannels);
-    }
+    ensureRealtimeTick(configuredChannels);
+    applyRealtimeXAxisWindow(configuredChannels);
     chart.update("none");
   }
 
@@ -764,11 +701,10 @@
 
     var channels = getConfiguredChannels();
     configuredChannels = channels;
-    var historySignature = buildHistorySignature(channels);
-    if (historySignature !== lastHistorySignature) {
-      lastHistorySignature = historySignature;
-      hasHistoryLoaded = false;
-      historyLoadTime = null;
+    var configSignature = buildConfigSignature(channels);
+    if (configSignature !== lastConfigSignature) {
+      lastConfigSignature = configSignature;
+      hasInitialDataLoaded = false;
     }
     var chartInstance = ensureChart(channels);
     if (!chartInstance) return;
@@ -787,8 +723,8 @@
       return;
     }
 
-    if (!hasHistoryLoaded) {
-      showOverlay("Loading chart history...");
+    if (!hasInitialDataLoaded) {
+      showOverlay("Loading chart data...");
     } else {
       showOverlay(null);
     }
@@ -796,10 +732,8 @@
     applyRealtimeXAxisWindow(channels);
     ensureRealtimeTick(channels);
 
-    // Only load history once (or when config changes, which resets hasHistoryLoaded).
-    // After history is loaded, all live updates come through SignalR -- no re-fetching.
-    if (!hasHistoryLoaded) {
-      requestHistoryRefresh();
+    if (!hasInitialDataLoaded) {
+      requestInitialLoad();
     }
   }
 
@@ -825,14 +759,12 @@
       name: "Chart",
       displayName: "Preview Trend",
       spanSeconds: 300,
-      refreshInterval: 1,
       showHeader: true,
       showBackground: true,
       showLegend: true,
       showGrid: true,
       showAxes: true,
       chartStyle: "line",
-      timeRangePreset: "5m",
       maxPoints: 800,
       channels: [
         {
@@ -871,14 +803,6 @@
         value: 34 + Math.cos(previewPhase * 0.6) * 11
       });
     }, 1000);
-  }
-
-  if (refreshBtnEl) {
-    refreshBtnEl.addEventListener("click", function () {
-      if (getTimeRangeMode() === "history") {
-        refreshHistory();
-      }
-    });
   }
 
   if (window.BruControl) {
