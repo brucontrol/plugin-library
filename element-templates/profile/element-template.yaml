@@ -1,0 +1,7 @@
+name: Profile - Card
+description: Built-in profile element template.
+version: 1.0.6
+supportedTypes:
+  - profile
+defaultFor: profile
+id: ae61e4ee-2d3b-4fd1-b5a9-270919a29943

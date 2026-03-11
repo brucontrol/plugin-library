@@ -1,0 +1,70 @@
+{
+  "tubeColor": {
+    "type": "text",
+    "default": "#b4d2e6",
+    "group": "Appearance",
+    "description": "Tint for the clear tube shell",
+    "format": "color"
+  },
+  "fluidColor": {
+    "type": "text",
+    "default": "#1e90ff",
+    "group": "Appearance",
+    "description": "Color of the liquid flowing through the hose",
+    "format": "color"
+  },
+  "hoseThickness": {
+    "type": "number",
+    "default": 20,
+    "group": "Appearance",
+    "description": "Tube diameter in pixels",
+    "format": "range",
+    "min": 8,
+    "max": 40
+  },
+  "flowSpeed": {
+    "type": "number",
+    "default": 1.0,
+    "group": "Flow",
+    "description": "Speed of the liquid animation",
+    "format": "range",
+    "min": 0.1,
+    "max": 3.0,
+    "step": 0.1
+  },
+  "flowDirection": {
+    "type": "text",
+    "default": "forward",
+    "group": "Flow",
+    "description": "Direction the liquid flows (forward = start to end)",
+    "enum": ["forward", "reverse"]
+  },
+  "bubbleDensity": {
+    "type": "number",
+    "default": 5,
+    "group": "Flow",
+    "description": "Number of bubbles visible in the hose",
+    "format": "range",
+    "min": 0,
+    "max": 20
+  },
+  "showHandles": {
+    "type": "boolean",
+    "default": true,
+    "group": "Interaction",
+    "description": "Show drag handles when focused"
+  },
+  "showResetBtn": {
+    "type": "boolean",
+    "default": true,
+    "group": "Interaction",
+    "description": "Show the reset-bends button when focused"
+  },
+  "anchors": {
+    "type": "text",
+    "default": "",
+    "group": "Internal",
+    "description": "Persisted anchor positions (JSON, managed by element)",
+    "hidden": true
+  }
+}

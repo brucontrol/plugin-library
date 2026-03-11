@@ -1,0 +1,31 @@
+name: Value Debug
+description: Debug element template that displays two bindable values with labels. Supports all element types for inspecting value and value2.
+version: 1.0.1
+supportedTypes:
+  - generic
+  - globalVariable-value
+  - globalVariable-bool
+  - globalVariable-string
+  - globalVariable-datetime
+  - globalVariable-timespan
+  - owTemp
+  - spiSensor
+  - analogInput
+  - pwmOutput
+  - dutyCycle
+  - pid
+  - counter
+  - hydrometer
+  - digitalInput
+  - digitalOutput
+  - timer
+  - stateful
+  - toggleSwitch
+  - button
+  - alarm
+  - profile
+  - hysteresis
+  - deadband
+  - chart
+  - scriptElement
+id: d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f7a

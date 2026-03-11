@@ -1,0 +1,157 @@
+{
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show header bar",
+    "group": "Layout"
+  },
+  "showBackground": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show element background and border",
+    "group": "Layout"
+  },
+  "showLabel": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show title label in header",
+    "group": "Layout"
+  },
+  "hiddenRowKeys": {
+    "type": "array",
+    "description": "Hide selected data rows",
+    "group": "Layout",
+    "items": {
+      "type": "string",
+      "enum": [
+        "value",
+        "target",
+        "band"
+      ]
+    }
+  },
+  "showValue": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show primary value rows",
+    "group": "Layout"
+  },
+  "showSecondaryRows": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show secondary detail rows",
+    "group": "Layout"
+  },
+  "showFooter": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show footer controls",
+    "group": "Layout"
+  },
+  "labelFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-family"
+  },
+  "labelFontSize": {
+    "type": "number",
+    "default": 12,
+    "group": "Label",
+    "format": "font-size",
+    "min": 8,
+    "max": 48
+  },
+  "labelFontWeight": {
+    "type": "text",
+    "default": "500",
+    "group": "Label",
+    "format": "font-weight"
+  },
+  "labelFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Label",
+    "format": "font-style"
+  },
+  "labelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "color",
+    "x-theme-default": "textPrimary"
+  },
+  "valueFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-family"
+  },
+  "valueFontSize": {
+    "type": "number",
+    "default": 14,
+    "group": "Value",
+    "format": "font-size",
+    "min": 10,
+    "max": 120
+  },
+  "valueFontWeight": {
+    "type": "text",
+    "default": "700",
+    "group": "Value",
+    "format": "font-weight"
+  },
+  "valueFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Value",
+    "format": "font-style"
+  },
+  "valueColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color",
+    "x-theme-default": "accentGreen"
+  },
+  "backgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override element background color",
+    "format": "color",
+    "x-theme-default": "bgSecondary"
+  },
+  "headerColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override header background color",
+    "format": "color",
+    "x-theme-default": "bgTertiary"
+  },
+  "borderColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override border color",
+    "format": "color",
+    "x-theme-default": "borderColor"
+  },
+  "rowLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Rows",
+    "description": "Override generic row label color",
+    "format": "color",
+    "x-theme-default": "textSecondary"
+  },
+  "rowValueColor": {
+    "type": "text",
+    "default": "",
+    "group": "Rows",
+    "description": "Override generic row value color",
+    "format": "color",
+    "x-theme-default": "accentGreen"
+  }
+}

@@ -1,7 +1,0 @@
-name: Generic Widget - Card
-description: Built-in default widget for generic elements. Shows the element name.
-version: 1.0.3
-supportedTypes:
-  - generic
-defaultFor: generic
-id: e9956a29-972c-4f64-9caf-3cb8b5ecbb7d

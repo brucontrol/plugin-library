@@ -1,7 +1,0 @@
-name: PID - Card
-description: Built-in PID widget template.
-version: 1.0.2
-supportedTypes:
-  - pid
-defaultFor: pid
-id: c9f71aaf-385f-4a8b-8b3b-8ab6b2a2b41d

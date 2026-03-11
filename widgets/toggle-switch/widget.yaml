@@ -1,7 +1,0 @@
-name: Toggle Switch - Card
-description: Built-in toggle switch widget (matches widget editor default).
-version: 1.0.3
-supportedTypes:
-  - toggleSwitch
-defaultFor: toggleSwitch
-id: a0d8bff0-93f4-4efe-abfa-4be5d02f0750

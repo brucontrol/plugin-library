@@ -1,7 +1,0 @@
-name: Hydrometer - Card
-description: Built-in hydrometer widget template.
-version: 1.0.2
-supportedTypes:
-  - hydrometer
-defaultFor: hydrometer
-id: 6c3b95b1-ae9f-43b5-83dd-7bc40dd849e8

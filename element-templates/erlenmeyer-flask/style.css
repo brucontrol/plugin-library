@@ -1,0 +1,172 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+#element {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: transparent;
+}
+
+/* Curved Erlenmeyer silhouette with SVG glass details */
+#flask-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  min-height: 120px;
+  aspect-ratio: 160 / 260;
+  margin: 0 auto;
+}
+
+#flask-glass {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+#flask-outline-path {
+  fill: url(#flask-glass-fill);
+  stroke: rgba(255, 255, 255, 0.26);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+#flask-rim-back {
+  fill: rgba(255, 255, 255, 0.14);
+}
+
+#flask-rim-front {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.32);
+  stroke-width: 1;
+}
+
+#flask-highlight-main {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+#flask-highlight-soft {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+#liquid-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  clip-path: polygon(38.8% 8.5%, 38.8% 17.7%, 30.6% 28.5%, 12% 81.9%, 22% 91.5%, 78% 91.5%, 88% 81.9%, 69.4% 28.5%, 61.2% 17.7%, 61.2% 8.5%);
+  clip-path: url(#flask-liquid-clip);
+  transition: height 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 1;
+}
+
+#liquid-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2%;
+  right: -2%;
+  height: 10px;
+  background: inherit;
+  animation: wave calc(var(--wave-duration, 3s) * 1.33) ease-in-out infinite;
+  border-radius: 50% 50% 55% 45% / 0% 0% 100% 100%;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+@keyframes wave {
+  0%, 100% { transform: scaleX(0.98) translateX(1%); }
+  33% { transform: scaleX(1.02) translateX(-0.5%); }
+  66% { transform: scaleX(1) translateX(-1%); }
+}
+
+.liquid-surface {
+  position: absolute;
+  top: 0;
+  left: -2%;
+  right: -2%;
+  height: 12px;
+  background: inherit;
+  animation: wave-alt var(--wave-duration, 3s) ease-in-out infinite;
+  border-radius: 50% 50% 45% 55% / 0% 0% 100% 100%;
+  box-shadow: 0 -2px 8px rgba(255,255,255,0.15);
+}
+
+.liquid-surface::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+@keyframes wave-alt {
+  0%, 100% { transform: scaleX(1) translateX(0); }
+  25% { transform: scaleX(1.02) translateX(1%); }
+  50% { transform: scaleX(0.98) translateX(-1%); }
+  75% { transform: scaleX(1.01) translateX(0.5%); }
+}
+
+/* Stir effect - rotating gradient overlay */
+#stir-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+}
+
+#stir-layer.active {
+  opacity: 1;
+  animation: stir-rotate var(--stir-duration, 4s) linear infinite;
+}
+
+@keyframes stir-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#bubbles {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(255,255,255,0.6) 0%,
+    rgba(255,255,255,0.3) 40%,
+    rgba(255,255,255,0.1) 100%);
+  box-shadow: inset -1px -1px 1px rgba(255,255,255,0.4);
+  pointer-events: none;
+}

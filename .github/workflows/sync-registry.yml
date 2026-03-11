@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'widgets/**'
+      - 'element-templates/**'
       - 'color-themes/**'
   workflow_dispatch:
 
@@ -30,8 +30,8 @@ jobs:
         run: npm ci
         working-directory: scripts
 
-      - name: Bump versions for changed widgets
-        run: node scripts/bump-widget-versions.mjs
+      - name: Bump versions for changed element templates
+        run: node scripts/bump-element-template-versions.mjs
         env:
           BEFORE_SHA: ${{ github.event.before || 'HEAD~1' }}
           AFTER_SHA: ${{ github.sha }}
@@ -44,13 +44,13 @@ jobs:
 
       - name: Commit version bumps and assigned plugin IDs
         run: |
-          if git diff --quiet widgets/; then
-            echo "No widget manifest changes"
+          if git diff --quiet element-templates/; then
+            echo "No element template manifest changes"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add widgets/
-            git commit -m "chore: bump widget versions and assign plugin ids"
+            git add element-templates/
+            git commit -m "chore: bump element template versions and assign plugin ids"
             git push
           fi
 

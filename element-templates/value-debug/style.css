@@ -1,0 +1,30 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+#element {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-tertiary, #2d2d2d);
+  color: var(--text-primary, #d4d4d4);
+  border-radius: 6px;
+}
+.value-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.value-row .label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.value-row .value {
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-all;
+}

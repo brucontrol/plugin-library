@@ -1,0 +1,102 @@
+{
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show header bar",
+    "group": "Layout"
+  },
+  "showBackground": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show element background and border",
+    "group": "Layout"
+  },
+  "showLabel": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show title label in header",
+    "group": "Layout"
+  },
+  "showValue": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show toggle control",
+    "group": "Layout"
+  },
+  "showToggleLabel": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show ON/OFF text beside toggle",
+    "group": "Layout"
+  },
+  "onLabel": {
+    "type": "text",
+    "default": "ON",
+    "group": "Toggle",
+    "description": "Toggle text when true"
+  },
+  "offLabel": {
+    "type": "text",
+    "default": "OFF",
+    "group": "Toggle",
+    "description": "Toggle text when false"
+  },
+  "labelFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-family"
+  },
+  "labelFontSize": {
+    "type": "number",
+    "default": 12,
+    "group": "Label",
+    "format": "font-size",
+    "min": 8,
+    "max": 48
+  },
+  "labelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "color",
+    "x-theme-default": "textPrimary"
+  },
+  "valueFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-family"
+  },
+  "valueFontSize": {
+    "type": "number",
+    "default": 19,
+    "group": "Value",
+    "format": "font-size",
+    "min": 10,
+    "max": 120
+  },
+  "valueColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color",
+    "x-theme-default": "accentGreen"
+  },
+  "backgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override element background color",
+    "format": "color",
+    "x-theme-default": "bgSecondary"
+  },
+  "borderColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override border color",
+    "format": "color",
+    "x-theme-default": "borderColor"
+  }
+}

@@ -1,7 +1,0 @@
-name: Digital Output - Card
-description: Built-in digital output widget template.
-version: 1.1.2
-supportedTypes:
-  - digitalOutput
-defaultFor: digitalOutput
-id: 202424bc-170f-42c9-92b1-b313b2114903

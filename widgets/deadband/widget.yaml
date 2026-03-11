@@ -1,7 +1,0 @@
-name: Deadband - Card
-description: Built-in deadband widget template.
-version: 1.0.2
-supportedTypes:
-  - deadband
-defaultFor: deadband
-id: aa4e295c-c298-479d-84d3-c8396cef052a

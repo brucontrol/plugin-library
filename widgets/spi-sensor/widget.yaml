@@ -1,7 +1,0 @@
-name: SPI Sensor - Card
-description: Built-in SPI sensor widget template.
-version: 1.0.2
-supportedTypes:
-  - spiSensor
-defaultFor: spiSensor
-id: e1380387-18f2-403c-a0ae-6c45a97d4d4a

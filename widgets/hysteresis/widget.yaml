@@ -1,7 +1,0 @@
-name: Hysteresis - Card
-description: Built-in hysteresis widget template.
-version: 1.0.2
-supportedTypes:
-  - hysteresis
-defaultFor: hysteresis
-id: a351f3c7-5a2e-459a-9ea0-a81b4e47232e

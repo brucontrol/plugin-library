@@ -1,0 +1,7 @@
+name: PWM Output - Card
+description: Built-in PWM output element template.
+version: 1.0.2
+supportedTypes:
+  - pwmOutput
+defaultFor: pwmOutput
+id: 48518124-c24f-445c-b316-b2ca4f8daf9f

@@ -1,0 +1,178 @@
+{
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show chart title/header row",
+    "group": "Layout"
+  },
+  "showBackground": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show element background and border",
+    "group": "Layout"
+  },
+  "showLegend": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show dataset legend",
+    "group": "Layout"
+  },
+  "chartStyle": {
+    "type": "text",
+    "default": "line",
+    "enum": [
+      "line",
+      "area",
+      "bar"
+    ],
+    "description": "Primary chart rendering style",
+    "group": "Series"
+  },
+  "lineWidth": {
+    "type": "number",
+    "default": 2,
+    "min": 1,
+    "max": 8,
+    "format": "range",
+    "description": "Series line width",
+    "group": "Series"
+  },
+  "pointRadius": {
+    "type": "number",
+    "default": 0,
+    "min": 0,
+    "max": 6,
+    "format": "range",
+    "description": "Visible point radius",
+    "group": "Series"
+  },
+  "smoothing": {
+    "type": "number",
+    "default": 0.25,
+    "min": 0,
+    "max": 0.95,
+    "step": 0.05,
+    "format": "range",
+    "description": "Line interpolation amount",
+    "group": "Series"
+  },
+  "fillArea": {
+    "type": "boolean",
+    "default": false,
+    "description": "Fill the area beneath line series",
+    "group": "Series"
+  },
+  "channel1Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 1",
+    "group": "Series"
+  },
+  "channel2Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 2",
+    "group": "Series"
+  },
+  "channel3Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 3",
+    "group": "Series"
+  },
+  "channel4Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 4",
+    "group": "Series"
+  },
+  "channel1Color": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Override channel 1 color",
+    "group": "Series"
+  },
+  "channel2Color": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Override channel 2 color",
+    "group": "Series"
+  },
+  "channel3Color": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Override channel 3 color",
+    "group": "Series"
+  },
+  "channel4Color": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Override channel 4 color",
+    "group": "Series"
+  },
+  "maxPoints": {
+    "type": "number",
+    "default": 1000,
+    "min": 100,
+    "max": 5000,
+    "step": 50,
+    "description": "Maximum historical samples fetched per channel",
+    "group": "Time"
+  },
+  "showGrid": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show chart grid lines",
+    "group": "Axes"
+  },
+  "showAxes": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show axis lines and tick labels",
+    "group": "Axes"
+  },
+  "showTooltip": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show hover tooltip",
+    "group": "Axes"
+  },
+  "rightAxisEnabled": {
+    "type": "boolean",
+    "default": true,
+    "description": "Enable right-side Y-axis for alternating channels",
+    "group": "Axes"
+  },
+  "leftAxisLabel": {
+    "type": "text",
+    "default": "",
+    "description": "Left axis label",
+    "group": "Axes"
+  },
+  "rightAxisLabel": {
+    "type": "text",
+    "default": "",
+    "description": "Right axis label",
+    "group": "Axes"
+  },
+  "backgroundColor": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Element background override",
+    "group": "Appearance",
+    "x-theme-default": "bgSecondary"
+  },
+  "borderColor": {
+    "type": "text",
+    "default": "",
+    "format": "color",
+    "description": "Element border color override",
+    "group": "Appearance",
+    "x-theme-default": "borderColor"
+  }
+}

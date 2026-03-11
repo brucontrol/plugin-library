@@ -1,0 +1,11 @@
+name: Global Variable - Card
+description: Built-in element template for displaying global variable value and label (matches element template editor default).
+version: 1.0.9
+supportedTypes:
+  - globalVariable-bool
+  - globalVariable-value
+  - globalVariable-string
+  - globalVariable-datetime
+  - globalVariable-timespan
+defaultFor: globalVariable-value
+id: fecc3b1e-96f0-40ea-bbb9-bb9a9ce44f80

@@ -1,0 +1,6 @@
+name: Image - Card
+description: Built-in image element template for generic elements.
+version: 1.0.0
+supportedTypes:
+  - generic
+id: 87befca7-ed3c-4259-aef0-a66a78ec2d70

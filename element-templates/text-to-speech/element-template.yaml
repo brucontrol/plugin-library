@@ -1,0 +1,7 @@
+id: d8b67837-843b-4321-ab80-922ac7b12318
+name: Piper Text to Speech
+description: Speaks text using browser speech synthesis. Configure text and speak in element template settings. Set speak to true to trigger; resets to false when done.
+version: 1.0.7
+supportedTypes:
+  - globalVariable-string
+  - generic

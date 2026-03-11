@@ -9,7 +9,7 @@ import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
-const pluginsDir = join(root, 'widgets');
+const pluginsDir = join(root, 'element-templates');
 const distDir = join(root, 'dist', 'manifests');
 
 const REPO = process.env.PLUGIN_REPO || 'brucontrol/plugin-library';
@@ -27,7 +27,7 @@ function getLastCommitForPath(path) {
   }
 }
 
-/** Resolve plugin id: use explicit id from widget.yaml if valid, else generate and persist. */
+/** Resolve plugin id: use explicit id from element-template.yaml if valid, else generate and persist. */
 function resolvePluginId(manifest, yamlPath, yamlContent) {
   const existing = manifest.id && String(manifest.id).trim();
   if (existing && validate(existing)) {
@@ -42,7 +42,7 @@ function resolvePluginId(manifest, yamlPath, yamlContent) {
 async function main() {
   await mkdir(distDir, { recursive: true });
 
-  // Clear existing widget manifests (not color-themes/) so old IDs don't accumulate
+  // Clear existing element template manifests (not color-themes/) so old IDs don't accumulate
   const existing = await readdir(distDir, { withFileTypes: true });
   for (const e of existing) {
     if (e.isFile() && e.name.endsWith('.json')) {
@@ -56,9 +56,9 @@ async function main() {
   const writeBacks = [];
 
   for (const folder of pluginDirs) {
-    const yamlPath = join(pluginsDir, folder, 'widget.yaml');
+    const yamlPath = join(pluginsDir, folder, 'element-template.yaml');
     if (!existsSync(yamlPath)) {
-      console.warn(`Skipping ${folder}: no widget.yaml`);
+      console.warn(`Skipping ${folder}: no element-template.yaml`);
       continue;
     }
 
@@ -66,7 +66,7 @@ async function main() {
     const manifest = parseYaml(yamlContent);
 
     if (!manifest.name) {
-      console.error(`${folder}/widget.yaml: missing 'name'`);
+      console.error(`${folder}/element-template.yaml: missing 'name'`);
       process.exit(1);
     }
 
@@ -85,8 +85,8 @@ async function main() {
       } catch { /* ignore */ }
     }
 
-    const widgetPath = `widgets/${folder}`;
-    const commitHash = getLastCommitForPath(widgetPath);
+    const templatePath = `element-templates/${folder}`;
+    const commitHash = getLastCommitForPath(templatePath);
 
     const registryManifest = {
       id,
@@ -94,7 +94,7 @@ async function main() {
       author: AUTHOR,
       description: manifest.description || '',
       repo: REPO,
-      path: widgetPath,
+      path: templatePath,
       version,
       commitHash,
       official: true,
