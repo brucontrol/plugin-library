@@ -1,6 +1,6 @@
 name: Int Debug
 description: Debug element template that displays two bindable numeric values with labels. Supports all element types for inspecting value and value2.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - generic
   - globalVariable-value

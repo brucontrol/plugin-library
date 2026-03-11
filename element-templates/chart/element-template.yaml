@@ -1,6 +1,6 @@
 name: Chart - Card
 description: Built-in chart element template with history, live streaming, and oscilloscope mode.
-version: 1.0.10
+version: 1.0.11
 supportedTypes:
   - chart
 defaultFor: chart

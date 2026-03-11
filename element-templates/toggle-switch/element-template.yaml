@@ -1,6 +1,6 @@
 name: Toggle Switch - Card
 description: Built-in toggle switch element template (matches element template editor default).
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - toggleSwitch
 defaultFor: toggleSwitch

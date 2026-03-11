@@ -1,6 +1,6 @@
 name: Generic Element - Card
 description: Built-in default element template for generic elements. Shows the element name.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - generic
 defaultFor: generic
