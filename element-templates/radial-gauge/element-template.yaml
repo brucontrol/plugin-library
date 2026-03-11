@@ -1,6 +1,6 @@
 name: Radial Gauge
 description: Semi-circular gauge with user-defined colored bands, needle, and optional value display. Works with global variables, analog input, PWM, duty cycle, OW temp, SPI sensor, PID, counter, hydrometer, and generic elements.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - generic
   - globalVariable-value
