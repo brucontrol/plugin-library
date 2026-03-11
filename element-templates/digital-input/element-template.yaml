@@ -1,6 +1,6 @@
 name: Digital Input - Card
 description: Built-in digital input element template.
-version: 1.2.2
+version: 1.2.3
 supportedTypes:
   - digitalInput
 defaultFor: digitalInput

@@ -1,6 +1,6 @@
 name: Timer - Card
 description: Built-in timer element template.
-version: 1.0.8
+version: 1.0.9
 supportedTypes:
   - timer
 defaultFor: timer

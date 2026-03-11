@@ -1,6 +1,6 @@
 name: Selector (Combo Box) - Card
 description: Dropdown selector for string global variables.
-version: 1.0.2
+version: 1.0.3
 supportedTypes:
   - globalVariable-string
 id: 7a20ee79-f631-45dc-8f1b-5e28f80031e2

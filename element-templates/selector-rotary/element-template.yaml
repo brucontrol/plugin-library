@@ -1,6 +1,6 @@
 name: Selector (Rotary Dial) - Card
 description: Rotary dial selector for numeric global variables.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - globalVariable-value
 id: 79349068-d4b2-408b-b878-355d3a6fb0e1

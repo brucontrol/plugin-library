@@ -1,6 +1,6 @@
 name: stateful - Card
 description: Built-in stateful element element template.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - stateful
 defaultFor: stateful

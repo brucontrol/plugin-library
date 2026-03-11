@@ -1,6 +1,6 @@
 name: Hysteresis - Card
 description: Built-in hysteresis element template.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - hysteresis
 defaultFor: hysteresis

@@ -1,6 +1,6 @@
 name: Profile - Card
 description: Built-in profile element template.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - profile
 defaultFor: profile

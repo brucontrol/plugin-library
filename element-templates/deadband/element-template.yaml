@@ -1,6 +1,6 @@
 name: Deadband - Card
 description: Built-in deadband element template.
-version: 1.0.3
+version: 1.0.4
 supportedTypes:
   - deadband
 defaultFor: deadband
