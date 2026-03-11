@@ -59,7 +59,7 @@
     "type": "text",
     "default": "",
     "group": "Label",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
@@ -80,7 +80,7 @@
     "type": "text",
     "default": "",
     "group": "Value",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
@@ -88,7 +88,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override element background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgSecondary"
   },
   "borderColor": {
@@ -96,7 +96,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "borderColor"
   }
 }

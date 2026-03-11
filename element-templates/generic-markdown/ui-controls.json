@@ -17,7 +17,7 @@
     "default": "",
     "group": "Appearance",
     "description": "Override element background color",
-    "format": "color",
+    "format": "color-alpha",
     "title": "Background Color",
     "x-theme-default": "bgSecondary"
   },
@@ -26,7 +26,7 @@
     "default": "",
     "group": "Appearance",
     "description": "Override text color",
-    "format": "color",
+    "format": "color-alpha",
     "title": "Text Color",
     "x-theme-default": "textPrimary"
   }

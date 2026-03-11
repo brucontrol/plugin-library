@@ -86,31 +86,55 @@
     "description": "Display label for channel 4",
     "group": "Series"
   },
+  "channel5Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 5",
+    "group": "Series"
+  },
+  "channel6Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 6",
+    "group": "Series"
+  },
+  "channel7Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 7",
+    "group": "Series"
+  },
+  "channel8Label": {
+    "type": "text",
+    "default": "",
+    "description": "Display label for channel 8",
+    "group": "Series"
+  },
   "channel1Color": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Override channel 1 color",
     "group": "Series"
   },
   "channel2Color": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Override channel 2 color",
     "group": "Series"
   },
   "channel3Color": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Override channel 3 color",
     "group": "Series"
   },
   "channel4Color": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Override channel 4 color",
     "group": "Series"
   },
@@ -162,7 +186,7 @@
   "backgroundColor": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Element background override",
     "group": "Appearance",
     "x-theme-default": "bgSecondary"
@@ -170,7 +194,7 @@
   "borderColor": {
     "type": "text",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Element border color override",
     "group": "Appearance",
     "x-theme-default": "borderColor"

@@ -43,7 +43,7 @@
     "default": "",
     "group": "Dial",
     "description": "Dial face color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgTertiary"
   },
   "needleColor": {
@@ -51,7 +51,7 @@
     "default": "",
     "group": "Dial",
     "description": "Indicator needle color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
   "activeColor": {
@@ -59,7 +59,7 @@
     "default": "",
     "group": "Dial",
     "description": "Highlight color for selected value",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentPrimary"
   },
   "labelFontFamily": {
@@ -92,7 +92,7 @@
     "type": "text",
     "default": "",
     "group": "Label",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
@@ -125,7 +125,7 @@
     "type": "text",
     "default": "",
     "group": "Value",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
@@ -133,7 +133,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override element background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgSecondary"
   },
   "headerColor": {
@@ -141,7 +141,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override header background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgTertiary"
   },
   "borderColor": {
@@ -149,7 +149,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "borderColor"
   }
 }

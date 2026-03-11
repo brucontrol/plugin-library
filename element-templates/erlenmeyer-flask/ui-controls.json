@@ -23,7 +23,7 @@
     "type": "text",
     "title": "Liquid Color",
     "default": "#3b82f6",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Hex color for the liquid"
   },
   "levelTransitionMs": {

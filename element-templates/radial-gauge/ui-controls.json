@@ -24,7 +24,7 @@
     "type": "text",
     "title": "Band 1 Color",
     "default": "#4ec9b0",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Bands"
   },
   "band1From": {
@@ -43,7 +43,7 @@
     "type": "text",
     "title": "Band 2 Color",
     "default": "#dcdcaa",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Bands"
   },
   "band2From": {
@@ -62,7 +62,7 @@
     "type": "text",
     "title": "Band 3 Color",
     "default": "#f14c4c",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Bands"
   },
   "band3From": {
@@ -81,7 +81,7 @@
     "type": "text",
     "title": "Band 4 Color",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Optional",
     "group": "Bands"
   },
@@ -101,7 +101,7 @@
     "type": "text",
     "title": "Band 5 Color",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "description": "Optional",
     "group": "Bands"
   },
@@ -171,7 +171,7 @@
     "type": "text",
     "default": "",
     "group": "Value Style",
-    "format": "color"
+    "format": "color-alpha"
   },
   "showBackground": {
     "type": "boolean",
@@ -184,21 +184,21 @@
     "type": "text",
     "title": "Needle Color",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Gauge Style"
   },
   "tickColor": {
     "type": "text",
     "title": "Tick Color",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Gauge Style"
   },
   "dialColor": {
     "type": "text",
     "title": "Dial Face Color",
     "default": "",
-    "format": "color",
+    "format": "color-alpha",
     "group": "Gauge Style"
   }
 }

@@ -4,7 +4,7 @@
     "default": "",
     "group": "Button",
     "description": "Button background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentPrimary"
   },
   "buttonFontFamily": {
@@ -42,7 +42,7 @@
     "default": "",
     "group": "Button",
     "description": "Text color for button label",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "textOnAccent"
   }
 }

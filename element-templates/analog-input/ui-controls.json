@@ -64,7 +64,7 @@
     "type": "text",
     "default": "",
     "group": "Label",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
@@ -97,7 +97,7 @@
     "type": "text",
     "default": "",
     "group": "Value",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
@@ -105,7 +105,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override element background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgSecondary"
   },
   "headerColor": {
@@ -113,7 +113,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override header background color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "bgTertiary"
   },
   "borderColor": {
@@ -121,7 +121,7 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override border color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "borderColor"
   },
   "rowLabelColor": {
@@ -129,7 +129,7 @@
     "default": "",
     "group": "Rows",
     "description": "Override generic row label color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "textSecondary"
   },
   "rowValueColor": {
@@ -137,7 +137,7 @@
     "default": "",
     "group": "Rows",
     "description": "Override generic row value color",
-    "format": "color",
+    "format": "color-alpha",
     "x-theme-default": "accentGreen"
   }
 }
