@@ -1,4 +1,6 @@
 name: Timer - Card
+defaultWidth: 60
+defaultHeight: 40
 description: Built-in timer element template.
 version: 1.0.9
 supportedTypes:

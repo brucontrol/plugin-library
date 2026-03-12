@@ -4,4 +4,6 @@ version: 1.0.6
 supportedTypes:
   - scriptElement
 defaultFor: scriptElement
+defaultWidth: 60
+defaultHeight: 40
 id: 10af8668-d537-4a70-838d-df25c7ba8271

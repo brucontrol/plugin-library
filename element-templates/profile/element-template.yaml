@@ -4,4 +4,6 @@ version: 1.0.8
 supportedTypes:
   - profile
 defaultFor: profile
+defaultWidth: 180
+defaultHeight: 120
 id: ae61e4ee-2d3b-4fd1-b5a9-270919a29943

@@ -4,4 +4,6 @@ version: 2.0.3
 supportedTypes:
   - button
 defaultFor: button
+defaultWidth: 60
+defaultHeight: 40
 id: a64ba026-7833-492f-8893-672cf530ae76

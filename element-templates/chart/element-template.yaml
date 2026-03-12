@@ -4,4 +4,6 @@ version: 1.0.12
 supportedTypes:
   - chart
 defaultFor: chart
+defaultWidth: 180
+defaultHeight: 120
 id: 8bb525c6-1494-499a-a64f-4593e1b5716a
