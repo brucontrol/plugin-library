@@ -115,56 +115,64 @@
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 1 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentGreen"
   },
   "channel2Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 2 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentYellow"
   },
   "channel3Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 3 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentBlue"
   },
   "channel4Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 4 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentOrange"
   },
   "channel5Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 5 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentPurple"
   },
   "channel6Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 6 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentRed"
   },
   "channel7Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 7 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentGreen"
   },
   "channel8Color": {
     "type": "text",
     "default": "",
     "format": "color-alpha",
     "description": "Override channel 8 color",
-    "group": "Series"
+    "group": "Series",
+    "x-theme-default": "accentBlue"
   },
   "maxPoints": {
     "type": "number",
