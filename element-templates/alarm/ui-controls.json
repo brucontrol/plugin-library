@@ -23,6 +23,18 @@
     "description": "Show active state row",
     "group": "Layout"
   },
+  "showFooter": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show footer bar",
+    "group": "Layout"
+  },
+  "showSecondaryRows": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show secondary data rows",
+    "group": "Layout"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -36,6 +48,18 @@
     "format": "font-size",
     "min": 8,
     "max": 48
+  },
+  "labelFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-weight"
+  },
+  "labelFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Label",
+    "format": "font-style"
   },
   "labelColor": {
     "type": "text",
@@ -58,6 +82,18 @@
     "min": 10,
     "max": 120
   },
+  "valueFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-weight"
+  },
+  "valueFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Value",
+    "format": "font-style"
+  },
   "valueColor": {
     "type": "text",
     "default": "",
@@ -73,6 +109,14 @@
     "format": "color-alpha",
     "x-theme-default": "bgSecondary"
   },
+  "headerColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override header background color",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
+  },
   "borderColor": {
     "type": "text",
     "default": "",
@@ -80,5 +124,21 @@
     "description": "Override border color",
     "format": "color-alpha",
     "x-theme-default": "borderColor"
+  },
+  "rowLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Rows",
+    "description": "Override generic row label color",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "rowValueColor": {
+    "type": "text",
+    "default": "",
+    "group": "Rows",
+    "description": "Override generic row value color",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
   }
 }
