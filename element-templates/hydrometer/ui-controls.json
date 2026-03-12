@@ -140,5 +140,21 @@
     "description": "Override generic row value color",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "tempPrecision": {
+    "type": "number",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for temperature display",
+    "group": "Rows"
+  },
+  "sgPrecision": {
+    "type": "number",
+    "default": 3,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for specific gravity display",
+    "group": "Rows"
   }
 }

@@ -223,11 +223,13 @@
   }
 
   function renderContentRows(type, hiddenRows) {
+    var d = currentData || {};
+    var prec = Math.max(0, Math.min(6, numberOrNull(d.precision) ?? 2));
     switch (type) {
       case "hysteresis":
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(2), "", "target", hiddenRows));
-        appendRow(primaryRow("Output", boolText(asBool(currentData.output || currentData.value)), asBool(currentData.output || currentData.value) ? "value--ok" : "value--warn", "output", hiddenRows));
-        appendRow(row("On Offset", toNumber(currentData.onOffset, 0).toFixed(2), "", { key: "onoffset" }, hiddenRows));
+        appendRow(primaryRow("Target", toNumber(d.target, 0).toFixed(prec), "", "target", hiddenRows));
+        appendRow(primaryRow("Output", boolText(asBool(d.output || d.value)), asBool(d.output || d.value) ? "value--ok" : "value--warn", "output", hiddenRows));
+        appendRow(row("On Offset", toNumber(d.onOffset, 0).toFixed(prec), "", { key: "onoffset" }, hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
@@ -246,10 +248,11 @@
   }
 
   function renderTargetSetter(data) {
+    var prec = Math.max(0, Math.min(6, numberOrNull(data.precision) ?? 2));
     footerEl.appendChild(
       makeButton("Set Target", function () {
         var displayName = currentData ? (currentData.displayName || currentData.name || "Target") : "Target";
-        requestKeypadFor("Set Target: " + displayName, String(toNumber(data.target, 0)), undefined, undefined, undefined, true, function (val) {
+        requestKeypadFor("Set Target: " + displayName, String(toNumber(data.target, 0)), undefined, undefined, prec, true, function (val) {
           sendPatch({ target: toNumber(val, 0) });
         });
       }, false)

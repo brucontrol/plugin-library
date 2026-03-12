@@ -4,14 +4,16 @@
     "default": "#b4d2e6",
     "group": "Appearance",
     "description": "Tint for the clear tube shell",
-    "format": "color-alpha"
+    "format": "color-alpha",
+    "x-theme-default": "borderColor"
   },
   "fluidColor": {
     "type": "text",
     "default": "#1e90ff",
     "group": "Appearance",
     "description": "Color of the liquid flowing through the hose",
-    "format": "color-alpha"
+    "format": "color-alpha",
+    "x-theme-default": "accentBlue"
   },
   "hoseThickness": {
     "type": "number",

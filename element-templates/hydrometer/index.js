@@ -170,10 +170,13 @@
   }
 
   function renderContentRows(type, hiddenRows) {
+    var d = currentData || {};
+    var tempPrec = Math.max(0, Math.min(6, numberOrNull(d.tempPrecision) ?? 2));
+    var sgPrec = Math.max(0, Math.min(6, numberOrNull(d.sgPrecision) ?? 3));
     switch (type) {
       case "hydrometer":
-        appendRow(primaryRow("Temperature", toNumber(currentData.temperature || currentData.temp, 0).toFixed(2), "", "temperature", hiddenRows));
-        appendRow(primaryRow("Specific Gravity", toNumber(currentData.specificGravity || currentData.sg, 0).toFixed(3), "", "specificgravity", hiddenRows));
+        appendRow(primaryRow("Temperature", toNumber(d.temperature || d.temp, 0).toFixed(tempPrec), "", "temperature", hiddenRows));
+        appendRow(primaryRow("Specific Gravity", toNumber(d.specificGravity || d.sg, 0).toFixed(sgPrec), "", "specificgravity", hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
