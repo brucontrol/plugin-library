@@ -113,6 +113,14 @@
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
+  "precision": {
+    "type": "number",
+    "default": 1,
+    "min": 0,
+    "max": 6,
+    "group": "Value",
+    "description": "Decimal places for duty and interval"
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",

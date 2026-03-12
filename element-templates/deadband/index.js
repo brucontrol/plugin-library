@@ -211,9 +211,10 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "deadband":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(2), "", "value", hiddenRows));
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(2), "", "target", hiddenRows));
-        appendRow(row("Band", toNumber(currentData.band || currentData.deadbandOffset, 0).toFixed(2), "", { key: "band" }, hiddenRows));
+        var prec = Math.max(0, Math.min(6, numberOrNull(currentData.precision) ?? 2));
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value", hiddenRows));
+        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target", hiddenRows));
+        appendRow(row("Band", toNumber(currentData.band || currentData.deadbandOffset, 0).toFixed(prec), "", { key: "band" }, hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));

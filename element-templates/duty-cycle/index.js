@@ -208,11 +208,19 @@
     applyStyles();
   }
 
+  function formatInterval(val) {
+    var n = toNumber(val, 0);
+    var p = Math.max(0, Math.min(6, Math.floor(toNumber(currentData.precision, 1))));
+    if (n === Math.floor(n)) return String(Math.round(n)) + " ms";
+    return n.toFixed(p) + " ms";
+  }
+
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "dutyCycle":
-        appendRow(primaryRow("Duty", toNumber(currentData.dutyCycle, 0).toFixed(1) + "%", "", "value", hiddenRows));
-        appendRow(row("Interval", toNumber(currentData.interval, 0) + " ms", "", { key: "interval" }, hiddenRows));
+        var p = Math.max(0, Math.min(6, Math.floor(toNumber(currentData.precision, 1))));
+        appendRow(primaryRow("Duty", toNumber(currentData.dutyCycle, 0).toFixed(p) + "%", "", "value", hiddenRows));
+        appendRow(row("Interval", formatInterval(currentData.interval), "", { key: "interval" }, hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
