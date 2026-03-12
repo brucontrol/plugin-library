@@ -21,7 +21,8 @@
     "description": "Font size for button text",
     "format": "font-size",
     "min": 8,
-    "max": 120
+    "max": 120,
+    "step": 1
   },
   "buttonFontWeight": {
     "type": "text",
@@ -43,6 +44,6 @@
     "group": "Button",
     "description": "Text color for button label",
     "format": "color-alpha",
-    "x-theme-default": "textOnAccent"
+    "x-theme-default": "textPrimary"
   }
 }

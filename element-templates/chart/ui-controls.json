@@ -138,6 +138,34 @@
     "description": "Override channel 4 color",
     "group": "Series"
   },
+  "channel5Color": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Override channel 5 color",
+    "group": "Series"
+  },
+  "channel6Color": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Override channel 6 color",
+    "group": "Series"
+  },
+  "channel7Color": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Override channel 7 color",
+    "group": "Series"
+  },
+  "channel8Color": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Override channel 8 color",
+    "group": "Series"
+  },
   "maxPoints": {
     "type": "number",
     "default": 1000,
@@ -183,6 +211,30 @@
     "description": "Right axis label",
     "group": "Axes"
   },
+  "axisColor": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Axis lines and tick labels color",
+    "group": "Axes",
+    "x-theme-default": "textPrimary"
+  },
+  "gridLineColor": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Chart grid lines color",
+    "group": "Axes",
+    "x-theme-default": "textSecondary"
+  },
+  "legendColor": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Legend text color",
+    "group": "Axes",
+    "x-theme-default": "textPrimary"
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -198,5 +250,13 @@
     "description": "Element border color override",
     "group": "Appearance",
     "x-theme-default": "borderColor"
+  },
+  "headerColor": {
+    "type": "text",
+    "default": "",
+    "format": "color-alpha",
+    "description": "Chart header/title color",
+    "group": "Appearance",
+    "x-theme-default": "bgTertiary"
   }
 }

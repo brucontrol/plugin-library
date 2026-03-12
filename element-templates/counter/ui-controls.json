@@ -41,6 +41,12 @@
     "description": "Show secondary detail rows",
     "group": "Layout"
   },
+  "showFooter": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show footer bar",
+    "group": "Layout"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -99,6 +105,22 @@
     "default": "normal",
     "group": "Value",
     "format": "font-style"
+  },
+  "countPrecision": {
+    "type": "number",
+    "default": 0,
+    "group": "Value",
+    "description": "Decimal places for count display",
+    "min": 0,
+    "max": 6
+  },
+  "ratePrecision": {
+    "type": "number",
+    "default": 2,
+    "group": "Value",
+    "description": "Decimal places for rate display",
+    "min": 0,
+    "max": 6
   },
   "valueColor": {
     "type": "text",

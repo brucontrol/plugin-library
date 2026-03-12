@@ -140,8 +140,12 @@
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
-      if (d.rowValueColor) el.style.color = d.rowValueColor;
-      if (d.valueColor) el.style.color = d.valueColor;
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
+      var valColor = isPrimary
+        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
+        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
+      el.style.color = valColor;
       if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
       if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
       if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
@@ -180,11 +184,18 @@
     applyStyles();
   }
 
+  function getPrecision(key, defaultVal) {
+    var d = currentData || {};
+    var p = key === "count" ? d.countPrecision : d.ratePrecision;
+    var n = typeof p === "number" && Number.isFinite(p) ? Math.max(0, Math.min(6, Math.floor(p))) : defaultVal;
+    return n;
+  }
+
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "counter":
-        appendRow(primaryRow("Count", toNumber(currentData.count || currentData.total, 0).toFixed(2), "", "count", hiddenRows));
-        appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(2), "", { key: "rate" }, hiddenRows));
+        appendRow(primaryRow("Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count", hiddenRows));
+        appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2)), "", { key: "rate" }, hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
