@@ -13,7 +13,7 @@
       nameEl.style.display = d.showValue === false ? "none" : "";
       nameEl.style.fontFamily = d.valueFontFamily || "";
       nameEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      nameEl.style.color = d.valueColor || d.textColor || "";
+      nameEl.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : (d.textColor && String(d.textColor).trim()) ? String(d.textColor).trim() : "var(--accent-green, #4ec9b0)";
     }
 
     if (elementEl) {

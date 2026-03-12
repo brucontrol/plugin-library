@@ -246,7 +246,7 @@
     contentEl.style.padding = "10px";
 
     if (center) {
-      var showValue = d.showValue === true;
+      var showValue = d.showValue !== false;
       center.style.display = showValue ? "" : "none";
       center.style.fontFamily = d.valueFontFamily || "";
       center.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";

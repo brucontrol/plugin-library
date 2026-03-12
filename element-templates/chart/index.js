@@ -247,9 +247,12 @@
     var theme = (window.BruControl && window.BruControl.getTheme) ? window.BruControl.getTheme() : {};
     var themeTextPrimary = theme["text-primary"] || theme["text-secondary"];
     var themeGridColor = themeTextPrimary ? withAlpha(themeTextPrimary, 0.15) : null;
-    var axisColor = currentData.axisColor || themeTextPrimary || "rgba(212, 212, 212, 0.78)";
-    var gridColor = currentData.gridLineColor || themeGridColor || "rgba(212, 212, 212, 0.14)";
-    var legendColor = currentData.legendColor || themeTextPrimary || "rgba(212, 212, 212, 0.9)";
+    var axisColorRaw = (currentData.axisColor && String(currentData.axisColor).trim()) ? String(currentData.axisColor).trim() : "";
+    var axisColor = axisColorRaw || themeTextPrimary || "rgba(212, 212, 212, 0.78)";
+    var gridColorRaw = (currentData.gridLineColor && String(currentData.gridLineColor).trim()) ? String(currentData.gridLineColor).trim() : "";
+    var gridColor = gridColorRaw || themeGridColor || "rgba(212, 212, 212, 0.14)";
+    var legendColorRaw = (currentData.legendColor && String(currentData.legendColor).trim()) ? String(currentData.legendColor).trim() : "";
+    var legendColor = legendColorRaw || themeTextPrimary || "rgba(212, 212, 212, 0.9)";
 
     var options = {
       responsive: true,
@@ -422,7 +425,8 @@
 
     if (headerEl) {
       headerEl.classList.toggle("hidden", !showHeader);
-      headerEl.style.background = currentData.headerColor || "";
+      var headerColor = (currentData.headerColor && String(currentData.headerColor).trim()) ? String(currentData.headerColor).trim() : "";
+      headerEl.style.background = headerColor || "";
       headerEl.style.borderBottom = showHeader ? "" : "none";
     }
 
@@ -431,8 +435,10 @@
     }
 
     if (showBackground) {
-      elementEl.style.background = currentData.backgroundColor || "";
-      elementEl.style.border = currentData.borderColor ? "1px solid " + currentData.borderColor : "";
+      var backgroundColor = (currentData.backgroundColor && String(currentData.backgroundColor).trim()) ? String(currentData.backgroundColor).trim() : "";
+      var borderColor = (currentData.borderColor && String(currentData.borderColor).trim()) ? String(currentData.borderColor).trim() : "";
+      elementEl.style.background = backgroundColor || "";
+      elementEl.style.border = borderColor ? "1px solid " + borderColor : "";
     } else {
       elementEl.style.background = "transparent";
       elementEl.style.border = "none";

@@ -131,10 +131,10 @@
     labelNodes.forEach(function (node) {
       var el = node;
       el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
+      el.style.fontFamily = d.labelFontFamily || "";
+      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+      el.style.fontWeight = d.labelFontWeight || "";
+      el.style.fontStyle = d.labelFontStyle || "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
@@ -147,7 +147,7 @@
         : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
       el.style.color = valColor;
       el.style.fontFamily = d.valueFontFamily || "";
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
+      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       el.style.fontWeight = d.valueFontWeight || "";
       el.style.fontStyle = d.valueFontStyle || "";
       el.style.textAlign = "center";

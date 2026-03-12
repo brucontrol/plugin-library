@@ -373,8 +373,8 @@
     currentData = data;
     var d = data;
 
-    state.tubeColor     = d.tubeColor     || "#b4d2e6";
-    state.fluidColor    = d.fluidColor    || "#1e90ff";
+    state.tubeColor     = (d.tubeColor && String(d.tubeColor).trim()) ? String(d.tubeColor).trim() : "var(--border-color, #8ab4d6)";
+    state.fluidColor    = (d.fluidColor && String(d.fluidColor).trim()) ? String(d.fluidColor).trim() : "var(--accent-blue, #1e90ff)";
     state.flowDirection = d.flowDirection  || "forward";
     state.flowSpeed     = typeof d.flowSpeed     === "number" ? d.flowSpeed     : 1.0;
     state.bubbleDensity = typeof d.bubbleDensity === "number" ? d.bubbleDensity : 5;

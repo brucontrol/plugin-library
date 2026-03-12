@@ -25,7 +25,7 @@
 
   function hexToRgb(hex) {
     var m = hex.replace(/^#/, '').match(/^(..)(..)(..)$/);
-    if (!m) return { r: 59, g: 130, b: 246 };
+    if (!m) return { r: 86, g: 156, b: 214 };
     return {
       r: parseInt(m[1], 16),
       g: parseInt(m[2], 16),
@@ -44,7 +44,7 @@
       value: 50,
       min: 0,
       max: 100,
-      liquidColor: '#3b82f6',
+      liquidColor: '#569cd6',
       levelTransitionMs: 500,
       bubbleDurationMs: 3000,
       bubbleDensity: 8
@@ -124,7 +124,7 @@
 
   function applyWaterStyle(color) {
     if (!fill) return;
-    var c = color || '#3b82f6';
+    var c = color || '#569cd6';
     fill.style.background =
       'linear-gradient(105deg, rgba(255,255,255,0.1) 0%, transparent 40%),' +
       'linear-gradient(180deg,' +
@@ -144,7 +144,8 @@
     if (isNaN(config.min)) config.min = 0;
     config.max = parseFloat(data.max);
     if (isNaN(config.max)) config.max = 100;
-    config.liquidColor = data.liquidColor || getThemeColor('--accent-blue', '#569cd6');
+    var trimmedLiquid = (data.liquidColor && String(data.liquidColor).trim()) ? String(data.liquidColor).trim() : "";
+    config.liquidColor = trimmedLiquid || getThemeColor('--accent-blue', '#569cd6');
     config.levelTransitionMs = parseInt(data.levelTransitionMs, 10);
     if (isNaN(config.levelTransitionMs) || config.levelTransitionMs < 0) config.levelTransitionMs = 500;
     config.bubbleDurationMs = parseInt(data.bubbleDurationMs, 10);

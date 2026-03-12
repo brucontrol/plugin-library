@@ -205,7 +205,7 @@
       triggerEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       triggerEl.style.fontWeight = d.valueFontWeight || "";
       triggerEl.style.fontStyle = d.valueFontStyle || "";
-      triggerEl.style.color = d.valueColor || "";
+      triggerEl.style.color = d.valueColor || "var(--accent-green, #4ec9b0)";
     }
   }
 

@@ -76,17 +76,17 @@
       toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       toggleLabel.style.fontWeight = d.valueFontWeight || "";
       toggleLabel.style.fontStyle = d.valueFontStyle || "";
-      toggleLabel.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
+      toggleLabel.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "";
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
       toggleLabel.classList.toggle("on", isOn);
     }
 
     if (toggleTrack) {
-      if (isOn && d.toggleOnColor) {
-        toggleTrack.style.background = d.toggleOnColor;
-      } else if (!isOn && d.toggleOffColor) {
-        toggleTrack.style.background = d.toggleOffColor;
+      if (isOn && (d.toggleOnColor && String(d.toggleOnColor).trim())) {
+        toggleTrack.style.background = String(d.toggleOnColor).trim();
+      } else if (!isOn && (d.toggleOffColor && String(d.toggleOffColor).trim())) {
+        toggleTrack.style.background = String(d.toggleOffColor).trim();
       } else {
         toggleTrack.style.background = "";
       }

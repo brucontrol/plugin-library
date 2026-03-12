@@ -163,7 +163,7 @@
     if (isNaN(config.min)) config.min = 0;
     config.max = parseFloat(data.max);
     if (isNaN(config.max)) config.max = 100;
-    config.liquidColor = data.liquidColor || getThemeColor('--accent-blue', '#569cd6');
+    config.liquidColor = (typeof data.liquidColor === "string" && data.liquidColor.trim()) ? data.liquidColor.trim() : getThemeColor('--accent-blue', '#569cd6');
     config.levelTransitionMs = parseInt(data.levelTransitionMs, 10);
     if (isNaN(config.levelTransitionMs) || config.levelTransitionMs < 0) config.levelTransitionMs = 500;
     config.bubbleDurationMs = parseInt(data.bubbleDurationMs, 10);

@@ -39,15 +39,18 @@
         elementEl.style.background = "transparent";
         elementEl.style.border = "none";
       } else {
-        elementEl.style.background = d.backgroundColor || "";
-        elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
+        var backgroundColor = (d.backgroundColor && String(d.backgroundColor).trim()) ? String(d.backgroundColor).trim() : "";
+        var borderColor = (d.borderColor && String(d.borderColor).trim()) ? String(d.borderColor).trim() : "";
+        elementEl.style.background = backgroundColor || "";
+        elementEl.style.border = borderColor ? "1px solid " + borderColor : "";
       }
       elementEl.style.borderRadius = "8px";
     }
 
     if (header) {
       header.style.display = d.showHeader === false ? "none" : "";
-      header.style.background = d.headerColor || "";
+      var headerColor = (d.headerColor && String(d.headerColor).trim()) ? String(d.headerColor).trim() : "";
+      header.style.background = headerColor || "";
       header.style.borderBottom = d.showHeader === false ? "none" : "";
     }
 
@@ -57,31 +60,33 @@
 
     if (titleEl) {
       titleEl.style.display = d.showLabel === false ? "none" : "";
-      titleEl.style.fontFamily = d.labelFontFamily || "";
+      titleEl.style.fontFamily = (d.labelFontFamily && String(d.labelFontFamily).trim()) ? String(d.labelFontFamily).trim() : "";
       titleEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      titleEl.style.fontWeight = d.labelFontWeight || "";
-      titleEl.style.fontStyle = d.labelFontStyle || "";
-      titleEl.style.color = d.labelColor || "";
+      titleEl.style.fontWeight = (d.labelFontWeight && String(d.labelFontWeight).trim()) ? String(d.labelFontWeight).trim() : "";
+      titleEl.style.fontStyle = (d.labelFontStyle && String(d.labelFontStyle).trim()) ? String(d.labelFontStyle).trim() : "";
+      titleEl.style.color = (d.labelColor && String(d.labelColor).trim()) ? String(d.labelColor).trim() : "";
       titleEl.style.textAlign = "left";
     }
 
     if (toggleLabel) {
       toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
-      toggleLabel.style.fontFamily = d.valueFontFamily || "";
+      toggleLabel.style.fontFamily = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
       toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      toggleLabel.style.fontWeight = d.valueFontWeight || "";
-      toggleLabel.style.fontStyle = d.valueFontStyle || "";
-      toggleLabel.style.color = (d.valueColor && d.valueColor.length > 0) ? d.valueColor : "";
+      toggleLabel.style.fontWeight = (d.valueFontWeight && String(d.valueFontWeight).trim()) ? String(d.valueFontWeight).trim() : "";
+      toggleLabel.style.fontStyle = (d.valueFontStyle && String(d.valueFontStyle).trim()) ? String(d.valueFontStyle).trim() : "";
+      toggleLabel.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "";
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
       toggleLabel.classList.toggle("on", isOn);
     }
 
     if (toggleTrack) {
-      if (isOn && d.toggleOnColor) {
-        toggleTrack.style.background = d.toggleOnColor;
-      } else if (!isOn && d.toggleOffColor) {
-        toggleTrack.style.background = d.toggleOffColor;
+      var toggleOnColor = (d.toggleOnColor && String(d.toggleOnColor).trim()) ? String(d.toggleOnColor).trim() : "";
+      var toggleOffColor = (d.toggleOffColor && String(d.toggleOffColor).trim()) ? String(d.toggleOffColor).trim() : "";
+      if (isOn && toggleOnColor) {
+        toggleTrack.style.background = toggleOnColor;
+      } else if (!isOn && toggleOffColor) {
+        toggleTrack.style.background = toggleOffColor;
       } else {
         toggleTrack.style.background = "";
       }

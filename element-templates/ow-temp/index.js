@@ -126,10 +126,10 @@
     labelNodes.forEach(function (node) {
       var el = node;
       el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
+      el.style.fontFamily = d.labelFontFamily || "";
+      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+      el.style.fontWeight = d.labelFontWeight || "";
+      el.style.fontStyle = d.labelFontStyle || "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
@@ -138,13 +138,13 @@
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
       var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
       var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
+        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green, #4ec9b0)")
+        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green, #4ec9b0)");
       el.style.color = valColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
+      el.style.fontFamily = d.valueFontFamily || "";
+      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      el.style.fontWeight = d.valueFontWeight || "";
+      el.style.fontStyle = d.valueFontStyle || "";
       el.style.textAlign = "center";
     });
 
