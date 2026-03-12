@@ -114,7 +114,7 @@
   function renderTicks(el, tickColor) {
     if (!el) return;
     el.innerHTML = '';
-    var color = (tickColor && String(tickColor).trim()) ? String(tickColor).trim() : 'white';
+    var color = (tickColor && String(tickColor).trim()) ? String(tickColor).trim() : 'var(--text-secondary)';
     var NUM_TICKS = 19;
     var innerR = R - STROKE / 2 + 3;
     var outerR = R + STROKE / 2 - 3;
@@ -163,7 +163,7 @@
     var showBg = d.showBackground !== false;
     if (dial) {
       dial.setAttribute('fill', showBg
-        ? ((d.dialColor && String(d.dialColor).trim()) ? String(d.dialColor).trim() : '#1a1a1a')
+        ? ((d.dialColor && String(d.dialColor).trim()) ? String(d.dialColor).trim() : 'var(--bg-tertiary)')
         : 'transparent');
     }
     if (track) {
@@ -181,14 +181,14 @@
       if (d.valueFontFamily) valueNum.setAttribute('font-family', d.valueFontFamily);
       if (numberOrNull(d.valueFontSize) != null) valueNum.setAttribute('font-size', String(numberOrNull(d.valueFontSize)));
       if (d.valueFontWeight) valueNum.setAttribute('font-weight', d.valueFontWeight);
-      valueNum.setAttribute('fill', (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : 'white');
+      valueNum.setAttribute('fill', (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : 'var(--accent-green)');
     }
 
     if (valueUnit) {
       valueUnit.style.display = d.showValue === false ? 'none' : '';
     }
 
-    var needleColor = (d.needleColor && String(d.needleColor).trim()) ? String(d.needleColor).trim() : 'white';
+    var needleColor = (d.needleColor && String(d.needleColor).trim()) ? String(d.needleColor).trim() : 'var(--accent-primary)';
     if (needleArm) needleArm.setAttribute('stroke', needleColor);
     if (needleTail) needleTail.setAttribute('stroke', needleColor);
     if (needleHub) needleHub.setAttribute('stroke', needleColor);

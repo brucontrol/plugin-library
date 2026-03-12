@@ -82,8 +82,8 @@
     var d = currentData || {};
     var options = getOptions();
     var dialColor = d.dialColor || getThemeColor("--bg-tertiary", "#2d2d2d");
-    var needleColor = d.needleColor || getThemeColor("--accent-primary", "#007acc");
-    var activeColor = d.activeColor || getThemeColor("--accent-green", "#4ec9b0");
+    var needleColor = d.needleColor || getThemeColor("--accent-green", "#4ec9b0");
+    var activeColor = d.activeColor || getThemeColor("--accent-primary", "#007acc");
     var trackStroke = getThemeColor("--border-color", "#555555");
     var textMuted = getThemeColor("--text-secondary", "#888888");
     var textSecondary = getThemeColor("--text-secondary", "#aaaaaa");

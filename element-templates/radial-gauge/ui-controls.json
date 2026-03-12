@@ -171,7 +171,8 @@
     "type": "text",
     "default": "",
     "group": "Value Style",
-    "format": "color-alpha"
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
   },
   "showBackground": {
     "type": "boolean",
@@ -185,20 +186,23 @@
     "title": "Needle Color",
     "default": "",
     "format": "color-alpha",
-    "group": "Gauge Style"
+    "group": "Gauge Style",
+    "x-theme-default": "accentPrimary"
   },
   "tickColor": {
     "type": "text",
     "title": "Tick Color",
     "default": "",
     "format": "color-alpha",
-    "group": "Gauge Style"
+    "group": "Gauge Style",
+    "x-theme-default": "textSecondary"
   },
   "dialColor": {
     "type": "text",
     "title": "Dial Face Color",
     "default": "",
     "format": "color-alpha",
-    "group": "Gauge Style"
+    "group": "Gauge Style",
+    "x-theme-default": "bgTertiary"
   }
 }

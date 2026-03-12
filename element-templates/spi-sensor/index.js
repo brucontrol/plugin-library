@@ -172,7 +172,8 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "spiSensor":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(2) + " " + (currentData.suffix || ""), "", "value", hiddenRows));
+        var prec = typeof currentData.precision === "number" && currentData.precision >= 0 && currentData.precision <= 6 ? currentData.precision : 2;
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec) + " " + (currentData.suffix || ""), "", "value", hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));

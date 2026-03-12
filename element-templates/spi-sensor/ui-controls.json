@@ -34,6 +34,20 @@
     "description": "Show primary value rows",
     "group": "Layout"
   },
+  "showSecondaryRows": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show secondary data rows",
+    "group": "Layout"
+  },
+  "precision": {
+    "type": "number",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for value display",
+    "group": "Value"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",

@@ -17,6 +17,12 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
+  "showSecondaryRows": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show secondary data rows",
+    "group": "Layout"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
