@@ -1,6 +1,6 @@
 name: SPI Sensor - Card
 description: Built-in SPI sensor element template.
-version: 1.0.4
+version: 1.0.5
 supportedTypes:
   - spiSensor
 defaultFor: spiSensor

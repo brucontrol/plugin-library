@@ -1,6 +1,6 @@
 name: Global Variable - Card
 description: Built-in element template for displaying global variable value and label (matches element template editor default).
-version: 1.0.11
+version: 1.0.12
 supportedTypes:
   - globalVariable-bool
   - globalVariable-value

@@ -1,6 +1,6 @@
 name: Counter - Card
 description: Built-in counter element template.
-version: 1.0.4
+version: 1.0.5
 supportedTypes:
   - counter
 defaultFor: counter

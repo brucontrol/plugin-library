@@ -1,6 +1,6 @@
 name: Erlenmeyer Flask
 description: Displays a value as liquid level in an Erlenmeyer flask. Liquid fills from bottom with bubbles and optional stir-plate spinning effect. Customizable color and animation.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - generic
 id: e7f8a9b0-c1d2-4e3f-9a0b-1c2d3e4f5a6b

@@ -1,6 +1,6 @@
 name: Duty Cycle - Card
 description: Built-in duty cycle element template.
-version: 1.0.4
+version: 1.0.5
 supportedTypes:
   - dutyCycle
 defaultFor: dutyCycle

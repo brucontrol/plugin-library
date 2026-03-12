@@ -1,6 +1,6 @@
 name: Button
 description: Momentary button. Sends state true on press (pointerdown) and state false on release (pointerup/leave). Scripts can use wait "Button" State == true without resetting. Stretches to element size.
-version: 2.0.3
+version: 2.0.4
 supportedTypes:
   - button
 defaultFor: button
