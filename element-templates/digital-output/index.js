@@ -41,8 +41,8 @@
       } else {
         var backgroundColor = (d.backgroundColor && String(d.backgroundColor).trim()) ? String(d.backgroundColor).trim() : "";
         var borderColor = (d.borderColor && String(d.borderColor).trim()) ? String(d.borderColor).trim() : "";
-        elementEl.style.background = backgroundColor || "";
-        elementEl.style.border = borderColor ? "1px solid " + borderColor : "";
+        if (backgroundColor) elementEl.style.background = backgroundColor; else elementEl.style.removeProperty("background");
+        if (borderColor) elementEl.style.border = "1px solid " + borderColor; else elementEl.style.removeProperty("border");
       }
       elementEl.style.borderRadius = "8px";
     }
@@ -50,8 +50,8 @@
     if (header) {
       header.style.display = d.showHeader === false ? "none" : "";
       var headerColor = (d.headerColor && String(d.headerColor).trim()) ? String(d.headerColor).trim() : "";
-      header.style.background = headerColor || "";
-      header.style.borderBottom = d.showHeader === false ? "none" : "";
+      if (headerColor) header.style.background = headerColor; else header.style.removeProperty("background");
+      if (d.showHeader === false) header.style.borderBottom = "none"; else header.style.removeProperty("border-bottom");
     }
 
     if (content) {
@@ -60,21 +60,31 @@
 
     if (titleEl) {
       titleEl.style.display = d.showLabel === false ? "none" : "";
-      titleEl.style.fontFamily = (d.labelFontFamily && String(d.labelFontFamily).trim()) ? String(d.labelFontFamily).trim() : "";
-      titleEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      titleEl.style.fontWeight = (d.labelFontWeight && String(d.labelFontWeight).trim()) ? String(d.labelFontWeight).trim() : "";
-      titleEl.style.fontStyle = (d.labelFontStyle && String(d.labelFontStyle).trim()) ? String(d.labelFontStyle).trim() : "";
-      titleEl.style.color = (d.labelColor && String(d.labelColor).trim()) ? String(d.labelColor).trim() : "";
+      var lf = (d.labelFontFamily && String(d.labelFontFamily).trim()) ? String(d.labelFontFamily).trim() : "";
+      var lfs = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+      var lfw = (d.labelFontWeight && String(d.labelFontWeight).trim()) ? String(d.labelFontWeight).trim() : "";
+      var lfst = (d.labelFontStyle && String(d.labelFontStyle).trim()) ? String(d.labelFontStyle).trim() : "";
+      var lc = (d.labelColor && String(d.labelColor).trim()) ? String(d.labelColor).trim() : "";
+      if (lf) titleEl.style.fontFamily = lf; else titleEl.style.removeProperty("font-family");
+      if (lfs) titleEl.style.fontSize = lfs; else titleEl.style.removeProperty("font-size");
+      if (lfw) titleEl.style.fontWeight = lfw; else titleEl.style.removeProperty("font-weight");
+      if (lfst) titleEl.style.fontStyle = lfst; else titleEl.style.removeProperty("font-style");
+      if (lc) titleEl.style.color = lc; else titleEl.style.removeProperty("color");
       titleEl.style.textAlign = "left";
     }
 
     if (toggleLabel) {
       toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
-      toggleLabel.style.fontFamily = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
-      toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      toggleLabel.style.fontWeight = (d.valueFontWeight && String(d.valueFontWeight).trim()) ? String(d.valueFontWeight).trim() : "";
-      toggleLabel.style.fontStyle = (d.valueFontStyle && String(d.valueFontStyle).trim()) ? String(d.valueFontStyle).trim() : "";
-      toggleLabel.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "";
+      var vf = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
+      var vfs = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      var vfw = (d.valueFontWeight && String(d.valueFontWeight).trim()) ? String(d.valueFontWeight).trim() : "";
+      var vfst = (d.valueFontStyle && String(d.valueFontStyle).trim()) ? String(d.valueFontStyle).trim() : "";
+      var vc = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "";
+      if (vf) toggleLabel.style.fontFamily = vf; else toggleLabel.style.removeProperty("font-family");
+      if (vfs) toggleLabel.style.fontSize = vfs; else toggleLabel.style.removeProperty("font-size");
+      if (vfw) toggleLabel.style.fontWeight = vfw; else toggleLabel.style.removeProperty("font-weight");
+      if (vfst) toggleLabel.style.fontStyle = vfst; else toggleLabel.style.removeProperty("font-style");
+      if (vc) toggleLabel.style.color = vc; else toggleLabel.style.removeProperty("color");
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
       toggleLabel.classList.toggle("on", isOn);
@@ -88,7 +98,7 @@
       } else if (!isOn && toggleOffColor) {
         toggleTrack.style.background = toggleOffColor;
       } else {
-        toggleTrack.style.background = "";
+        toggleTrack.style.removeProperty("background");
       }
     }
 

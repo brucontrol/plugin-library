@@ -43,7 +43,6 @@
     "default": "",
     "group": "Button",
     "description": "Text color for button label",
-    "format": "color-alpha",
-    "x-theme-default": "textPrimary"
+    "format": "color-alpha"
   }
 }

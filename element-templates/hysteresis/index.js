@@ -182,6 +182,11 @@
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
+      var hasSemanticClass = el.classList && (el.classList.contains("value--ok") || el.classList.contains("value--warn") || el.classList.contains("value--bad"));
+      if (hasSemanticClass) {
+        el.style.color = "";
+        return;
+      }
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
       var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
       var valColor = isPrimary

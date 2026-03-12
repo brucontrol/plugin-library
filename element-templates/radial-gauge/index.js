@@ -167,7 +167,7 @@
         : 'transparent');
     }
     if (track) {
-      track.setAttribute('stroke', showBg ? '#2c2c2c' : 'transparent');
+      track.setAttribute('stroke', showBg ? 'var(--bg-secondary, #2c2c2c)' : 'transparent');
     }
     var needleTail = document.getElementById('needle-tail');
     var needleHub = document.getElementById('needle-hub');

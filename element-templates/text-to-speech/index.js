@@ -87,6 +87,8 @@
           window.BruControl.updateProperties({ speak: false });
         }
       });
+    } else {
+      setStatus('Ready', false);
     }
   }
 
