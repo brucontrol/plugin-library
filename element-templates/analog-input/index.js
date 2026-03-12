@@ -140,11 +140,11 @@
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
-      var valColor = (d.valueColor && String(d.valueColor).trim())
-        ? String(d.valueColor).trim()
-        : (d.rowValueColor && String(d.rowValueColor).trim())
-          ? String(d.rowValueColor).trim()
-          : "var(--accent-green)";
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
+      var valColor = isPrimary
+        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
+        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
       el.style.color = valColor;
       el.style.fontFamily = d.valueFontFamily || "";
       if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";

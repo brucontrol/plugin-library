@@ -182,8 +182,12 @@
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
-      if (d.rowValueColor) el.style.color = d.rowValueColor;
-      if (d.valueColor) el.style.color = d.valueColor;
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
+      var valColor = isPrimary
+        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
+        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
+      el.style.color = valColor;
       if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
       if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
       if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;

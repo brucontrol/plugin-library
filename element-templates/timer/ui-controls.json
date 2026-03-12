@@ -99,7 +99,7 @@
     "default": "",
     "group": "Value",
     "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "x-theme-default": "accentPrimary"
   },
   "backgroundColor": {
     "type": "text",
