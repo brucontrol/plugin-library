@@ -98,16 +98,10 @@
   function applyStyles() {
     var d = currentData || {};
 
-    if (elementEl && d.backgroundColor) {
-      elementEl.style.background = d.backgroundColor;
-    }
-
-    if (viewEl && d.textColor) {
-      viewEl.style.color = d.textColor;
-    }
-
+    if (elementEl) elementEl.style.background = d.backgroundColor || "";
+    if (viewEl) viewEl.style.color = d.textColor || "";
     if (titleEl) {
-      if (d.textColor) titleEl.style.color = d.textColor;
+      titleEl.style.color = d.textColor || "";
       titleEl.textContent = d.displayName || d.name || 'Markdown';
     }
 
