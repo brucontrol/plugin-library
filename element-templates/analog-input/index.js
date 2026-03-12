@@ -146,10 +146,10 @@
           ? String(d.rowValueColor).trim()
           : "var(--accent-green)";
       el.style.color = valColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
+      el.style.fontFamily = d.valueFontFamily || "";
       if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
+      el.style.fontWeight = d.valueFontWeight || "";
+      el.style.fontStyle = d.valueFontStyle || "";
       el.style.textAlign = "center";
     });
 
@@ -187,7 +187,7 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "analogInput":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(2) + " " + (currentData.suffix || ""), "", "value", hiddenRows));
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(Math.max(0, Math.min(6, numberOrNull(currentData.precision) ?? 2))) + " " + (currentData.suffix || ""), "", "value", hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
