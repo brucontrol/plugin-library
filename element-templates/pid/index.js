@@ -208,11 +208,17 @@
     applyStyles();
   }
 
+  function getPrecision() {
+    var p = toNumber(currentData.precision, 2);
+    return Math.max(0, Math.min(6, Math.round(p)));
+  }
+
   function renderContentRows(type, hiddenRows) {
+    var prec = getPrecision();
     switch (type) {
       case "pid":
-        appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(2), "", "output", hiddenRows));
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(2), "", "target", hiddenRows));
+        appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(prec), "", "output", hiddenRows));
+        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target", hiddenRows));
         appendRow(row("Kp/Ki/Kd", toNumber(currentData.kp, 0) + " / " + toNumber(currentData.ki, 0) + " / " + toNumber(currentData.kd, 0), "", { key: "kpkikd" }, hiddenRows));
         break;
       default:
@@ -232,10 +238,11 @@
   }
 
   function renderTargetSetter(data) {
+    var prec = getPrecision();
     footerEl.appendChild(
       makeButton("Set Target", function () {
         var displayName = currentData ? (currentData.displayName || currentData.name || "Target") : "Target";
-        requestKeypadFor("Set Target: " + displayName, String(toNumber(data.target, 0)), undefined, undefined, undefined, true, function (val) {
+        requestKeypadFor("Set Target: " + displayName, String(toNumber(data.target, 0)), undefined, undefined, prec, true, function (val) {
           sendPatch({ target: toNumber(val, 0) });
         });
       }, false)

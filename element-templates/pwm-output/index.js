@@ -208,11 +208,17 @@
     applyStyles();
   }
 
+  function getPrecision() {
+    var p = toNumber(currentData.precision, 2);
+    return Math.max(0, Math.min(6, Math.round(p)));
+  }
+
   function renderContentRows(type, hiddenRows) {
+    var prec = getPrecision();
     switch (type) {
       case "pwmOutput":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(2), "", "value", hiddenRows));
-        appendRow(primaryRow("Requested", toNumber(currentData.requestedValue, 0).toFixed(2), "", "requested", hiddenRows));
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value", hiddenRows));
+        appendRow(primaryRow("Requested", toNumber(currentData.requestedValue, 0).toFixed(prec), "", "requested", hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
@@ -221,11 +227,12 @@
   }
 
   function renderFooter(type) {
+    var prec = getPrecision();
     switch (type) {
       case "pwmOutput":
         footerEl.appendChild(
           makeButton("Set Value", function () {
-            requestKeypadFor("Set PWM Value", String(toNumber(currentData.requestedValue, 0)), undefined, undefined, undefined, true, function (val) {
+            requestKeypadFor("Set PWM Value", String(toNumber(currentData.requestedValue, 0)), undefined, undefined, prec, true, function (val) {
               sendPatch({ requestedValue: toNumber(val, 0) });
             });
           }, false)
