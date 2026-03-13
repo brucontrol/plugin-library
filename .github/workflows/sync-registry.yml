@@ -35,6 +35,7 @@ jobs:
         env:
           BEFORE_SHA: ${{ github.event.before || 'HEAD~1' }}
           AFTER_SHA: ${{ github.sha }}
+          CLEAR_BETA: 'true'
 
       - name: Generate manifests
         run: node scripts/generate-manifests.mjs
@@ -72,6 +73,11 @@ jobs:
           # Remove only stable manifests (preserve *-beta.json from beta branch)
           find registry/plugins -maxdepth 1 -name "*.json" ! -name "*-beta.json" -delete
           cp dist/manifests/*.json registry/plugins/
+          # Remove beta manifests for plugins we're promoting to stable
+          for f in dist/manifests/*.json; do
+            base=$(basename "$f" .json)
+            rm -f registry/plugins/$base-beta.json
+          done
           mkdir -p registry/color-themes
           cp dist/manifests/color-themes/*.json registry/color-themes/
 
@@ -94,3 +100,20 @@ jobs:
             git commit -m "chore: sync manifests from plugin-library@${GITHUB_SHA::8}"
             git push
           fi
+
+  backmerge:
+    runs-on: ubuntu-latest
+    needs: sync
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout beta
+          git merge origin/main -m "chore: merge main into beta"
+          git push origin beta

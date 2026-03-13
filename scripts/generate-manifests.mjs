@@ -19,6 +19,38 @@ const HEAD_HASH = process.env.COMMIT_HASH
 
 const isBetaMode = process.argv.includes('--beta');
 
+const BEFORE_SHA = process.env.BEFORE_SHA || 'HEAD~1';
+const AFTER_SHA = process.env.AFTER_SHA || 'HEAD';
+
+/**
+ * Get element template folder names that had changes in the given commit range.
+ * @param {boolean} includeYaml - If true, include folders that only changed element-template.yaml
+ */
+function getChangedTemplateFolders(beforeSha, afterSha, includeYaml = false) {
+  const empty = '0000000000000000000000000000000000000000';
+  if (beforeSha === empty || !beforeSha) return [];
+  try {
+    const out = execSync(
+      `git diff --name-only "${beforeSha}" "${afterSha}" -- element-templates/`,
+      { cwd: root, encoding: 'utf8' }
+    ).trim();
+    if (!out) return [];
+    const folders = new Set();
+    for (const line of out.split('\n').filter(Boolean)) {
+      const m = line.match(/^element-templates\/([^/]+)\/(.+)$/);
+      if (m) {
+        const [, folder, file] = m;
+        if (includeYaml || file !== 'element-template.yaml') {
+          folders.add(folder);
+        }
+      }
+    }
+    return [...folders];
+  } catch {
+    return [];
+  }
+}
+
 /** Get the last commit that touched the given path. Falls back to HEAD if path has no history. */
 function getLastCommitForPath(path) {
   try {
@@ -54,6 +86,10 @@ async function main() {
 
   const folders = await readdir(pluginsDir, { withFileTypes: true });
   const pluginDirs = folders.filter(d => d.isDirectory()).map(d => d.name);
+
+  /** In beta mode, only process templates that changed in this push. System sets beta: true. */
+  const changedFolders = isBetaMode ? new Set(getChangedTemplateFolders(BEFORE_SHA, AFTER_SHA, true)) : null;
+
   let count = 0;
   const writeBacks = [];
 
@@ -72,14 +108,17 @@ async function main() {
       process.exit(1);
     }
 
-    if (isBetaMode && manifest.beta !== true) {
-      continue;
+    if (isBetaMode) {
+      if (!changedFolders.has(folder)) continue;
+      manifest.beta = true;
     }
 
     const idResult = resolvePluginId(manifest, yamlPath, yamlContent);
     const id = typeof idResult === 'string' ? idResult : idResult.id;
     if (typeof idResult !== 'string' && idResult.writeBack) {
       writeBacks.push(idResult.writeBack);
+    } else if (isBetaMode) {
+      writeBacks.push({ path: yamlPath, content: stringifyYaml(manifest, { lineWidth: -1 }) });
     }
 
     let version = manifest.version || '1.0.0';

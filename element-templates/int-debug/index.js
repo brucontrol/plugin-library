@@ -1,4 +1,5 @@
 (function () {
+  // Int Debug - displays bindable numeric values
   var valueEl = document.getElementById('valueDisplay');
   var value2El = document.getElementById('value2Display');
 

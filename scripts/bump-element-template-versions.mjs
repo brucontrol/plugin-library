@@ -6,6 +6,7 @@
  * Env:
  *   BEFORE_SHA - start of range (e.g. github.event.before for push)
  *   AFTER_SHA  - end of range (e.g. github.sha for push)
+ *   CLEAR_BETA - if set, also set beta: false when writing (used on main branch after merge from beta)
  *   If unset (e.g. workflow_dispatch), uses HEAD~1..HEAD.
  */
 import { readFile, writeFile } from 'fs/promises';
@@ -83,6 +84,9 @@ async function main() {
     const oldVersion = manifest.version || '1.0.0';
     const newVersion = bumpPatch(oldVersion);
     manifest.version = newVersion;
+    if (process.env.CLEAR_BETA) {
+      manifest.beta = false;
+    }
     const updated = stringifyYaml(manifest, { lineWidth: -1 });
     await writeFile(yamlPath, updated, 'utf8');
     console.log(`  ${folder}: ${oldVersion} → ${newVersion}`);
