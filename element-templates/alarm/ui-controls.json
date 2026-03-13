@@ -117,6 +117,22 @@
     "format": "color-alpha",
     "x-theme-default": "bgTertiary"
   },
+  "valueSectionBackground": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override value section (Active state) background color",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
+  },
+  "buttonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override Activate/Deactivate button background color",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
+  },
   "borderColor": {
     "type": "text",
     "default": "",

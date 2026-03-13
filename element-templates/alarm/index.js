@@ -154,6 +154,16 @@
       content.style.padding = "10px";
     }
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueSectionBackground && String(d.valueSectionBackground).trim()) ? String(d.valueSectionBackground).trim() : "";
+    });
+
+    var footerButtons = document.querySelectorAll(".element-footer button");
+    footerButtons.forEach(function (btn) {
+      btn.style.background = (d.buttonColor && String(d.buttonColor).trim()) ? String(d.buttonColor).trim() : "";
+    });
+
     if (titleEl) {
       titleEl.style.display = d.showLabel === false ? "none" : "";
       titleEl.style.fontFamily = d.labelFontFamily || "";
@@ -225,7 +235,7 @@
     switch (type) {
       case "alarm":
         appendRow(primaryRow("Active", boolText(asBool(currentData.active)), asBool(currentData.active) ? "value--bad" : "value--ok", "active", hiddenRows));
-        appendRow(row("Sound", currentData.sound || "Default", "", { key: "sound" }, hiddenRows));
+        appendRow(row("Sound", (currentData.soundFile && String(currentData.soundFile).trim()) ? currentData.soundFile : "/sounds/alarm.wav", "", { key: "soundFile" }, hiddenRows));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
@@ -250,7 +260,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      alarm: { elementType: "alarm", name: "Alarm", displayName: "Alarm", active: false, sound: "Default", userControl: true, enabled: true }
+      alarm: { elementType: "alarm", name: "Alarm", displayName: "Alarm", active: false, soundFile: "/sounds/alarm.wav", userControl: true, enabled: true }
     };
     return map[t] || { elementType: t, displayName: t };
   }
