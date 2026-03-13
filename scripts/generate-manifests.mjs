@@ -17,6 +17,8 @@ const AUTHOR = process.env.PLUGIN_AUTHOR || 'BruControl';
 const HEAD_HASH = process.env.COMMIT_HASH
   || execSync('git rev-parse HEAD', { cwd: root, encoding: 'utf8' }).trim();
 
+const isBetaMode = process.argv.includes('--beta');
+
 /** Get the last commit that touched the given path. Falls back to HEAD if path has no history. */
 function getLastCommitForPath(path) {
   try {
@@ -70,6 +72,10 @@ async function main() {
       process.exit(1);
     }
 
+    if (isBetaMode && manifest.beta !== true) {
+      continue;
+    }
+
     const idResult = resolvePluginId(manifest, yamlPath, yamlContent);
     const id = typeof idResult === 'string' ? idResult : idResult.id;
     if (typeof idResult !== 'string' && idResult.writeBack) {
@@ -102,9 +108,10 @@ async function main() {
       tags: Array.isArray(manifest.tags) ? manifest.tags : [],
       supportedTypes: Array.isArray(manifest.supportedTypes) ? manifest.supportedTypes : [],
       ...(manifest.collection ? { collection: String(manifest.collection).trim() } : {}),
+      ...(isBetaMode ? { stablePluginId: id, beta: true } : {}),
     };
 
-    const outPath = join(distDir, `${id}.json`);
+    const outPath = join(distDir, isBetaMode ? `${id}-beta.json` : `${id}.json`);
     await writeFile(outPath, JSON.stringify(registryManifest, null, 2) + '\n', 'utf8');
     console.log(`  ${folder} → ${id}.json (v${version}${registryManifest.beta ? ' BETA' : ''})`);
     count++;
