@@ -422,24 +422,33 @@
 
     var showHeader = toBool(currentData.showHeader, true);
     var showBackground = toBool(currentData.showBackground, true);
+    var image = (currentData.image && String(currentData.image).trim()) ? String(currentData.image).trim() : "";
 
     if (headerEl) {
-      headerEl.classList.toggle("hidden", !showHeader);
+      headerEl.classList.toggle("hidden", !showHeader || !!image);
       var headerColor = (currentData.headerColor && String(currentData.headerColor).trim()) ? String(currentData.headerColor).trim() : "";
       headerEl.style.background = headerColor || "";
-      headerEl.style.borderBottom = showHeader ? "" : "none";
+      headerEl.style.borderBottom = showHeader && !image ? "" : "none";
     }
 
     if (contentEl) {
       contentEl.style.padding = "8px";
     }
 
-    if (showBackground) {
+    if (image) {
+      elementEl.style.background = "transparent";
+      elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+      elementEl.style.backgroundSize = "cover";
+      elementEl.style.backgroundPosition = "center";
+      elementEl.style.border = "none";
+    } else if (showBackground) {
+      elementEl.style.backgroundImage = "";
       var backgroundColor = (currentData.backgroundColor && String(currentData.backgroundColor).trim()) ? String(currentData.backgroundColor).trim() : "";
       var borderColor = (currentData.borderColor && String(currentData.borderColor).trim()) ? String(currentData.borderColor).trim() : "";
       elementEl.style.background = backgroundColor || "";
       elementEl.style.border = borderColor ? "1px solid " + borderColor : "";
     } else {
+      elementEl.style.backgroundImage = "";
       elementEl.style.background = "transparent";
       elementEl.style.border = "none";
     }

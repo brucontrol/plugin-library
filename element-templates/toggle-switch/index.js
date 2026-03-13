@@ -38,20 +38,30 @@
     var toggleTrack = document.querySelector(".toggle-track");
     var toggleSwitch = document.getElementById("toggleSwitch");
     var isOn = getIsOn(currentData);
+    var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
 
     if (elementEl) {
-      if (d.showBackground === false) {
+      if (image) {
         elementEl.style.background = "transparent";
+        elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+        elementEl.style.backgroundSize = "cover";
+        elementEl.style.backgroundPosition = "center";
         elementEl.style.border = "none";
       } else {
-        elementEl.style.background = d.backgroundColor || "";
-        elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
+        elementEl.style.backgroundImage = "";
+        if (d.showBackground === false) {
+          elementEl.style.background = "transparent";
+          elementEl.style.border = "none";
+        } else {
+          elementEl.style.background = d.backgroundColor || "";
+          elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
+        }
       }
       elementEl.style.borderRadius = "8px";
     }
 
     if (header) {
-      header.style.display = d.showHeader === false ? "none" : "";
+      header.style.display = image ? "none" : (d.showHeader === false ? "none" : "");
       header.style.background = d.headerColor || "";
       header.style.borderBottom = d.showHeader === false ? "none" : "";
     }

@@ -204,5 +204,15 @@
     "format": "color-alpha",
     "group": "Gauge Style",
     "x-theme-default": "bgTertiary"
+  },
+  "image": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Use an image as the card background instead of color/border. When set, background and border are replaced by this image.",
+    "format": "file-upload",
+    "title": "Background Image",
+    "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
+    "x-picker-title": "Select Background Image"
   }
 }

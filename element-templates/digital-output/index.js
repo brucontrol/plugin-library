@@ -35,10 +35,19 @@
     var isOn = currentData ? asBool(currentData.state) : false;
 
     if (elementEl) {
-      if (d.showBackground === false) {
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      if (image) {
+        elementEl.style.background = "transparent";
+        elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+        elementEl.style.backgroundSize = "cover";
+        elementEl.style.backgroundPosition = "center";
+        elementEl.style.border = "none";
+      } else if (d.showBackground === false) {
         elementEl.style.background = "transparent";
         elementEl.style.border = "none";
+        elementEl.style.backgroundImage = "";
       } else {
+        elementEl.style.backgroundImage = "";
         var backgroundColor = (d.backgroundColor && String(d.backgroundColor).trim()) ? String(d.backgroundColor).trim() : "";
         var borderColor = (d.borderColor && String(d.borderColor).trim()) ? String(d.borderColor).trim() : "";
         if (backgroundColor) elementEl.style.background = backgroundColor; else elementEl.style.removeProperty("background");
@@ -48,7 +57,8 @@
     }
 
     if (header) {
-      header.style.display = d.showHeader === false ? "none" : "";
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      header.style.display = image ? "none" : (d.showHeader === false ? "none" : "");
       var headerColor = (d.headerColor && String(d.headerColor).trim()) ? String(d.headerColor).trim() : "";
       if (headerColor) header.style.background = headerColor; else header.style.removeProperty("background");
       if (d.showHeader === false) header.style.borderBottom = "none"; else header.style.removeProperty("border-bottom");

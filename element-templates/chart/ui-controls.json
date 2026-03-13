@@ -266,5 +266,15 @@
     "description": "Chart header/title color",
     "group": "Appearance",
     "x-theme-default": "bgTertiary"
+  },
+  "image": {
+    "type": "text",
+    "default": "",
+    "group": "Appearance",
+    "description": "Use an image as the card background instead of color/border. When set, background, header, and border are replaced by this image.",
+    "format": "file-upload",
+    "title": "Background Image",
+    "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
+    "x-picker-title": "Select Background Image"
   }
 }

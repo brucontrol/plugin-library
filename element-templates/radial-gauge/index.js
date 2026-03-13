@@ -151,6 +151,7 @@
 
   function applyStyles() {
     var d = currentData || {};
+    var elementEl = document.getElementById('element');
     var titleEl = document.getElementById('elementTitle');
     var valueNum = document.getElementById('valueNumber');
     var valueUnit = document.getElementById('valueUnit');
@@ -159,6 +160,21 @@
     var dial = document.getElementById('gauge-dial');
     var track = document.getElementById('gauge-track');
     var needleArm = document.getElementById('needle-arm');
+
+    if (elementEl) {
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      if (image) {
+        elementEl.style.background = "transparent";
+        elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+        elementEl.style.backgroundSize = "cover";
+        elementEl.style.backgroundPosition = "center";
+        elementEl.style.border = "none";
+      } else {
+        elementEl.style.backgroundImage = "";
+        elementEl.style.background = "";
+        elementEl.style.border = "";
+      }
+    }
 
     var showBg = d.showBackground !== false;
     if (dial) {

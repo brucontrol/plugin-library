@@ -15,10 +15,19 @@
     var contentEl = document.querySelector(".element-content");
 
     if (elementEl) {
-      if (d.showBackground === false) {
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      if (image) {
+        elementEl.style.background = "transparent";
+        elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+        elementEl.style.backgroundSize = "cover";
+        elementEl.style.backgroundPosition = "center";
+        elementEl.style.border = "none";
+      } else if (d.showBackground === false) {
         elementEl.style.background = "transparent";
         elementEl.style.border = "none";
+        elementEl.style.backgroundImage = "";
       } else {
+        elementEl.style.backgroundImage = "";
         elementEl.style.background = d.backgroundColor || "";
         elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
       }
@@ -26,7 +35,8 @@
     }
 
     if (headerEl) {
-      headerEl.style.display = d.showHeader === false ? "none" : "";
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      headerEl.style.display = (image || d.showHeader === false) ? "none" : "";
     }
 
     if (variableLabelEl) {

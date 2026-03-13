@@ -4,7 +4,7 @@
 
   function applyData(data) {
     var d = data && typeof data === 'object' ? data : {};
-    var nextUrl = typeof d.imageUrl === 'string' ? d.imageUrl.trim() : '';
+    var nextUrl = typeof d.image === 'string' ? d.image.trim() : '';
     if (!nextUrl) {
       imageEl.removeAttribute('src');
     } else {

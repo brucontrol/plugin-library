@@ -1,5 +1,5 @@
 {
-  "imageUrl": {
+  "image": {
     "type": "text",
     "default": "",
     "group": "Image",

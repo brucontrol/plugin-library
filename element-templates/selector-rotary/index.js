@@ -221,17 +221,27 @@
 
     if (!elementEl || !header || !titleEl || !contentEl) return;
 
-    if (d.showBackground === false) {
+    var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+    if (image) {
       elementEl.style.background = "transparent";
+      elementEl.style.backgroundImage = "url(\"" + image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\")";
+      elementEl.style.backgroundSize = "cover";
+      elementEl.style.backgroundPosition = "center";
       elementEl.style.border = "none";
+      header.style.display = "none";
     } else {
-      elementEl.style.background = d.backgroundColor || "";
-      elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
+      elementEl.style.backgroundImage = "";
+      if (d.showBackground === false) {
+        elementEl.style.background = "transparent";
+        elementEl.style.border = "none";
+      } else {
+        elementEl.style.background = d.backgroundColor || "";
+        elementEl.style.border = d.borderColor ? "1px solid " + d.borderColor : "";
+      }
+      header.style.display = d.showHeader === false ? "none" : "";
     }
 
     elementEl.style.borderRadius = "8px";
-
-    header.style.display = d.showHeader === false ? "none" : "";
     header.style.background = d.headerColor || "";
     header.style.borderBottom = d.showHeader === false ? "none" : "";
 
