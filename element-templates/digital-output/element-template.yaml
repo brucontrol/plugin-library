@@ -1,7 +1,7 @@
 name: Digital Output - Card
 collection: BruControl Cards
 description: Built-in digital output element template.
-version: 1.1.5
+version: 1.1.6
 supportedTypes:
   - digitalOutput
 defaultFor: digitalOutput

@@ -1,7 +1,7 @@
 name: Counter - Card
 collection: BruControl Cards
 description: Built-in counter element template.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - counter
 defaultFor: counter

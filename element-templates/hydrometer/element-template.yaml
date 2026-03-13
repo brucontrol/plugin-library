@@ -1,7 +1,7 @@
 name: Hydrometer - Card
 collection: BruControl Cards
 description: Built-in hydrometer element template.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - hydrometer
 defaultFor: hydrometer

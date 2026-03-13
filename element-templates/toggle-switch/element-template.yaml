@@ -1,7 +1,7 @@
 name: Toggle Switch - Card
 collection: BruControl Cards
 description: Built-in toggle switch element template (matches element template editor default).
-version: 1.0.6
+version: 1.0.7
 supportedTypes:
   - toggleSwitch
 defaultFor: toggleSwitch

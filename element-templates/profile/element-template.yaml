@@ -1,7 +1,7 @@
 name: Profile - Card
 collection: BruControl Cards
 description: Built-in profile element template.
-version: 1.0.9
+version: 1.0.10
 supportedTypes:
   - profile
 defaultFor: profile

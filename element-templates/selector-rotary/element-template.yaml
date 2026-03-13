@@ -1,7 +1,7 @@
 name: Selector (Rotary Dial) - Card
 collection: BruControl Cards
 description: Rotary dial selector for numeric global variables.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - globalVariable-value
 id: 79349068-d4b2-408b-b878-355d3a6fb0e1

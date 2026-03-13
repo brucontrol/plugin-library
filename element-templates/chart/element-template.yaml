@@ -1,7 +1,7 @@
 name: Chart - Card
 collection: BruControl Cards
 description: Built-in chart element template with history, live streaming, and oscilloscope mode.
-version: 1.0.13
+version: 1.0.14
 supportedTypes:
   - chart
 defaultFor: chart

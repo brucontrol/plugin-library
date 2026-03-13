@@ -1,6 +1,6 @@
 name: Generic Element - Markdown
 description: Displays rich markdown content with inline view and edit modes. Supports headings, lists, links, code blocks, tables, and more.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - generic
 id: 4c9e9f5b-c4b2-42e7-bbec-f1121a975686

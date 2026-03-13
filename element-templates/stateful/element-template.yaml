@@ -1,7 +1,7 @@
 name: stateful - Card
 collection: BruControl Cards
 description: Built-in stateful element element template.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - stateful
 defaultFor: stateful
