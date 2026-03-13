@@ -1,4 +1,5 @@
 name: Global Variable Boolean - Card
+collection: BruControl Cards
 description: Editor-only starter for global variable (Boolean) templates.
 version: 1.0.6
 supportedTypes:

@@ -1,4 +1,5 @@
 name: OW Temperature - Card
+collection: BruControl Cards
 description: Built-in one-wire temperature element template.
 version: 1.0.6
 supportedTypes:
