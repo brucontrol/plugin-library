@@ -1,5 +1,5 @@
 name: stateful - Card
-collection: BruControl Cards
+collection: BruControl Card
 description: Built-in stateful element element template.
 version: 1.0.5
 supportedTypes:

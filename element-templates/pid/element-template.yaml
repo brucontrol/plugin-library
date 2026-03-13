@@ -1,5 +1,5 @@
 name: PID - Card
-collection: BruControl Cards
+collection: BruControl Card
 description: Built-in PID element template.
 version: 1.0.5
 supportedTypes:

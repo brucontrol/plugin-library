@@ -1,5 +1,5 @@
 name: Global Variable - Card
-collection: BruControl Cards
+collection: BruControl Card
 description: Built-in element template for displaying global variable value and label (matches element template editor default).
 version: 1.0.12
 supportedTypes:

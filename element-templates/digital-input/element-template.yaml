@@ -1,5 +1,5 @@
 name: Digital Input - Card
-collection: BruControl Cards
+collection: BruControl Card
 description: Built-in digital input element template.
 version: 1.2.4
 supportedTypes:
