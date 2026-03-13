@@ -1,5 +1,5 @@
 name: PWM Output - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Built-in PWM output element template.
 version: 1.0.5
 supportedTypes:

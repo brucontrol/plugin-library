@@ -1,5 +1,5 @@
 name: Selector (Rotary Dial) - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Rotary dial selector for numeric global variables.
 version: 1.0.5
 supportedTypes:

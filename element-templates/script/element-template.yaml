@@ -1,5 +1,5 @@
 name: Script Element - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Built-in script element element template.
 version: 1.0.7
 supportedTypes:

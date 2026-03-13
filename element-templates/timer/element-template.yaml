@@ -1,5 +1,5 @@
 name: Timer - Card
-collection: BruControl Card
+collection: BruControl Cards
 defaultWidth: 60
 defaultHeight: 40
 description: Built-in timer element template.

@@ -1,5 +1,5 @@
 name: Alarm - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Built-in alarm element template.
 version: 1.0.8
 supportedTypes:

@@ -1,5 +1,5 @@
 name: Counter - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Built-in counter element template.
 version: 1.0.5
 supportedTypes:

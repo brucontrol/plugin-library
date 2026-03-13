@@ -1,5 +1,5 @@
 name: Image - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Built-in image element template for generic elements.
 version: 1.0.1
 supportedTypes:

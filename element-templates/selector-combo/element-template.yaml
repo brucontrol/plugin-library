@@ -1,5 +1,5 @@
 name: Selector (Combo Box) - Card
-collection: BruControl Card
+collection: BruControl Cards
 description: Dropdown selector for string global variables.
 version: 1.0.4
 supportedTypes:
