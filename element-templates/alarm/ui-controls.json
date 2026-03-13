@@ -155,7 +155,7 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row label color",
+    "description": "Override base row label color",
     "format": "color-alpha",
     "x-theme-default": "textSecondary"
   },
@@ -163,7 +163,7 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row value color",
+    "description": "Override base row value color",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   }
