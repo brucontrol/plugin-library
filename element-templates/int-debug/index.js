@@ -20,7 +20,7 @@
       elementType: 'generic',
       displayName: 'Int Debug',
       value: 42,
-      value2: 100
+      value2: 1000
     };
   }
 
