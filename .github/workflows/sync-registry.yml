@@ -69,7 +69,8 @@ jobs:
 
       - name: Copy manifests to registry
         run: |
-          rm -f registry/plugins/*.json
+          # Remove only stable manifests (preserve *-beta.json from beta branch)
+          find registry/plugins -maxdepth 1 -name "*.json" ! -name "*-beta.json" -delete
           cp dist/manifests/*.json registry/plugins/
           mkdir -p registry/color-themes
           cp dist/manifests/color-themes/*.json registry/color-themes/
