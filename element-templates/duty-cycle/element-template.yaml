@@ -1,7 +1,7 @@
 name: Duty Cycle - Card
 collection: BruControl Cards
 description: Built-in duty cycle element template.
-version: 1.0.6
+version: 1.0.7
 supportedTypes:
   - dutyCycle
 defaultFor: dutyCycle

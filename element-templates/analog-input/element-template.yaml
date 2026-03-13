@@ -1,7 +1,7 @@
 name: Analog Input - Card
 collection: BruControl Cards
 description: Built-in analog input element template.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - analogInput
 defaultFor: analogInput

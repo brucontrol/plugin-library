@@ -1,7 +1,7 @@
 name: OW Temperature - Card
 collection: BruControl Cards
 description: Built-in one-wire temperature element template.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - owTemp
 defaultFor: owTemp

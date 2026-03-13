@@ -1,7 +1,7 @@
 name: Selector (Combo Box) - Card
 collection: BruControl Cards
 description: Dropdown selector for string global variables.
-version: 1.0.5
+version: 1.0.6
 supportedTypes:
   - globalVariable-string
 id: 7a20ee79-f631-45dc-8f1b-5e28f80031e2

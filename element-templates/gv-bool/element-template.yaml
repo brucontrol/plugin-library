@@ -1,7 +1,7 @@
 name: Global Variable Boolean - Card
 collection: BruControl Cards
 description: Editor-only starter for global variable (Boolean) templates.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - globalVariable-bool
 defaultFor: globalVariable-bool
