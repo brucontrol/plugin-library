@@ -21,12 +21,26 @@
     var d = currentData || {};
     if (!btnEl) return;
 
-    if (d.buttonColor) {
-      document.body.style.setProperty("--button-primary-bg", d.buttonColor);
-      document.body.style.setProperty("--button-primary-hover", d.buttonColor);
-    } else {
+    var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+    if (image) {
+      var escaped = image.replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+      btnEl.style.setProperty("--button-bg-image", "url(\"" + escaped + "\")");
+      btnEl.classList.add("has-image");
       document.body.style.removeProperty("--button-primary-bg");
       document.body.style.removeProperty("--button-primary-hover");
+    } else {
+      btnEl.style.removeProperty("--button-bg-image");
+      btnEl.classList.remove("has-image");
+      btnEl.style.backgroundImage = "";
+      btnEl.style.backgroundSize = "";
+      btnEl.style.backgroundPosition = "";
+      if (d.buttonColor) {
+        document.body.style.setProperty("--button-primary-bg", d.buttonColor);
+        document.body.style.setProperty("--button-primary-hover", d.buttonColor);
+      } else {
+        document.body.style.removeProperty("--button-primary-bg");
+        document.body.style.removeProperty("--button-primary-hover");
+      }
     }
 
     btnEl.style.fontFamily = d.buttonFontFamily || "";
