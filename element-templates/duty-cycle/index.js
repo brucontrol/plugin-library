@@ -175,6 +175,12 @@
       el.style.fontStyle = d.labelFontStyle || "";
     });
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+      rowEl.classList.toggle("editable", d.userControl !== false);
+    });
+
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
@@ -245,28 +251,30 @@
   function renderFooter(type) {
     switch (type) {
       case "dutyCycle":
-        var dcRange = document.createElement("input");
-        dcRange.type = "range";
-        dcRange.min = "0";
-        dcRange.max = "100";
-        dcRange.step = "1";
-        dcRange.value = String(toNumber(currentData.dutyCycle, 0));
-        dcRange.disabled = false;
-        dcRange.addEventListener("change", function () {
-          sendPatch({ dutyCycle: toNumber(dcRange.value, 0) });
-        });
-        footerEl.appendChild(dcRange);
-        footerEl.appendChild(
-          makeButton("Set Exact", function () {
-            requestKeypadFor("Set Duty Cycle", String(toNumber(currentData.dutyCycle, 0)), 0, 100, 1, false, function (val) {
-              sendPatch({ dutyCycle: toNumber(val, 0) });
-            });
-          }, false)
-        );
         break;
       default:
         break;
     }
+  }
+
+  function handleDutyValueClick() {
+    if (!currentData || currentData.userControl === false) return;
+    var prec = Math.max(0, Math.min(6, Math.floor(toNumber(currentData.precision, 1))));
+    var label = (currentData.displayName || currentData.name || "Duty Cycle") + " - Set Duty %";
+    requestKeypadFor(label, String(toNumber(currentData.dutyCycle, 0)), 0, 100, prec, false, function (val) {
+      sendPatch({ dutyCycle: toNumber(val, 0) });
+    });
+  }
+
+  function bindValueClick() {
+    if (!contentEl) return;
+    contentEl.addEventListener("click", function (e) {
+      var target = e.target;
+      if (!target || !target.classList || !target.classList.contains("row-value")) return;
+      var rowEl = target.closest ? target.closest(".element-row--primary") : null;
+      if (!rowEl || rowEl.getAttribute("data-row-key") !== "value") return;
+      handleDutyValueClick();
+    });
   }
 
   function getPreviewData() {
@@ -276,6 +284,8 @@
     };
     return map[t] || { elementType: t, displayName: t };
   }
+
+  bindValueClick();
 
   if (window.BruControl) {
     if (window.BruControl.getData) {

@@ -48,6 +48,14 @@
     "description": "Show footer controls",
     "group": "Layout"
   },
+  "footerButtonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "accentPrimary",
+    "description": "Set Target button background color"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -113,6 +121,14 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of Value and Target sections"
   },
   "precision": {
     "type": "number",

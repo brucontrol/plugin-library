@@ -23,10 +23,10 @@
     "description": "Show timer value row",
     "group": "Layout"
   },
-  "showSecondaryRows": {
+  "showDetails": {
     "type": "boolean",
     "default": true,
-    "description": "Show secondary data rows",
+    "description": "Show Details",
     "group": "Layout"
   },
   "showFooter": {
@@ -101,6 +101,14 @@
     "format": "color-alpha",
     "x-theme-default": "accentPrimary"
   },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of the area behind the timer value"
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -150,5 +158,48 @@
     "description": "Override generic row value color",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "footerButtonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "accentPrimary",
+    "description": "Start / Stop / Reset button background color"
+  },
+  "buttonFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "font-family",
+    "description": "Button font family"
+  },
+  "buttonFontSize": {
+    "type": "number",
+    "default": 13,
+    "group": "Footer",
+    "format": "font-size",
+    "min": 8,
+    "max": 48
+  },
+  "buttonFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "font-weight"
+  },
+  "buttonFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Footer",
+    "format": "font-style"
+  },
+  "buttonTextColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "textPrimary",
+    "description": "Button text color"
   }
 }

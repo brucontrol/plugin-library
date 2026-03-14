@@ -37,6 +37,8 @@
     if (headerEl) {
       var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
       headerEl.style.display = (image || d.showHeader === false) ? "none" : "";
+      headerEl.style.background = d.headerColor || "";
+      headerEl.style.borderBottom = d.showHeader === false ? "none" : "";
     }
 
     if (variableLabelEl) {

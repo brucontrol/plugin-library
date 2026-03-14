@@ -57,7 +57,41 @@
     if (/^#([0-9a-fA-F]{6})$/.test(withHash)) {
       return withHash.toUpperCase();
     }
+    if (/^#([0-9a-fA-F]{8})$/.test(withHash)) {
+      return withHash.slice(0, 7).toUpperCase();
+    }
     return fallback;
+  }
+
+  function resolveCssVarToHex(value) {
+    if (typeof value !== "string") return null;
+    var trimmed = value.trim();
+    var match = /^var\(\s*--([a-zA-Z0-9-]+)\s*\)$/.exec(trimmed);
+    if (!match) return null;
+    var cssVar = match[1];
+    var theme = (window.BruControl && window.BruControl.getTheme) ? window.BruControl.getTheme() : {};
+    var resolved = theme[cssVar];
+    if (typeof resolved === "string" && resolved.trim()) {
+      var hex = normalizeHexColor(resolved, null);
+      if (hex) return hex;
+    }
+    try {
+      var el = document.createElement("div");
+      el.style.color = trimmed;
+      document.body.appendChild(el);
+      var computed = window.getComputedStyle(el).color;
+      document.body.removeChild(el);
+      if (computed) {
+        var rgbMatch = /rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/.exec(computed);
+        if (rgbMatch) {
+          var r = parseInt(rgbMatch[1], 10).toString(16).padStart(2, "0");
+          var g = parseInt(rgbMatch[2], 10).toString(16).padStart(2, "0");
+          var b = parseInt(rgbMatch[3], 10).toString(16).padStart(2, "0");
+          return "#" + r + g + b;
+        }
+      }
+    } catch (e) {}
+    return null;
   }
 
   function withAlpha(hexColor, alpha) {
@@ -138,15 +172,19 @@
 
   function getChannelColor(channelIndex, channel) {
     var metaColor = currentData["channel" + String(channelIndex + 1) + "Color"];
+    var fallback = COLOR_PALETTE[channelIndex % COLOR_PALETTE.length];
     if (typeof metaColor === "string" && metaColor.trim()) {
-      return normalizeHexColor(metaColor, COLOR_PALETTE[channelIndex % COLOR_PALETTE.length]);
+      var hex = normalizeHexColor(metaColor, null);
+      if (hex) return hex;
+      var resolved = resolveCssVarToHex(metaColor);
+      if (resolved) return resolved;
+      return fallback;
     }
 
     var appearanceColor = colorFromInt(channel.appearanceLineColor);
     if (appearanceColor) return appearanceColor;
 
     var themePalette = getThemeChannelPalette();
-    var fallback = COLOR_PALETTE[channelIndex % COLOR_PALETTE.length];
     if (themePalette && themePalette.length > 0) {
       var themeColor = themePalette[channelIndex % themePalette.length];
       if (themeColor) return themeColor;
@@ -240,7 +278,7 @@
     var showLegend = toBool(currentData.showLegend, true);
     var showGrid = toBool(currentData.showGrid, true);
     var showAxes = toBool(currentData.showAxes, true);
-    var showTooltip = toBool(currentData.showTooltip, true);
+    var showTooltip = true;
     var rightAxisEnabled = toBool(currentData.rightAxisEnabled, true);
     var axisLocks = getAxisLocks(channels);
 

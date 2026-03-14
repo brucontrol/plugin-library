@@ -82,7 +82,7 @@
       valueText.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       valueText.style.fontWeight = (typeof d.valueFontWeight === "string" && d.valueFontWeight.trim()) ? d.valueFontWeight.trim() : "";
       valueText.style.fontStyle = (typeof d.valueFontStyle === "string" && d.valueFontStyle.trim()) ? d.valueFontStyle.trim() : "";
-      valueText.style.color = (typeof d.valueColor === "string" && d.valueColor.trim()) ? d.valueColor.trim() : "";
+      valueText.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "var(--accent-green, #4ec9b0)";
       valueText.style.textAlign = "center";
       valueText.textContent = getStateLabel(isOn);
       valueText.classList.toggle("on", isOn);

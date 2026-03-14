@@ -34,18 +34,6 @@
     "description": "Show primary value rows",
     "group": "Layout"
   },
-  "showSecondaryRows": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show secondary data rows",
-    "group": "Layout"
-  },
-  "showFooter": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show footer bar",
-    "group": "Layout"
-  },
   "precision": {
     "type": "number",
     "default": 2,
@@ -120,6 +108,14 @@
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of the area behind the value"
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -153,21 +149,5 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   }
 }

@@ -5,4 +5,6 @@ version: 1.0.7
 supportedTypes:
   - pid
 defaultFor: pid
+defaultWidth: 190
+defaultHeight: 250
 id: c9f71aaf-385f-4a8b-8b3b-8ab6b2a2b41d

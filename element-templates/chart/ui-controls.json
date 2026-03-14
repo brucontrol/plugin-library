@@ -195,12 +195,6 @@
     "description": "Show axis lines and tick labels",
     "group": "Axes"
   },
-  "showTooltip": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show hover tooltip",
-    "group": "Axes"
-  },
   "rightAxisEnabled": {
     "type": "boolean",
     "default": true,

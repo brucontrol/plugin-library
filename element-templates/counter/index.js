@@ -137,9 +137,24 @@
       titleEl.style.textAlign = "left";
     }
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+    });
+
+    var countLabelEl = document.querySelector(".element-row--primary[data-row-key=\"count\"] .row-label");
+    if (countLabelEl) {
+      countLabelEl.style.color = (d.countLabelColor && String(d.countLabelColor).trim()) ? String(d.countLabelColor).trim() : "";
+      countLabelEl.style.fontFamily = d.countLabelFontFamily || "";
+      countLabelEl.style.fontSize = numberOrNull(d.countLabelFontSize) !== null ? numberOrNull(d.countLabelFontSize) + "px" : "";
+      countLabelEl.style.fontWeight = d.countLabelFontWeight || "";
+      countLabelEl.style.fontStyle = d.countLabelFontStyle || "";
+    }
+
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
+      if (el.closest && el.closest(".element-row--primary[data-row-key=\"count\"]")) return;
       el.style.color = d.rowLabelColor || "";
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
@@ -163,11 +178,8 @@
       el.style.textAlign = "center";
     });
 
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
+    if (footerEl) {
       footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
     }
   }
 
@@ -204,7 +216,7 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "counter":
-        appendRow(primaryRow("Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count", hiddenRows));
+        appendRow(primaryRow((currentData.countLabel && String(currentData.countLabel).trim()) ? String(currentData.countLabel).trim() : "Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count", hiddenRows));
         appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2)), "", { key: "rate" }, hiddenRows));
         break;
       default:

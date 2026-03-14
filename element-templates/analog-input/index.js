@@ -52,9 +52,6 @@
     if (isPrimary && d.showValue === false) {
       return null;
     }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
     if (hiddenRows[key]) {
       return null;
     }
@@ -137,10 +134,15 @@
       titleEl.style.textAlign = "left";
     }
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+    });
+
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      el.style.color = d.rowLabelColor || "";
+      el.style.color = "";
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       el.style.fontWeight = d.labelFontWeight || "";
@@ -152,9 +154,7 @@
       var el = node;
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
       var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
+      var valColor = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "var(--accent-green, #4ec9b0)";
       el.style.color = valColor;
       el.style.fontFamily = d.valueFontFamily || "";
       el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
@@ -163,11 +163,8 @@
       el.style.textAlign = "center";
     });
 
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
+    if (footerEl) {
       footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
     }
   }
 

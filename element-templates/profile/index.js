@@ -238,12 +238,6 @@
     var key = toRowKey(opts.key || label);
     var isPrimary = !!opts.primary;
 
-    if (isPrimary && d.showValue === false) {
-      return null;
-    }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
     if (hiddenRows[key]) {
       return null;
     }
@@ -335,11 +329,7 @@
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
-      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
+      var valColor = (d.rowValueColor && String(d.rowValueColor).trim()) ? String(d.rowValueColor).trim() : "var(--accent-green, #4ec9b0)";
       el.style.color = valColor;
       el.style.fontFamily = d.valueFontFamily || "";
       el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";

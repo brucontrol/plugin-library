@@ -42,11 +42,13 @@
     "description": "Show secondary detail rows",
     "group": "Layout"
   },
-  "showFooter": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show footer controls",
-    "group": "Layout"
+  "footerButtonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "accentPrimary",
+    "description": "Set Target button background color"
   },
   "labelFontFamily": {
     "type": "text",
@@ -113,6 +115,14 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of Target and Output value sections"
   },
   "precision": {
     "type": "number",
