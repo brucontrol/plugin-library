@@ -1,10 +1,11 @@
 name: Deadband - Card
 collection: BruControl Cards
 description: Built-in deadband element template.
-version: 1.0.7
+version: 1.0.8
 supportedTypes:
   - deadband
 defaultFor: deadband
 defaultWidth: 150
 defaultHeight: 170
 id: aa4e295c-c298-479d-84d3-c8396cef052a
+beta: true
