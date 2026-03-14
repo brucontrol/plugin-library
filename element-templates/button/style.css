@@ -44,3 +44,15 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.element-button.has-image {
+  background: var(--button-bg-image) center/cover no-repeat !important;
+  background-color: transparent !important;
+  box-shadow: none;
+}
+
+.element-button.has-image:hover:not(:disabled) {
+  background: var(--button-bg-image) center/cover no-repeat !important;
+  background-color: transparent !important;
+  filter: brightness(1.05);
+}

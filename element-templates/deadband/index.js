@@ -175,6 +175,11 @@
       el.style.fontStyle = d.labelFontStyle || "";
     });
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+    });
+
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
@@ -191,11 +196,17 @@
       el.style.textAlign = "center";
     });
 
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
-      footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
+    if (footerEl) {
+      if (d.showFooter === false || !footerEl.childNodes.length) {
+        footerEl.style.display = "none";
+      } else {
+        footerEl.style.display = "flex";
+        var footerButtons = footerEl.querySelectorAll("button");
+        var btnBg = (d.footerButtonColor && String(d.footerButtonColor).trim()) ? String(d.footerButtonColor).trim() : "var(--accent-primary, #0e639c)";
+        footerButtons.forEach(function (btn) {
+          btn.style.background = btnBg;
+        });
+      }
     }
   }
 

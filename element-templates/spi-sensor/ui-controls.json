@@ -114,6 +114,14 @@
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of the area behind the value"
+  },
   "backgroundColor": {
     "type": "text",
     "default": "",

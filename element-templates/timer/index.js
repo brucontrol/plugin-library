@@ -69,7 +69,7 @@
     if (isPrimary && d.showValue === false) {
       return null;
     }
-    if (!isPrimary && d.showSecondaryRows === false) {
+    if (!isPrimary && d.showDetails === false) {
       return null;
     }
     if (hiddenRows[key]) {
@@ -91,7 +91,9 @@
     v.className = "value row-value" + (cls ? " " + cls : "");
     v.textContent = String(value);
 
-    r.appendChild(l);
+    if (label && String(label).trim() !== "") {
+      r.appendChild(l);
+    }
     r.appendChild(v);
     return r;
   }
@@ -187,6 +189,11 @@
       titleEl.style.textAlign = "left";
     }
 
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+    });
+
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
@@ -213,11 +220,22 @@
       el.style.textAlign = "center";
     });
 
-    if (!footerEl) return;
-    if (d.showFooter === false || !footerEl.childNodes.length) {
-      footerEl.style.display = "none";
-    } else {
-      footerEl.style.display = "flex";
+    if (footerEl) {
+      if (d.showFooter === false || !footerEl.childNodes.length) {
+        footerEl.style.display = "none";
+      } else {
+        footerEl.style.display = "flex";
+        var footerButtons = footerEl.querySelectorAll("button");
+        var btnBg = (d.footerButtonColor && String(d.footerButtonColor).trim()) ? String(d.footerButtonColor).trim() : "var(--accent-primary, #0e639c)";
+        footerButtons.forEach(function (btn) {
+          btn.style.background = btnBg;
+          btn.style.color = (d.buttonTextColor && String(d.buttonTextColor).trim()) ? String(d.buttonTextColor).trim() : "var(--text-primary, #d4d4d4)";
+          btn.style.fontFamily = d.buttonFontFamily || "";
+          btn.style.fontSize = numberOrNull(d.buttonFontSize) !== null ? numberOrNull(d.buttonFontSize) + "px" : "";
+          btn.style.fontWeight = d.buttonFontWeight || "";
+          btn.style.fontStyle = d.buttonFontStyle || "";
+        });
+      }
     }
   }
 
@@ -247,7 +265,7 @@
   function renderContentRows(type, hiddenRows) {
     switch (type) {
       case "timer": {
-        var valueRow = primaryRow("Value", formatTimerValue(currentData.value), "", "value", hiddenRows);
+        var valueRow = primaryRow("", formatTimerValue(currentData.value), "", "value", hiddenRows);
         if (valueRow && currentData.userControl !== false) {
           var valueSpan = valueRow.querySelector(".row-value");
           if (valueSpan) {

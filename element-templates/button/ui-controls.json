@@ -44,5 +44,15 @@
     "group": "Button",
     "description": "Text color for button label",
     "format": "color-alpha"
+  },
+  "image": {
+    "type": "text",
+    "default": "",
+    "group": "Button",
+    "description": "Use an image as the button background instead of color. When set, the solid background is replaced by this image.",
+    "format": "file-upload",
+    "title": "Background Image",
+    "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
+    "x-picker-title": "Select Background Image"
   }
 }

@@ -30,18 +30,6 @@
       ]
     }
   },
-  "showValue": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show profile rows",
-    "group": "Layout"
-  },
-  "showSecondaryRows": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show secondary data rows",
-    "group": "Layout"
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -100,13 +88,6 @@
     "default": "normal",
     "group": "Value",
     "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",

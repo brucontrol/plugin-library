@@ -43,8 +43,8 @@
   },
   "showFooter": {
     "type": "boolean",
-    "default": true,
-    "description": "Show footer controls",
+    "default": false,
+    "description": "Show footer controls (unused when value is clickable)",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -112,6 +112,14 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of the area behind the duty value"
   },
   "precision": {
     "type": "number",

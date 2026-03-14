@@ -41,12 +41,6 @@
     "description": "Show secondary detail rows",
     "group": "Layout"
   },
-  "showFooter": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show footer bar",
-    "group": "Layout"
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -128,6 +122,54 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Background color of the count value section"
+  },
+  "countLabel": {
+    "type": "text",
+    "default": "Count",
+    "group": "Value",
+    "description": "Label for the count value (e.g. Count, Total)"
+  },
+  "countLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary",
+    "description": "Count label text color"
+  },
+  "countLabelFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-family"
+  },
+  "countLabelFontSize": {
+    "type": "number",
+    "default": 10,
+    "group": "Value",
+    "format": "font-size",
+    "min": 8,
+    "max": 24
+  },
+  "countLabelFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "font-weight"
+  },
+  "countLabelFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Value",
+    "format": "font-style"
   },
   "backgroundColor": {
     "type": "text",
