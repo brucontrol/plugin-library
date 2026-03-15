@@ -24,7 +24,9 @@
   };
 
   function hexToRgb(hex) {
-    var m = hex.replace(/^#/, '').match(/^(..)(..)(..)$/);
+    if (!hex || typeof hex !== 'string') return { r: 86, g: 156, b: 214 };
+    var s = hex.replace(/^#/, '').trim();
+    var m = s.match(/^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?$/);
     if (!m) return { r: 86, g: 156, b: 214 };
     return {
       r: parseInt(m[1], 16),
