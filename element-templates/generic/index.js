@@ -8,13 +8,29 @@
     'headerColor', 'backgroundColor', 'borderColor', 'image'
   ]);
 
-  function getThemeColor(varName, fallback) {
+  function getThemeColor(cssVarName, fallback) {
     try {
-      var val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+      if (window.BruControl && window.BruControl.getTheme) {
+        var theme = window.BruControl.getTheme();
+        var key = cssVarName.replace(/^--/, '');
+        if (theme && typeof theme[key] === 'string' && theme[key].trim()) return theme[key].trim();
+      }
+      var val = getComputedStyle(document.documentElement).getPropertyValue(cssVarName).trim();
       return val || fallback;
     } catch (e) {
       return fallback;
     }
+  }
+
+  function isHexColor(s) {
+    if (!s || typeof s !== 'string') return false;
+    var t = s.trim();
+    return /^#[0-9A-Fa-f]{6}$/.test(t) || /^#[0-9A-Fa-f]{8}$/.test(t);
+  }
+
+  function resolveColor(value, themeVar, fallback) {
+    if (isHexColor(value)) return (value && value.trim()) || fallback;
+    return getThemeColor(themeVar, fallback);
   }
 
   function formatValue(value) {
@@ -52,8 +68,7 @@
       titleEl.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       titleEl.style.fontWeight = (d.labelFontWeight && String(d.labelFontWeight).trim()) ? String(d.labelFontWeight).trim() : "";
       titleEl.style.fontStyle = (d.labelFontStyle && String(d.labelFontStyle).trim()) ? String(d.labelFontStyle).trim() : "";
-      var lc = (d.labelColor && String(d.labelColor).trim()) ? String(d.labelColor).trim() : "";
-      titleEl.style.color = lc || getThemeColor("--text-primary", "#d4d4d4");
+      titleEl.style.color = resolveColor(d.labelColor, "--text-primary", "#d4d4d4");
     }
 
     if (header) {
@@ -67,6 +82,9 @@
     if (propertyList) {
       propertyList.innerHTML = "";
       var props = getNonBaseProperties(d);
+      var valueColorResolved = resolveColor(d.valueColor, "--accent-green", "#4ec9b0");
+      var valueFontFamily = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
+      var valueFontSizePx = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
       props.forEach(function (p) {
         var row = document.createElement("div");
         row.className = "property-row";
@@ -76,6 +94,9 @@
         var valueSpan = document.createElement("span");
         valueSpan.className = "property-value";
         valueSpan.textContent = p.value;
+        valueSpan.style.color = valueColorResolved;
+        if (valueFontFamily) valueSpan.style.fontFamily = valueFontFamily;
+        if (valueFontSizePx) valueSpan.style.fontSize = valueFontSizePx;
         row.appendChild(nameSpan);
         row.appendChild(valueSpan);
         propertyList.appendChild(row);
@@ -106,6 +127,14 @@
 
   if (window.BruControl) {
     window.BruControl.onData(render);
+    window.BruControl.onTheme(function () {
+      if (window.BruControl.getData) {
+        try {
+          var data = window.BruControl.getData();
+          if (data) render(data);
+        } catch (e) {}
+      }
+    });
   } else {
     render({ displayName: "Generic" });
   }
