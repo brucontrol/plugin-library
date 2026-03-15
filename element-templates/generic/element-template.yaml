@@ -5,6 +5,6 @@ version: 1.0.8
 supportedTypes:
   - generic
 defaultFor: generic
-defaultWidth: 100
-defaultHeight: 60
+defaultWidth: 160
+defaultHeight: 160
 id: e9956a29-972c-4f64-9caf-3cb8b5ecbb7d
