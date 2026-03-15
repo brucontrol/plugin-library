@@ -9,7 +9,7 @@
  *   CLEAR_BETA - if set, also set beta: false when writing (used on main branch after merge from beta)
  *   If unset (e.g. workflow_dispatch), uses HEAD~1..HEAD.
  */
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile, readdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
@@ -64,8 +64,34 @@ function getChangedTemplateFolders(beforeSha, afterSha) {
 async function main() {
   const beforeSha = process.env.BEFORE_SHA || 'HEAD~1';
   const afterSha = process.env.AFTER_SHA || 'HEAD';
+  const clearBeta = process.env.CLEAR_BETA === 'true';
 
   const folders = getChangedTemplateFolders(beforeSha, afterSha);
+
+  // When CLEAR_BETA is set (main branch), ensure every template has beta: false.
+  // Merges from beta can leave beta: true in yamls where the only change was element-template.yaml,
+  // which getChangedTemplateFolders excludes, so we clear beta in all templates.
+  if (clearBeta) {
+    const entries = await readdir(templatesDir, { withFileTypes: true });
+    const allFolders = entries.filter(d => d.isDirectory()).map(d => d.name);
+    let cleared = 0;
+    for (const folder of allFolders.sort()) {
+      const yamlPath = join(templatesDir, folder, 'element-template.yaml');
+      if (!existsSync(yamlPath)) continue;
+      const yamlContent = await readFile(yamlPath, 'utf8');
+      const manifest = parseYaml(yamlContent);
+      if (manifest.beta === true) {
+        manifest.beta = false;
+        await writeFile(yamlPath, stringifyYaml(manifest, { lineWidth: -1 }), 'utf8');
+        console.log(`  ${folder}: cleared beta`);
+        cleared++;
+      }
+    }
+    if (cleared > 0) {
+      console.log(`Cleared beta in ${cleared} template(s) on main.\n`);
+    }
+  }
+
   if (folders.length === 0) {
     console.log('No element template folders changed in this push; skipping version bumps.');
     return;
@@ -84,7 +110,7 @@ async function main() {
     const oldVersion = manifest.version || '1.0.0';
     const newVersion = bumpPatch(oldVersion);
     manifest.version = newVersion;
-    if (process.env.CLEAR_BETA) {
+    if (clearBeta) {
       manifest.beta = false;
     }
     const updated = stringifyYaml(manifest, { lineWidth: -1 });
