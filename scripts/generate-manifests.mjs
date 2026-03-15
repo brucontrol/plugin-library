@@ -143,7 +143,7 @@ async function main() {
       version,
       commitHash,
       official: true,
-      beta: manifest.beta === true,
+      beta: isBetaMode ? true : false,
       tags: Array.isArray(manifest.tags) ? manifest.tags : [],
       supportedTypes: Array.isArray(manifest.supportedTypes) ? manifest.supportedTypes : [],
       ...(manifest.collection ? { collection: String(manifest.collection).trim() } : {}),

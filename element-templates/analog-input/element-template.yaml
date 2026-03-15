@@ -8,4 +8,4 @@ defaultFor: analogInput
 defaultWidth: 160
 defaultHeight: 160
 id: b40835fe-5a1d-4a6c-80c0-d3471732488a
-beta: true
+beta: false
