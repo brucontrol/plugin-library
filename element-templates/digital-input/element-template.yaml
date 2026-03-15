@@ -1,8 +1,9 @@
 name: Digital Input - Card
 collection: BruControl Cards
 description: Built-in digital input element template.
-version: 1.2.6
+version: 1.2.8
 supportedTypes:
   - digitalInput
 defaultFor: digitalInput
 id: 39211543-69fd-421b-9442-fa105a713af2
+beta: false

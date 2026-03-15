@@ -1,8 +1,9 @@
 name: SPI Sensor - Card
 collection: BruControl Cards
 description: Built-in SPI sensor element template.
-version: 1.0.7
+version: 1.0.9
 supportedTypes:
   - spiSensor
 defaultFor: spiSensor
 id: e1380387-18f2-403c-a0ae-6c45a97d4d4a
+beta: false
