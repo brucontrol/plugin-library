@@ -1,4 +1,16 @@
 {
+  "showHeader": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show header bar",
+    "group": "Layout"
+  },
+  "showLabel": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show title label in header",
+    "group": "Layout"
+  },
   "showBackground": {
     "type": "boolean",
     "default": true,
@@ -10,6 +22,39 @@
     "default": true,
     "description": "Show value text",
     "group": "Layout"
+  },
+  "labelFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-family"
+  },
+  "labelFontSize": {
+    "type": "number",
+    "default": 12,
+    "group": "Label",
+    "format": "font-size",
+    "min": 8,
+    "max": 48
+  },
+  "labelFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "font-weight"
+  },
+  "labelFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Label",
+    "format": "font-style"
+  },
+  "labelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Label",
+    "format": "color-alpha",
+    "x-theme-default": "textPrimary"
   },
   "valueFontFamily": {
     "type": "text",
@@ -31,6 +76,14 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "headerColor": {
+    "type": "text",
+    "default": "",
+    "group": "Background & Border",
+    "description": "Override header background color",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
   },
   "backgroundColor": {
     "type": "text",
