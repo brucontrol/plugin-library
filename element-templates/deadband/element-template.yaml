@@ -5,7 +5,7 @@ version: 1.0.9
 supportedTypes:
   - deadband
 defaultFor: deadband
-defaultWidth: 150
+defaultWidth: 160
 defaultHeight: 170
 id: aa4e295c-c298-479d-84d3-c8396cef052a
-beta: false
+beta: true

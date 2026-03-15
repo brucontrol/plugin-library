@@ -9,6 +9,7 @@ supportedTypes:
   - globalVariable-datetime
   - globalVariable-timespan
 defaultFor: globalVariable-value
-defaultWidth: 100
-defaultHeight: 60
+defaultWidth: 160
+defaultHeight: 160
 id: fecc3b1e-96f0-40ea-bbb9-bb9a9ce44f80
+beta: true
