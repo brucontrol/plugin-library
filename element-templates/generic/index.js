@@ -1,4 +1,23 @@
 (function () {
+  var BASE_KEYS = new Set([ 'id', 'workspaceId', 'name', 'displayName', 'enabled', 'userControl', 'visibility', 'elementType', 'enableHistoricalLogging', 'loggingIntervalSeconds', 'maxSilenceSeconds', 'propertiesJson', 'schemaJson', 'uiControls', 'elementTemplateId', 'appearance' ]);
+
+  function formatValue(value) {
+    if (value == null) return '--';
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  }
+
+  function getNonBaseProperties(data) {
+    if (!data || typeof data !== 'object') return [];
+    var out = [];
+    Object.keys(data).sort().forEach(function (key) {
+      if (!BASE_KEYS.has(key)) {
+        out.push({ name: key, value: formatValue(data[key]) });
+      }
+    });
+    return out;
+  }
+
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
