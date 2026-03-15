@@ -24,15 +24,38 @@
 
   function render(data) {
     var d = data || {};
-    var nameEl = document.getElementById("name");
     var elementEl = document.getElementById("element");
+    var titleEl = document.getElementById("elementTitle");
+    var header = document.querySelector(".element-header");
+    var propertyList = document.getElementById("propertyList");
 
-    if (nameEl) {
-      nameEl.textContent = d.displayName || d.name || "Generic";
-      nameEl.style.display = d.showValue === false ? "none" : "";
-      nameEl.style.fontFamily = d.valueFontFamily || "";
-      nameEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      nameEl.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : (d.textColor && String(d.textColor).trim()) ? String(d.textColor).trim() : "var(--accent-green, #4ec9b0)";
+    if (titleEl) {
+      titleEl.textContent = d.displayName || d.name || "Generic";
+    }
+
+    if (header) {
+      var image = (d.image && String(d.image).trim()) ? String(d.image).trim() : "";
+      header.style.display = image ? "none" : (d.showHeader === false ? "none" : "");
+      header.style.background = d.headerColor || "";
+      header.style.borderBottom = d.showHeader === false ? "none" : "";
+    }
+
+    if (propertyList) {
+      propertyList.innerHTML = "";
+      var props = getNonBaseProperties(d);
+      props.forEach(function (p) {
+        var row = document.createElement("div");
+        row.className = "property-row";
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "property-name";
+        nameSpan.textContent = p.name + ": ";
+        var valueSpan = document.createElement("span");
+        valueSpan.className = "property-value";
+        valueSpan.textContent = p.value;
+        row.appendChild(nameSpan);
+        row.appendChild(valueSpan);
+        propertyList.appendChild(row);
+      });
     }
 
     if (elementEl) {
