@@ -3,9 +3,6 @@ name: Sync Plugin Registry
 on:
   push:
     branches: [main]
-    paths:
-      - 'element-templates/**'
-      - 'color-themes/**'
   workflow_dispatch:
 
 jobs:
