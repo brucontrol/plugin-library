@@ -35,6 +35,14 @@
     "description": "Show footer controls",
     "group": "Layout"
   },
+  "precision": {
+    "type": "number",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for numeric displays",
+    "group": "Layout"
+  },
   "footerButtonColor": {
     "type": "text",
     "default": "",
@@ -76,56 +84,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen",
-    "description": "Default value text color for all primary rows"
-  },
-  "valueBackgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary",
-    "description": "Default background color for all primary value rows"
-  },
-  "precision": {
-    "type": "number",
-    "default": 2,
-    "min": 0,
-    "max": 6,
-    "description": "Decimal places for value display",
-    "group": "Value"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -160,55 +118,35 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Default label color for all rows",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Default value color for secondary rows",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-
   "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
-  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input value text color (overrides global Value Color)" },
-  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input box background color (overrides global Value Background)" },
-  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input label text color (overrides global Row Label Color)" },
-  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family (overrides global Value Font)" },
-  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px (overrides global Value Font Size)" },
-  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight (overrides global Value Font Weight)" },
-  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style (overrides global Value Font Style)" },
-
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" },
   "showReading": { "type": "boolean", "default": true, "group": "Reading", "description": "Show the Value/Reading section" },
-  "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) text color (overrides global Value Color)" },
-  "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) box background (overrides global Value Background)" },
-  "readingLabelColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) label color (overrides global Row Label Color)" },
-  "readingFont": { "type": "text", "default": "", "group": "Reading", "format": "font-family", "description": "Reading (Value row) font family (overrides global Value Font)" },
-  "readingSize": { "type": "number", "default": null, "group": "Reading", "format": "font-size", "min": 8, "max": 120, "description": "Reading (Value row) font size in px (overrides global Value Font Size)" },
-  "readingWeight": { "type": "text", "default": "", "group": "Reading", "format": "font-weight", "description": "Reading (Value row) font weight (overrides global Value Font Weight)" },
-  "readingStyle": { "type": "text", "default": "", "group": "Reading", "format": "font-style", "description": "Reading (Value row) font style (overrides global Value Font Style)" },
-
+  "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Reading (Value row) text color" },
+  "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Reading (Value row) box background" },
+  "readingLabelColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Reading (Value row) label color" },
+  "readingFont": { "type": "text", "default": "", "group": "Reading", "format": "font-family", "description": "Reading (Value row) font family" },
+  "readingSize": { "type": "number", "default": null, "group": "Reading", "format": "font-size", "min": 8, "max": 120, "description": "Reading (Value row) font size in px" },
+  "readingWeight": { "type": "text", "default": "", "group": "Reading", "format": "font-weight", "description": "Reading (Value row) font weight" },
+  "readingStyle": { "type": "text", "default": "", "group": "Reading", "format": "font-style", "description": "Reading (Value row) font style" },
   "showTarget": { "type": "boolean", "default": true, "group": "Target", "description": "Show the Target section" },
-  "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target value text color (overrides global Value Color)" },
-  "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target box background color (overrides global Value Background)" },
-  "targetLabelColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target label text color (overrides global Row Label Color)" },
-  "targetFont": { "type": "text", "default": "", "group": "Target", "format": "font-family", "description": "Target value font family (overrides global Value Font)" },
-  "targetSize": { "type": "number", "default": null, "group": "Target", "format": "font-size", "min": 8, "max": 120, "description": "Target value font size in px (overrides global Value Font Size)" },
-  "targetWeight": { "type": "text", "default": "", "group": "Target", "format": "font-weight", "description": "Target value font weight (overrides global Value Font Weight)" },
-  "targetStyle": { "type": "text", "default": "", "group": "Target", "format": "font-style", "description": "Target value font style (overrides global Value Font Style)" },
-
+  "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Target value text color" },
+  "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Target box background color" },
+  "targetLabelColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Target label text color" },
+  "targetFont": { "type": "text", "default": "", "group": "Target", "format": "font-family", "description": "Target value font family" },
+  "targetSize": { "type": "number", "default": null, "group": "Target", "format": "font-size", "min": 8, "max": 120, "description": "Target value font size in px" },
+  "targetWeight": { "type": "text", "default": "", "group": "Target", "format": "font-weight", "description": "Target value font weight" },
+  "targetStyle": { "type": "text", "default": "", "group": "Target", "format": "font-style", "description": "Target value font style" },
   "showBand": { "type": "boolean", "default": true, "group": "Band", "description": "Show the Band section" },
-  "bandColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "description": "Band value text color (overrides global Row Value Color)" },
-  "bandLabelColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "description": "Band label text color (overrides global Row Label Color)" },
-  "bandFont": { "type": "text", "default": "", "group": "Band", "format": "font-family", "description": "Band value font family (overrides global Value Font)" },
-  "bandSize": { "type": "number", "default": null, "group": "Band", "format": "font-size", "min": 8, "max": 120, "description": "Band value font size in px (overrides global Value Font Size)" },
-  "bandWeight": { "type": "text", "default": "", "group": "Band", "format": "font-weight", "description": "Band value font weight (overrides global Value Font Weight)" },
-  "bandStyle": { "type": "text", "default": "", "group": "Band", "format": "font-style", "description": "Band value font style (overrides global Value Font Style)" }
+  "bandColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Band value text color" },
+  "bandLabelColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Band label text color" },
+  "bandFont": { "type": "text", "default": "", "group": "Band", "format": "font-family", "description": "Band value font family" },
+  "bandSize": { "type": "number", "default": null, "group": "Band", "format": "font-size", "min": 8, "max": 120, "description": "Band value font size in px" },
+  "bandWeight": { "type": "text", "default": "", "group": "Band", "format": "font-weight", "description": "Band value font weight" },
+  "bandStyle": { "type": "text", "default": "", "group": "Band", "format": "font-style", "description": "Band value font style" }
 }

@@ -244,7 +244,7 @@
       var pfx = sectionPrefix[key] || "";
       el.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim())
         ? String(d[pfx + "LabelColor"]).trim()
-        : (d.rowLabelColor || "");
+        : "";
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       el.style.fontWeight = d.labelFontWeight || "";
@@ -255,10 +255,9 @@
     primaryRows.forEach(function (rowEl) {
       var key = rowEl.getAttribute("data-row-key") || "";
       var pfx = sectionPrefix[key] || "";
-      var bg = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
+      rowEl.style.background = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
         ? String(d[pfx + "Bg"]).trim()
-        : ((d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "");
-      rowEl.style.background = bg;
+        : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
@@ -267,19 +266,15 @@
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
       var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
       var pfx = sectionPrefix[key] || "";
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
 
-      var globalColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
       el.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim())
         ? String(d[pfx + "Color"]).trim()
-        : globalColor;
+        : "var(--accent-green, #4ec9b0)";
 
-      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : (d.valueFontFamily || "");
-      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : (numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "");
-      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : (d.valueFontWeight || "");
-      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : (d.valueFontStyle || "");
+      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : "";
+      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : "";
+      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : "";
       el.style.textAlign = "center";
     });
 
@@ -367,7 +362,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      pid: { elementType: "pid", name: "PID", displayName: "PID", target: 65, output: 49, kp: 2, ki: 0.8, kd: 0.2, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "", showInput: true, inputColor: "", inputBg: "", inputLabelColor: "", inputFont: "", inputSize: null, inputWeight: "", inputStyle: "", showOutput: true, outputColor: "", outputBg: "", outputLabelColor: "", outputFont: "", outputSize: null, outputWeight: "", outputStyle: "", showTarget: true, targetColor: "", targetBg: "", targetLabelColor: "", targetFont: "", targetSize: null, targetWeight: "", targetStyle: "", showKpKiKd: true, kpKiKdColor: "", kpKiKdLabelColor: "", kpKiKdFont: "", kpKiKdSize: null, kpKiKdWeight: "", kpKiKdStyle: "" }
+      pid: { elementType: "pid", name: "PID", displayName: "PID", target: 65, output: 49, kp: 2, ki: 0.8, kd: 0.2, precision: 2, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "", showInput: true, inputColor: "", inputBg: "", inputLabelColor: "", inputFont: "", inputSize: null, inputWeight: "", inputStyle: "", showOutput: true, outputColor: "", outputBg: "", outputLabelColor: "", outputFont: "", outputSize: null, outputWeight: "", outputStyle: "", showTarget: true, targetColor: "", targetBg: "", targetLabelColor: "", targetFont: "", targetSize: null, targetWeight: "", targetStyle: "", showKpKiKd: true, kpKiKdColor: "", kpKiKdLabelColor: "", kpKiKdFont: "", kpKiKdSize: null, kpKiKdWeight: "", kpKiKdStyle: "" }
     };
     return map[t] || { elementType: t, displayName: t };
   }
