@@ -97,34 +97,31 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
     var isPrimary = !!opts.primary;
 
+    var sectionToggle = {
+      input: "showInput",
+      value: "showReading",
+      target: "showTarget",
+      band: "showBand"
+    };
+    var toggleProp = sectionToggle[key];
+    if (toggleProp && d[toggleProp] === false) {
+      return null;
+    }
+
     if (isPrimary && d.showValue === false) {
       return null;
     }
     if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
       return null;
     }
 
@@ -148,8 +145,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -188,6 +185,12 @@
 
   function applyStyles() {
     var d = currentData || {};
+    var sectionPrefix = {
+      input: "input",
+      value: "reading",
+      target: "target",
+      band: "band"
+    };
     var elementEl = document.getElementById("element");
     var header = document.querySelector(".element-header");
     var content = document.querySelector(".element-content");
@@ -237,7 +240,12 @@
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      el.style.color = d.rowLabelColor || "";
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+      el.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim())
+        ? String(d[pfx + "LabelColor"]).trim()
+        : (d.rowLabelColor || "");
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       el.style.fontWeight = d.labelFontWeight || "";
@@ -246,22 +254,33 @@
 
     var primaryRows = document.querySelectorAll(".element-row--primary");
     primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      var bg = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
+        ? String(d[pfx + "Bg"]).trim()
+        : ((d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "");
+      rowEl.style.background = bg;
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
       var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
+
+      var globalColor = isPrimary
         ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
         : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
+      el.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim())
+        ? String(d[pfx + "Color"]).trim()
+        : globalColor;
+
+      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : (d.valueFontFamily || "");
+      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : (numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "");
+      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : (d.valueFontWeight || "");
+      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : (d.valueFontStyle || "");
       el.style.textAlign = "center";
     });
 
@@ -283,7 +302,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
     setupInputSubscription(currentData);
 
     if (titleEl) {
@@ -293,7 +311,7 @@
     var footerBusy = isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -303,19 +321,19 @@
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "deadband":
         var prec = Math.max(0, Math.min(6, numberOrNull(currentData.precision) ?? 2));
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
         var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
-        appendRow(row(inputLabel, inputVal, "", { key: "input" }, hiddenRows));
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value", hiddenRows));
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target", hiddenRows));
-        appendRow(row("Band", toNumber(currentData.band || currentData.deadbandOffset, 0).toFixed(prec), "", { key: "band" }, hiddenRows));
+        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value"));
+        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target"));
+        appendRow(row("Band", toNumber(currentData.band || currentData.deadbandOffset, 0).toFixed(prec), "", { key: "band" }));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }
@@ -344,7 +362,11 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      deadband: { elementType: "deadband", name: "Deadband", displayName: "Deadband", target: 66, value: 50, deadbandOffset: 2, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "" }
+      deadband: { elementType: "deadband", name: "Deadband", displayName: "Deadband", target: 66, value: 50, deadbandOffset: 2, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "",
+        showInput: true, inputColor: "", inputBg: "", inputLabelColor: "", inputFont: "", inputSize: null, inputWeight: "", inputStyle: "",
+        showReading: true, readingColor: "", readingBg: "", readingLabelColor: "", readingFont: "", readingSize: null, readingWeight: "", readingStyle: "",
+        showTarget: true, targetColor: "", targetBg: "", targetLabelColor: "", targetFont: "", targetSize: null, targetWeight: "", targetStyle: "",
+        showBand: true, bandColor: "", bandLabelColor: "", bandFont: "", bandSize: null, bandWeight: "", bandStyle: "" }
     };
     return map[t] || { elementType: t, displayName: t };
   }

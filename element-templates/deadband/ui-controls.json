@@ -17,20 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "input",
-        "value",
-        "target",
-        "band"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -121,7 +107,8 @@
     "default": "",
     "group": "Value",
     "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "x-theme-default": "accentGreen",
+    "description": "Default value text color for all primary rows"
   },
   "valueBackgroundColor": {
     "type": "text",
@@ -129,7 +116,7 @@
     "group": "Value",
     "format": "color-alpha",
     "x-theme-default": "bgTertiary",
-    "description": "Background color of Value and Target sections"
+    "description": "Default background color for all primary value rows"
   },
   "precision": {
     "type": "number",
@@ -177,7 +164,7 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row label color",
+    "description": "Default label color for all rows",
     "format": "color-alpha",
     "x-theme-default": "textSecondary"
   },
@@ -185,8 +172,43 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row value color",
+    "description": "Default value color for secondary rows",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
-  }
+  },
+
+  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input value text color (overrides global Value Color)" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input box background color (overrides global Value Background)" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input label text color (overrides global Row Label Color)" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family (overrides global Value Font)" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px (overrides global Value Font Size)" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight (overrides global Value Font Weight)" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style (overrides global Value Font Style)" },
+
+  "showReading": { "type": "boolean", "default": true, "group": "Reading", "description": "Show the Value/Reading section" },
+  "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) text color (overrides global Value Color)" },
+  "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) box background (overrides global Value Background)" },
+  "readingLabelColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "description": "Reading (Value row) label color (overrides global Row Label Color)" },
+  "readingFont": { "type": "text", "default": "", "group": "Reading", "format": "font-family", "description": "Reading (Value row) font family (overrides global Value Font)" },
+  "readingSize": { "type": "number", "default": null, "group": "Reading", "format": "font-size", "min": 8, "max": 120, "description": "Reading (Value row) font size in px (overrides global Value Font Size)" },
+  "readingWeight": { "type": "text", "default": "", "group": "Reading", "format": "font-weight", "description": "Reading (Value row) font weight (overrides global Value Font Weight)" },
+  "readingStyle": { "type": "text", "default": "", "group": "Reading", "format": "font-style", "description": "Reading (Value row) font style (overrides global Value Font Style)" },
+
+  "showTarget": { "type": "boolean", "default": true, "group": "Target", "description": "Show the Target section" },
+  "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target value text color (overrides global Value Color)" },
+  "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target box background color (overrides global Value Background)" },
+  "targetLabelColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target label text color (overrides global Row Label Color)" },
+  "targetFont": { "type": "text", "default": "", "group": "Target", "format": "font-family", "description": "Target value font family (overrides global Value Font)" },
+  "targetSize": { "type": "number", "default": null, "group": "Target", "format": "font-size", "min": 8, "max": 120, "description": "Target value font size in px (overrides global Value Font Size)" },
+  "targetWeight": { "type": "text", "default": "", "group": "Target", "format": "font-weight", "description": "Target value font weight (overrides global Value Font Weight)" },
+  "targetStyle": { "type": "text", "default": "", "group": "Target", "format": "font-style", "description": "Target value font style (overrides global Value Font Style)" },
+
+  "showBand": { "type": "boolean", "default": true, "group": "Band", "description": "Show the Band section" },
+  "bandColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "description": "Band value text color (overrides global Row Value Color)" },
+  "bandLabelColor": { "type": "text", "default": "", "group": "Band", "format": "color-alpha", "description": "Band label text color (overrides global Row Label Color)" },
+  "bandFont": { "type": "text", "default": "", "group": "Band", "format": "font-family", "description": "Band value font family (overrides global Value Font)" },
+  "bandSize": { "type": "number", "default": null, "group": "Band", "format": "font-size", "min": 8, "max": 120, "description": "Band value font size in px (overrides global Value Font Size)" },
+  "bandWeight": { "type": "text", "default": "", "group": "Band", "format": "font-weight", "description": "Band value font weight (overrides global Value Font Weight)" },
+  "bandStyle": { "type": "text", "default": "", "group": "Band", "format": "font-style", "description": "Band value font style (overrides global Value Font Style)" }
 }
