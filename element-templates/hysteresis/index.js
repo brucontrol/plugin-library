@@ -3,6 +3,9 @@
   var contentEl = document.getElementById("elementContent");
   var footerEl = document.getElementById("elementFooter");
   var currentData = null;
+  var inputLiveValue = null;
+  var inputDisplayNameFromFetch = null;
+  var subscribedInput = null;
 
   function isFooterActive() {
     return footerEl && footerEl.contains(document.activeElement) &&
@@ -32,6 +35,72 @@
       return lowered === "true" || lowered === "1" || lowered === "on";
     }
     return !!value;
+  }
+
+  function isEmptyRef(id) {
+    return !id || id === "00000000-0000-0000-0000-000000000000" || String(id).trim() === "";
+  }
+
+  function formatElementValue(data) {
+    if (!data) return null;
+    if (data.value !== undefined && data.value !== null) return String(data.value);
+    if (data.variable !== undefined && data.variable !== null) return String(data.variable);
+    if (data.state !== undefined && data.state !== null) return data.state ? "On" : "Off";
+    return null;
+  }
+
+  function idMatches(a, b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return String(a).toLowerCase() === String(b).toLowerCase();
+  }
+
+  function handleElementUpdate(payload) {
+    var et = payload && payload.elementType;
+    var eid = payload && payload.elementId;
+    var data = payload && payload.data;
+    if (subscribedInput && et === subscribedInput.type && idMatches(eid, subscribedInput.id)) {
+      inputLiveValue = formatElementValue(data);
+      render(currentData);
+    }
+  }
+
+  function unsubscribeInput() {
+    var bc = window.BruControl;
+    if (!bc || !bc.unsubscribeElement || !subscribedInput) return;
+    bc.unsubscribeElement(subscribedInput.type, subscribedInput.id);
+    subscribedInput = null;
+    inputLiveValue = null;
+    inputDisplayNameFromFetch = null;
+  }
+
+  function setupInputSubscription(data) {
+    var bc = window.BruControl;
+    if (!bc || !bc.subscribeElement) return;
+
+    var inputType = String(data.inputElementType || "").trim();
+    var inputId = data.inputElementId ? String(data.inputElementId) : "";
+
+    if (!inputType || !inputId || isEmptyRef(inputId)) {
+      if (subscribedInput) unsubscribeInput();
+      return;
+    }
+
+    if (subscribedInput && subscribedInput.type === inputType && idMatches(subscribedInput.id, inputId)) {
+      return;
+    }
+
+    unsubscribeInput();
+    subscribedInput = { type: inputType, id: inputId };
+
+    bc.subscribeElement(inputType, inputId).then(function (elData) {
+      if (!subscribedInput || subscribedInput.type !== inputType || !idMatches(subscribedInput.id, inputId)) return;
+      inputLiveValue = formatElementValue(elData);
+      if (elData) {
+        inputDisplayNameFromFetch = elData.displayName || elData.name || null;
+      }
+      render(currentData);
+    }).catch(function () {});
   }
 
   function clear(el) {
@@ -223,6 +292,7 @@
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
     var hiddenRows = getHiddenRowsMap();
+    setupInputSubscription(currentData);
 
     if (titleEl) {
       titleEl.textContent = displayName;
@@ -246,6 +316,9 @@
     var prec = Math.max(0, Math.min(6, numberOrNull(d.precision) ?? 2));
     switch (type) {
       case "hysteresis":
+        var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
+        var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
+        appendRow(row(inputLabel, inputVal, "", { key: "input" }, hiddenRows));
         appendRow(primaryRow("Target", toNumber(d.target, 0).toFixed(prec), "", "target", hiddenRows));
         appendRow(primaryRow("Output", boolText(asBool(d.output || d.value)), asBool(d.output || d.value) ? "value--ok" : "value--warn", "output", hiddenRows));
         appendRow(row("On Offset", toNumber(d.onOffset, 0).toFixed(prec), "", { key: "onoffset" }, hiddenRows));
@@ -281,12 +354,15 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      hysteresis: { elementType: "hysteresis", name: "Hysteresis", displayName: "Hysteresis", target: 68, output: true, onOffset: 1.5, userControl: true, enabled: true, deviceConnected: true }
+      hysteresis: { elementType: "hysteresis", name: "Hysteresis", displayName: "Hysteresis", target: 68, output: true, onOffset: 1.5, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "" }
     };
     return map[t] || { elementType: t, displayName: t };
   }
 
   if (window.BruControl) {
+    if (window.BruControl.onElementUpdate) {
+      window.BruControl.onElementUpdate(handleElementUpdate);
+    }
     if (window.BruControl.getData) {
       try {
         var initial = window.BruControl.getData();
