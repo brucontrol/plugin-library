@@ -17,20 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "input",
-        "target",
-        "output",
-        "onoffset"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -48,6 +34,14 @@
     "default": true,
     "description": "Show footer controls",
     "group": "Layout"
+  },
+  "footerButtonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "accentPrimary",
+    "description": "Set Target button background color"
   },
   "labelFontFamily": {
     "type": "text",
@@ -113,7 +107,16 @@
     "default": "",
     "group": "Value",
     "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "x-theme-default": "accentGreen",
+    "description": "Default value text color for all primary rows"
+  },
+  "valueBackgroundColor": {
+    "type": "text",
+    "default": "",
+    "group": "Value",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Default background color for all primary value rows"
   },
   "backgroundColor": {
     "type": "text",
@@ -153,7 +156,7 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row label color",
+    "description": "Default label color for all rows",
     "format": "color-alpha",
     "x-theme-default": "textSecondary"
   },
@@ -161,7 +164,7 @@
     "type": "text",
     "default": "",
     "group": "Rows",
-    "description": "Override generic row value color",
+    "description": "Default value color for secondary rows",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },
@@ -172,5 +175,36 @@
     "max": 6,
     "description": "Decimal places for Target and On Offset display",
     "group": "Rows"
-  }
+  },
+  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input value text color (overrides global Value Color)" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input box background color (overrides global Value Background)" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "description": "Input label text color (overrides global Row Label Color)" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family (overrides global Value Font)" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px (overrides global Value Font Size)" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight (overrides global Value Font Weight)" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style (overrides global Value Font Style)" },
+  "showTarget": { "type": "boolean", "default": true, "group": "Target", "description": "Show the Target section" },
+  "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target value text color (overrides global Value Color)" },
+  "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target box background color (overrides global Value Background)" },
+  "targetLabelColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "description": "Target label text color (overrides global Row Label Color)" },
+  "targetFont": { "type": "text", "default": "", "group": "Target", "format": "font-family", "description": "Target value font family (overrides global Value Font)" },
+  "targetSize": { "type": "number", "default": null, "group": "Target", "format": "font-size", "min": 8, "max": 120, "description": "Target value font size in px (overrides global Value Font Size)" },
+  "targetWeight": { "type": "text", "default": "", "group": "Target", "format": "font-weight", "description": "Target value font weight (overrides global Value Font Weight)" },
+  "targetStyle": { "type": "text", "default": "", "group": "Target", "format": "font-style", "description": "Target value font style (overrides global Value Font Style)" },
+  "showOutput": { "type": "boolean", "default": true, "group": "Output", "description": "Show the Output section" },
+  "outputColor": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "description": "Output value text color (overrides global Value Color)" },
+  "outputBg": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "description": "Output box background color (overrides global Value Background)" },
+  "outputLabelColor": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "description": "Output label text color (overrides global Row Label Color)" },
+  "outputFont": { "type": "text", "default": "", "group": "Output", "format": "font-family", "description": "Output value font family (overrides global Value Font)" },
+  "outputSize": { "type": "number", "default": null, "group": "Output", "format": "font-size", "min": 8, "max": 120, "description": "Output value font size in px (overrides global Value Font Size)" },
+  "outputWeight": { "type": "text", "default": "", "group": "Output", "format": "font-weight", "description": "Output value font weight (overrides global Value Font Weight)" },
+  "outputStyle": { "type": "text", "default": "", "group": "Output", "format": "font-style", "description": "Output value font style (overrides global Value Font Style)" },
+  "showOnOffset": { "type": "boolean", "default": true, "group": "On Offset", "description": "Show the On Offset section" },
+  "onOffsetColor": { "type": "text", "default": "", "group": "On Offset", "format": "color-alpha", "description": "On Offset value text color (overrides global Value Color)" },
+  "onOffsetLabelColor": { "type": "text", "default": "", "group": "On Offset", "format": "color-alpha", "description": "On Offset label text color (overrides global Row Label Color)" },
+  "onOffsetFont": { "type": "text", "default": "", "group": "On Offset", "format": "font-family", "description": "On Offset value font family (overrides global Value Font)" },
+  "onOffsetSize": { "type": "number", "default": null, "group": "On Offset", "format": "font-size", "min": 8, "max": 120, "description": "On Offset value font size in px (overrides global Value Font Size)" },
+  "onOffsetWeight": { "type": "text", "default": "", "group": "On Offset", "format": "font-weight", "description": "On Offset value font weight (overrides global Value Font Weight)" },
+  "onOffsetStyle": { "type": "text", "default": "", "group": "On Offset", "format": "font-style", "description": "On Offset value font style (overrides global Value Font Style)" }
 }
