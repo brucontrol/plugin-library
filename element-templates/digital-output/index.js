@@ -85,16 +85,16 @@
 
     if (toggleLabel) {
       toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
-      var vf = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
-      var vfs = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      var vfw = (d.valueFontWeight && String(d.valueFontWeight).trim()) ? String(d.valueFontWeight).trim() : "";
-      var vfst = (d.valueFontStyle && String(d.valueFontStyle).trim()) ? String(d.valueFontStyle).trim() : "";
-      var vc = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "";
-      if (vf) toggleLabel.style.fontFamily = vf; else toggleLabel.style.removeProperty("font-family");
-      if (vfs) toggleLabel.style.fontSize = vfs; else toggleLabel.style.removeProperty("font-size");
-      if (vfw) toggleLabel.style.fontWeight = vfw; else toggleLabel.style.removeProperty("font-weight");
-      if (vfst) toggleLabel.style.fontStyle = vfst; else toggleLabel.style.removeProperty("font-style");
-      if (vc) toggleLabel.style.color = vc; else toggleLabel.style.removeProperty("color");
+      var tf = (d.toggleFontFamily && String(d.toggleFontFamily).trim()) ? String(d.toggleFontFamily).trim() : "";
+      var tfs = numberOrNull(d.toggleFontSize) !== null ? numberOrNull(d.toggleFontSize) + "px" : "";
+      var tfw = (d.toggleFontWeight && String(d.toggleFontWeight).trim()) ? String(d.toggleFontWeight).trim() : "";
+      var tfst = (d.toggleFontStyle && String(d.toggleFontStyle).trim()) ? String(d.toggleFontStyle).trim() : "";
+      var tc = (d.toggleTextColor && String(d.toggleTextColor).trim()) ? String(d.toggleTextColor).trim() : "";
+      if (tf) toggleLabel.style.fontFamily = tf; else toggleLabel.style.removeProperty("font-family");
+      if (tfs) toggleLabel.style.fontSize = tfs; else toggleLabel.style.removeProperty("font-size");
+      if (tfw) toggleLabel.style.fontWeight = tfw; else toggleLabel.style.removeProperty("font-weight");
+      if (tfst) toggleLabel.style.fontStyle = tfst; else toggleLabel.style.removeProperty("font-style");
+      if (tc) toggleLabel.style.color = tc; else toggleLabel.style.removeProperty("color");
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
       toggleLabel.classList.toggle("on", isOn);

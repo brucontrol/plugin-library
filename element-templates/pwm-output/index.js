@@ -28,22 +28,14 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  var sectionToggle = { value: "showCurrent", requested: "showRequested" };
+  var sectionPrefix = { value: "current", requested: "requested" };
+
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -52,10 +44,9 @@
     if (isPrimary && d.showValue === false) {
       return null;
     }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
+
+    var toggle = sectionToggle[key];
+    if (toggle && d[toggle] === false) {
       return null;
     }
 
@@ -79,8 +70,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -168,7 +159,12 @@
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      el.style.color = d.rowLabelColor || "";
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+      el.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim())
+        ? String(d[pfx + "LabelColor"]).trim()
+        : "";
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       el.style.fontWeight = d.labelFontWeight || "";
@@ -177,22 +173,28 @@
 
     var primaryRows = document.querySelectorAll(".element-row--primary");
     primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      rowEl.style.background = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
+        ? String(d[pfx + "Bg"]).trim()
+        : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+
+      el.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim())
+        ? String(d[pfx + "Color"]).trim()
+        : "var(--accent-green, #4ec9b0)";
+
+      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : "";
+      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : "";
+      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : "";
       el.style.textAlign = "center";
     });
 
@@ -208,7 +210,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (titleEl) {
       titleEl.textContent = displayName;
@@ -217,7 +218,7 @@
     var footerBusy = isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -232,15 +233,15 @@
     return Math.max(0, Math.min(6, Math.round(p)));
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     var prec = getPrecision();
     switch (type) {
       case "pwmOutput":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value", hiddenRows));
-        appendRow(primaryRow("Requested", toNumber(currentData.requestedValue, 0).toFixed(prec), "", "requested", hiddenRows));
+        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value"));
+        appendRow(primaryRow("Requested", toNumber(currentData.requestedValue, 0).toFixed(prec), "", "requested"));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

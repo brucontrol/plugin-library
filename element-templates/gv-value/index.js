@@ -49,11 +49,11 @@
     titleEl.style.textAlign = "left";
 
     valueEl.style.display = (d.showValue === false) ? "none" : "";
-    valueEl.style.fontFamily = d.valueFontFamily || "";
-    valueEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-    valueEl.style.fontWeight = d.valueFontWeight || "";
-    valueEl.style.fontStyle = d.valueFontStyle || "";
-    valueEl.style.color = d.valueColor || "";
+    valueEl.style.fontFamily = d.displayFontFamily || "";
+    valueEl.style.fontSize = numberOrNull(d.displayFontSize) !== null ? numberOrNull(d.displayFontSize) + "px" : "";
+    valueEl.style.fontWeight = d.displayFontWeight || "";
+    valueEl.style.fontStyle = d.displayFontStyle || "";
+    valueEl.style.color = (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : "var(--accent-green, #4ec9b0)";
     valueEl.style.textAlign = "center";
 
     contentEl.style.padding = "10px";

@@ -17,18 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "value",
-        "interval"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -45,6 +33,14 @@
     "type": "boolean",
     "default": false,
     "description": "Show footer controls (unused when value is clickable)",
+    "group": "Layout"
+  },
+  "precision": {
+    "type": "number",
+    "default": 1,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for duty and interval",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -80,55 +76,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "valueBackgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary",
-    "description": "Background color of the area behind the duty value"
-  },
-  "precision": {
-    "type": "number",
-    "default": 1,
-    "min": 0,
-    "max": 6,
-    "group": "Value",
-    "description": "Decimal places for duty and interval"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -163,20 +110,19 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  }
+  "showDuty": { "type": "boolean", "default": true, "group": "Duty", "description": "Show the Duty section" },
+  "dutyColor": { "type": "text", "default": "", "group": "Duty", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Duty value text color" },
+  "dutyBg": { "type": "text", "default": "", "group": "Duty", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Duty box background color" },
+  "dutyLabelColor": { "type": "text", "default": "", "group": "Duty", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Duty label text color" },
+  "dutyFont": { "type": "text", "default": "", "group": "Duty", "format": "font-family", "description": "Duty value font family" },
+  "dutySize": { "type": "number", "default": null, "group": "Duty", "format": "font-size", "min": 8, "max": 120, "description": "Duty value font size in px" },
+  "dutyWeight": { "type": "text", "default": "", "group": "Duty", "format": "font-weight", "description": "Duty value font weight" },
+  "dutyStyle": { "type": "text", "default": "", "group": "Duty", "format": "font-style", "description": "Duty value font style" },
+  "showInterval": { "type": "boolean", "default": true, "group": "Interval", "description": "Show the Interval section" },
+  "intervalColor": { "type": "text", "default": "", "group": "Interval", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Interval value text color" },
+  "intervalLabelColor": { "type": "text", "default": "", "group": "Interval", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Interval label text color" },
+  "intervalFont": { "type": "text", "default": "", "group": "Interval", "format": "font-family", "description": "Interval value font family" },
+  "intervalSize": { "type": "number", "default": null, "group": "Interval", "format": "font-size", "min": 8, "max": 120, "description": "Interval value font size in px" },
+  "intervalWeight": { "type": "text", "default": "", "group": "Interval", "format": "font-weight", "description": "Interval value font weight" },
+  "intervalStyle": { "type": "text", "default": "", "group": "Interval", "format": "font-style", "description": "Interval value font style" }
 }

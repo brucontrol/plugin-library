@@ -17,18 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "value",
-        "requested"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -39,6 +27,14 @@
     "type": "boolean",
     "default": true,
     "description": "Show footer controls",
+    "group": "Layout"
+  },
+  "precision": {
+    "type": "number",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for value display",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -74,54 +70,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "valueBackgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary",
-    "description": "Background color of the area behind the value"
-  },
-  "precision": {
-    "type": "number",
-    "default": 2,
-    "min": 0,
-    "max": 6,
-    "group": "Value"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -156,20 +104,20 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  }
+  "showCurrent": { "type": "boolean", "default": true, "group": "Current", "description": "Show the current value section" },
+  "currentColor": { "type": "text", "default": "", "group": "Current", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Current value text color" },
+  "currentBg": { "type": "text", "default": "", "group": "Current", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Current value box background" },
+  "currentLabelColor": { "type": "text", "default": "", "group": "Current", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Current value label color" },
+  "currentFont": { "type": "text", "default": "", "group": "Current", "format": "font-family", "description": "Current value font family" },
+  "currentSize": { "type": "number", "default": null, "group": "Current", "format": "font-size", "min": 8, "max": 120, "description": "Current value font size in px" },
+  "currentWeight": { "type": "text", "default": "", "group": "Current", "format": "font-weight", "description": "Current value font weight" },
+  "currentStyle": { "type": "text", "default": "", "group": "Current", "format": "font-style", "description": "Current value font style" },
+  "showRequested": { "type": "boolean", "default": true, "group": "Requested", "description": "Show the requested value section" },
+  "requestedColor": { "type": "text", "default": "", "group": "Requested", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Requested value text color" },
+  "requestedBg": { "type": "text", "default": "", "group": "Requested", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Requested value box background" },
+  "requestedLabelColor": { "type": "text", "default": "", "group": "Requested", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Requested value label color" },
+  "requestedFont": { "type": "text", "default": "", "group": "Requested", "format": "font-family", "description": "Requested value font family" },
+  "requestedSize": { "type": "number", "default": null, "group": "Requested", "format": "font-size", "min": 8, "max": 120, "description": "Requested value font size in px" },
+  "requestedWeight": { "type": "text", "default": "", "group": "Requested", "format": "font-weight", "description": "Requested value font weight" },
+  "requestedStyle": { "type": "text", "default": "", "group": "Requested", "format": "font-style", "description": "Requested value font style" }
 }

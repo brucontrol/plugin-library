@@ -1,4 +1,10 @@
 {
+  "options": {
+    "type": "text",
+    "default": "",
+    "description": "Comma-separated list of selectable options (e.g. Auto, Manual, Off)",
+    "group": "Selector"
+  },
   "showHeader": {
     "type": "boolean",
     "default": true,
@@ -20,15 +26,7 @@
   "showValue": {
     "type": "boolean",
     "default": true,
-    "description": "Show primary value rows",
-    "group": "Layout"
-  },
-  "precision": {
-    "type": "number",
-    "default": 2,
-    "min": 0,
-    "max": 6,
-    "description": "Decimal places for value display",
+    "description": "Show value text",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -47,7 +45,7 @@
   },
   "labelFontWeight": {
     "type": "text",
-    "default": "500",
+    "default": "",
     "group": "Label",
     "format": "font-weight"
   },
@@ -92,18 +90,15 @@
     "type": "text",
     "default": "",
     "group": "Background & Border",
-    "description": "Use an image as the card background instead of color/border. When set, background, header, and border are replaced by this image.",
+    "description": "Use an image as the card background instead of color/border.",
     "format": "file-upload",
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "showReading": { "type": "boolean", "default": true, "group": "Reading", "description": "Show the value reading section" },
-  "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Reading value text color" },
-  "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Reading box background color" },
-  "readingLabelColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Reading label text color" },
-  "readingFont": { "type": "text", "default": "", "group": "Reading", "format": "font-family", "description": "Reading value font family" },
-  "readingSize": { "type": "number", "default": null, "group": "Reading", "format": "font-size", "min": 8, "max": 120, "description": "Reading value font size in px" },
-  "readingWeight": { "type": "text", "default": "", "group": "Reading", "format": "font-weight", "description": "Reading value font weight" },
-  "readingStyle": { "type": "text", "default": "", "group": "Reading", "format": "font-style", "description": "Reading value font style" }
+  "displayColor": { "type": "text", "default": "", "group": "Display", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Value display text color" },
+  "displayFontFamily": { "type": "text", "default": "", "group": "Display", "format": "font-family", "description": "Value display font family" },
+  "displayFontSize": { "type": "number", "default": 26, "group": "Display", "format": "font-size", "min": 10, "max": 120, "description": "Value display font size" },
+  "displayFontWeight": { "type": "text", "default": "", "group": "Display", "format": "font-weight", "description": "Value display font weight" },
+  "displayFontStyle": { "type": "text", "default": "normal", "group": "Display", "format": "font-style", "description": "Value display font style" }
 }
