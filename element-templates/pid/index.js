@@ -326,9 +326,9 @@
       case "pid":
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
         var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
-        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(prec), "", "output"));
         appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target"));
+        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(row("Kp/Ki/Kd", toNumber(currentData.kp, 0) + " / " + toNumber(currentData.ki, 0) + " / " + toNumber(currentData.kd, 0), "", { key: "kpkikd" }));
         break;
       default:

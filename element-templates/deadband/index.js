@@ -322,9 +322,9 @@
         var prec = Math.max(0, Math.min(6, numberOrNull(currentData.precision) ?? 2));
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
         var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
-        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value"));
         appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target"));
+        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(row("Band", toNumber(currentData.band || currentData.deadbandOffset, 0).toFixed(prec), "", { key: "band" }));
         break;
       default:

@@ -72,7 +72,7 @@
     var displayName = currentData.displayName || currentData.name || type;
 
     if (btnEl) {
-      btnEl.textContent = displayName;
+      btnEl.textContent = currentData.showButtonText === false ? "" : displayName;
       btnEl.disabled = currentData.userControl === false;
     }
 

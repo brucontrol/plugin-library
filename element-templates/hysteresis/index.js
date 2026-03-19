@@ -341,9 +341,9 @@
       case "hysteresis":
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
         var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
-        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
-        appendRow(primaryRow("Target", toNumber(d.target, 0).toFixed(prec), "", "target"));
         appendRow(primaryRow("Output", boolText(asBool(d.output || d.value)), asBool(d.output || d.value) ? "value--ok" : "value--warn", "output"));
+        appendRow(primaryRow("Target", toNumber(d.target, 0).toFixed(prec), "", "target"));
+        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(row("On Offset", toNumber(d.onOffset, 0).toFixed(prec), "", { key: "onoffset" }));
         break;
       default:

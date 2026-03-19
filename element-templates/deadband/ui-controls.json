@@ -118,14 +118,6 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
-  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
-  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
-  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
-  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
-  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
-  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
-  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" },
   "showReading": { "type": "boolean", "default": true, "group": "Reading", "description": "Show the Value/Reading section" },
   "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Reading (Value row) text color" },
   "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Reading (Value row) box background" },
@@ -148,5 +140,13 @@
   "bandFont": { "type": "text", "default": "", "group": "Band", "format": "font-family", "description": "Band value font family" },
   "bandSize": { "type": "number", "default": null, "group": "Band", "format": "font-size", "min": 8, "max": 120, "description": "Band value font size in px" },
   "bandWeight": { "type": "text", "default": "", "group": "Band", "format": "font-weight", "description": "Band value font weight" },
-  "bandStyle": { "type": "text", "default": "", "group": "Band", "format": "font-style", "description": "Band value font style" }
+  "bandStyle": { "type": "text", "default": "", "group": "Band", "format": "font-style", "description": "Band value font style" },
+  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" }
 }

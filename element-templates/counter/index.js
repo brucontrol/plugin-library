@@ -28,22 +28,14 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  var sectionToggle = { count: "showCount", rate: "showRate" };
+  var sectionPrefix = { count: "count", rate: "rate" };
+
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -55,7 +47,8 @@
     if (!isPrimary && d.showSecondaryRows === false) {
       return null;
     }
-    if (hiddenRows[key]) {
+    var toggle = sectionToggle[key];
+    if (toggle && d[toggle] === false) {
       return null;
     }
 
@@ -79,8 +72,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -137,44 +130,54 @@
       titleEl.style.textAlign = "left";
     }
 
-    var primaryRows = document.querySelectorAll(".element-row--primary");
-    primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
-    });
-
-    var countLabelEl = document.querySelector(".element-row--primary[data-row-key=\"count\"] .row-label");
-    if (countLabelEl) {
-      countLabelEl.style.color = (d.countLabelColor && String(d.countLabelColor).trim()) ? String(d.countLabelColor).trim() : "";
-      countLabelEl.style.fontFamily = d.countLabelFontFamily || "";
-      countLabelEl.style.fontSize = numberOrNull(d.countLabelFontSize) !== null ? numberOrNull(d.countLabelFontSize) + "px" : "";
-      countLabelEl.style.fontWeight = d.countLabelFontWeight || "";
-      countLabelEl.style.fontStyle = d.countLabelFontStyle || "";
-    }
-
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      if (el.closest && el.closest(".element-row--primary[data-row-key=\"count\"]")) return;
-      el.style.color = d.rowLabelColor || "";
-      el.style.fontFamily = d.labelFontFamily || "";
-      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      el.style.fontWeight = d.labelFontWeight || "";
-      el.style.fontStyle = d.labelFontStyle || "";
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+
+      el.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim())
+        ? String(d[pfx + "LabelColor"]).trim()
+        : "";
+
+      if (key === "count") {
+        el.style.fontFamily = d.countLabelFontFamily || d.labelFontFamily || "";
+        el.style.fontSize = numberOrNull(d.countLabelFontSize) !== null ? numberOrNull(d.countLabelFontSize) + "px" : (numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "");
+        el.style.fontWeight = d.countLabelFontWeight || d.labelFontWeight || "";
+        el.style.fontStyle = d.countLabelFontStyle || d.labelFontStyle || "";
+      } else {
+        el.style.fontFamily = d.labelFontFamily || "";
+        el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+        el.style.fontWeight = d.labelFontWeight || "";
+        el.style.fontStyle = d.labelFontStyle || "";
+      }
+    });
+
+    var primaryRows = document.querySelectorAll(".element-row--primary");
+    primaryRows.forEach(function (rowEl) {
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      rowEl.style.background = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
+        ? String(d[pfx + "Bg"]).trim()
+        : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+
+      el.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim())
+        ? String(d[pfx + "Color"]).trim()
+        : "var(--accent-green, #4ec9b0)";
+
+      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : "";
+      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : "";
+      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : "";
       el.style.textAlign = "center";
     });
 
@@ -187,7 +190,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (titleEl) {
       titleEl.textContent = displayName;
@@ -196,7 +198,7 @@
     var footerBusy = isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -213,14 +215,14 @@
     return n;
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "counter":
-        appendRow(primaryRow((currentData.countLabel && String(currentData.countLabel).trim()) ? String(currentData.countLabel).trim() : "Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count", hiddenRows));
-        appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2)), "", { key: "rate" }, hiddenRows));
+        appendRow(primaryRow((currentData.countLabel && String(currentData.countLabel).trim()) ? String(currentData.countLabel).trim() : "Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count"));
+        appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2)), "", { key: "rate" }));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

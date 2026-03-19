@@ -118,14 +118,6 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
-  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
-  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
-  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
-  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
-  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
-  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
-  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" },
   "showTarget": { "type": "boolean", "default": true, "group": "Target", "description": "Show the Target section" },
   "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Target value text color" },
   "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Target box background color" },
@@ -148,5 +140,13 @@
   "onOffsetFont": { "type": "text", "default": "", "group": "On Offset", "format": "font-family", "description": "On Offset value font family" },
   "onOffsetSize": { "type": "number", "default": null, "group": "On Offset", "format": "font-size", "min": 8, "max": 120, "description": "On Offset value font size in px" },
   "onOffsetWeight": { "type": "text", "default": "", "group": "On Offset", "format": "font-weight", "description": "On Offset value font weight" },
-  "onOffsetStyle": { "type": "text", "default": "", "group": "On Offset", "format": "font-style", "description": "On Offset value font style" }
+  "onOffsetStyle": { "type": "text", "default": "", "group": "On Offset", "format": "font-style", "description": "On Offset value font style" },
+  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" }
 }
