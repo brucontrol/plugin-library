@@ -45,22 +45,14 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  var sectionToggle = { value: "showTimer", type: "showType", running: "showRunning" };
+  var sectionPrefix = { value: "timer", type: "type", running: "running" };
+
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -72,7 +64,8 @@
     if (!isPrimary && d.showDetails === false) {
       return null;
     }
-    if (hiddenRows[key]) {
+    var toggleKey = sectionToggle[key];
+    if (toggleKey && d[toggleKey] === false) {
       return null;
     }
 
@@ -98,8 +91,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -189,35 +182,35 @@
       titleEl.style.textAlign = "left";
     }
 
-    var primaryRows = document.querySelectorAll(".element-row--primary");
-    primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
-    });
-
-    var labelNodes = document.querySelectorAll(".element-row .row-label");
-    labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
-    });
-
-    var valueNodes = document.querySelectorAll(".element-row .row-value");
-    valueNodes.forEach(function (node) {
-      var el = node;
-      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-primary)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
-      el.style.textAlign = "center";
+    var rowEls = document.querySelectorAll(".element-row");
+    rowEls.forEach(function (rowEl) {
+      var key = rowEl.getAttribute("data-row-key");
+      var prefix = sectionPrefix[key];
+      if (!prefix) return;
+      var labelNode = rowEl.querySelector(".row-label");
+      var valueNode = rowEl.querySelector(".row-value");
+      if (prefix === "timer") {
+        rowEl.style.background = (d.timerBg && String(d.timerBg).trim()) ? String(d.timerBg).trim() : "";
+      } else {
+        rowEl.style.background = "";
+      }
+      if (labelNode) {
+        var labelColorKey = prefix + "LabelColor";
+        labelNode.style.color = (d[labelColorKey] && String(d[labelColorKey]).trim()) ? String(d[labelColorKey]).trim() : "";
+        labelNode.style.fontFamily = d[prefix + "Font"] || "";
+        labelNode.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
+        labelNode.style.fontWeight = d[prefix + "Weight"] || "";
+        labelNode.style.fontStyle = d[prefix + "Style"] || "";
+      }
+      if (valueNode) {
+        var valColorKey = prefix + "Color";
+        valueNode.style.color = (d[valColorKey] && String(d[valColorKey]).trim()) ? String(d[valColorKey]).trim() : "";
+        valueNode.style.fontFamily = d[prefix + "Font"] || "";
+        valueNode.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
+        valueNode.style.fontWeight = d[prefix + "Weight"] || "";
+        valueNode.style.fontStyle = d[prefix + "Style"] || "";
+        valueNode.style.textAlign = "center";
+      }
     });
 
     if (footerEl) {
@@ -243,8 +236,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
-
     if (titleEl) {
       titleEl.textContent = displayName;
     }
@@ -252,7 +243,7 @@
     var footerBusy = type === "timer" ? false : isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -262,10 +253,10 @@
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "timer": {
-        var valueRow = primaryRow("", formatTimerValue(currentData.value), "", "value", hiddenRows);
+        var valueRow = primaryRow("", formatTimerValue(currentData.value), "", "value");
         if (valueRow && currentData.userControl !== false) {
           var valueSpan = valueRow.querySelector(".row-value");
           if (valueSpan) {
@@ -275,12 +266,12 @@
           }
         }
         appendRow(valueRow);
-        appendRow(row("Type", currentData.type || "--", "", { key: "type" }, hiddenRows));
-        appendRow(row("Running", boolText(asBool(currentData.isRunning)), asBool(currentData.isRunning) ? "value--ok" : "value--warn", { key: "running" }, hiddenRows));
-        }
+        appendRow(row("Type", currentData.type || "--", "", { key: "type" }));
+        appendRow(row("Running", boolText(asBool(currentData.isRunning)), asBool(currentData.isRunning) ? "value--ok" : "value--warn", { key: "running" }));
         break;
+      }
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

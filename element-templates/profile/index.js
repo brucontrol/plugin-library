@@ -34,20 +34,12 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
+
+  var sectionToggle = { source: "showSource", destination: "showDestination", direction: "showDirection" };
+  var sectionPrefix = { source: "source", destination: "destination", direction: "direction" };
 
   function formatElementValue(data) {
     if (!data) return null;
@@ -232,13 +224,14 @@
     }
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
     var isPrimary = !!opts.primary;
 
-    if (hiddenRows[key]) {
+    var toggleKey = sectionToggle[key];
+    if (toggleKey && d[toggleKey] === false) {
       return null;
     }
 
@@ -316,26 +309,28 @@
       titleEl.style.textAlign = "left";
     }
 
-    var labelNodes = document.querySelectorAll(".element-row .row-label");
-    labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      el.style.fontFamily = d.labelFontFamily || "";
-      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      el.style.fontWeight = d.labelFontWeight || "";
-      el.style.fontStyle = d.labelFontStyle || "";
-    });
-
-    var valueNodes = document.querySelectorAll(".element-row .row-value");
-    valueNodes.forEach(function (node) {
-      var el = node;
-      var valColor = (d.rowValueColor && String(d.rowValueColor).trim()) ? String(d.rowValueColor).trim() : "var(--accent-green, #4ec9b0)";
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
-      el.style.textAlign = "center";
+    var rows = document.querySelectorAll(".element-row[data-row-key]");
+    rows.forEach(function (r) {
+      var key = r.getAttribute("data-row-key");
+      var prefix = sectionPrefix[key];
+      if (!prefix) return;
+      var labelEl = r.querySelector(".row-label");
+      var valueEl = r.querySelector(".row-value");
+      if (labelEl) {
+        labelEl.style.color = d[prefix + "LabelColor"] || "";
+        labelEl.style.fontFamily = d[prefix + "Font"] || "";
+        labelEl.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
+        labelEl.style.fontWeight = d[prefix + "Weight"] || "";
+        labelEl.style.fontStyle = d[prefix + "Style"] || "";
+      }
+      if (valueEl) {
+        valueEl.style.color = (d[prefix + "Color"] && String(d[prefix + "Color"]).trim()) ? String(d[prefix + "Color"]).trim() : "var(--accent-green, #4ec9b0)";
+        valueEl.style.fontFamily = d[prefix + "Font"] || "";
+        valueEl.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
+        valueEl.style.fontWeight = d[prefix + "Weight"] || "";
+        valueEl.style.fontStyle = d[prefix + "Style"] || "";
+        valueEl.style.textAlign = "center";
+      }
     });
 
     if (!footerEl) return;
@@ -350,7 +345,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (type === "profile") {
       setupSubscriptions(currentData);
@@ -365,7 +359,7 @@
     var footerBusy = isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -375,7 +369,7 @@
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "profile": {
         var srcLabel = getLabel(
@@ -390,13 +384,13 @@
         );
         var srcVal = sourceLiveValue !== null ? sourceLiveValue : "—";
         var destVal = destinationLiveValue !== null ? destinationLiveValue : "—";
-        appendRow(row(srcLabel, srcVal, "", { key: "source" }, hiddenRows));
-        appendRow(row(destLabel, destVal, "", { key: "destination" }, hiddenRows));
-        appendRow(row("Direction", currentData.direction || (currentData.directional ? "Bidirectional" : "Forward"), "", { key: "direction" }, hiddenRows));
+        appendRow(row(srcLabel, srcVal, "", { key: "source" }));
+        appendRow(row(destLabel, destVal, "", { key: "destination" }));
+        appendRow(row("Direction", currentData.direction || (currentData.directional ? "Bidirectional" : "Forward"), "", { key: "direction" }));
         break;
       }
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

@@ -207,6 +207,7 @@
   }
 
   handleGroup.addEventListener("pointerdown", function (e) {
+    if (!state.showHandles) return;
     e.stopPropagation();
     setFocused(true);
     var target = e.target;
@@ -253,6 +254,7 @@
   /* ── Segment click → add bend point ─────────────────────────────── */
 
   hitPath.addEventListener("pointerdown", function (e) {
+    if (!state.showHandles) return;
     if (state.dragging) return;
     e.stopPropagation();
     setFocused(true);
@@ -270,6 +272,7 @@
   /* ── Double-click bend handle → remove ──────────────────────────── */
 
   handleGroup.addEventListener("dblclick", function (e) {
+    if (!state.showHandles) return;
     var target = e.target;
     if (!target.classList.contains("bend-handle")) return;
     var idx = parseInt(target.dataset.bendIndex, 10);
@@ -283,6 +286,7 @@
   /* ── Reset button ───────────────────────────────────────────────── */
 
   resetBtn.addEventListener("click", function (e) {
+    if (!state.showHandles) return;
     e.stopPropagation();
     state.bendPoints = [];
     render();
@@ -292,7 +296,7 @@
   /* ── Keyboard shortcuts ─────────────────────────────────────────── */
 
   document.addEventListener("keydown", function (e) {
-    if (!state.focused) return;
+    if (!state.focused || !state.showHandles) return;
     if (e.key === "Escape") {
       state.bendPoints = [];
       render();

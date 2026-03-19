@@ -17,19 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "target",
-        "output",
-        "onoffset"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -47,6 +34,22 @@
     "default": true,
     "description": "Show footer controls",
     "group": "Layout"
+  },
+  "precision": {
+    "type": "number",
+    "default": 2,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for numeric displays",
+    "group": "Layout"
+  },
+  "footerButtonColor": {
+    "type": "text",
+    "default": "",
+    "group": "Footer",
+    "format": "color-alpha",
+    "x-theme-default": "accentPrimary",
+    "description": "Set Target button background color"
   },
   "labelFontFamily": {
     "type": "text",
@@ -80,39 +83,6 @@
     "group": "Label",
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
-  },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
@@ -148,28 +118,35 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "precision": {
-    "type": "number",
-    "default": 2,
-    "min": 0,
-    "max": 6,
-    "description": "Decimal places for Target and On Offset display",
-    "group": "Rows"
-  }
+  "showTarget": { "type": "boolean", "default": true, "group": "Target", "description": "Show the Target section" },
+  "targetColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Target value text color" },
+  "targetBg": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Target box background color" },
+  "targetLabelColor": { "type": "text", "default": "", "group": "Target", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Target label text color" },
+  "targetFont": { "type": "text", "default": "", "group": "Target", "format": "font-family", "description": "Target value font family" },
+  "targetSize": { "type": "number", "default": null, "group": "Target", "format": "font-size", "min": 8, "max": 120, "description": "Target value font size in px" },
+  "targetWeight": { "type": "text", "default": "", "group": "Target", "format": "font-weight", "description": "Target value font weight" },
+  "targetStyle": { "type": "text", "default": "", "group": "Target", "format": "font-style", "description": "Target value font style" },
+  "showOutput": { "type": "boolean", "default": true, "group": "Output", "description": "Show the Output section" },
+  "outputColor": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Output value text color" },
+  "outputBg": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Output box background color" },
+  "outputLabelColor": { "type": "text", "default": "", "group": "Output", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Output label text color" },
+  "outputFont": { "type": "text", "default": "", "group": "Output", "format": "font-family", "description": "Output value font family" },
+  "outputSize": { "type": "number", "default": null, "group": "Output", "format": "font-size", "min": 8, "max": 120, "description": "Output value font size in px" },
+  "outputWeight": { "type": "text", "default": "", "group": "Output", "format": "font-weight", "description": "Output value font weight" },
+  "outputStyle": { "type": "text", "default": "", "group": "Output", "format": "font-style", "description": "Output value font style" },
+  "showOnOffset": { "type": "boolean", "default": true, "group": "On Offset", "description": "Show the On Offset section" },
+  "onOffsetColor": { "type": "text", "default": "", "group": "On Offset", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "On Offset value text color" },
+  "onOffsetLabelColor": { "type": "text", "default": "", "group": "On Offset", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "On Offset label text color" },
+  "onOffsetFont": { "type": "text", "default": "", "group": "On Offset", "format": "font-family", "description": "On Offset value font family" },
+  "onOffsetSize": { "type": "number", "default": null, "group": "On Offset", "format": "font-size", "min": 8, "max": 120, "description": "On Offset value font size in px" },
+  "onOffsetWeight": { "type": "text", "default": "", "group": "On Offset", "format": "font-weight", "description": "On Offset value font weight" },
+  "onOffsetStyle": { "type": "text", "default": "", "group": "On Offset", "format": "font-style", "description": "On Offset value font style" },
+  "showInput": { "type": "boolean", "default": true, "group": "Input", "description": "Show the Input section" },
+  "inputColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Input value text color" },
+  "inputBg": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Input box background color" },
+  "inputLabelColor": { "type": "text", "default": "", "group": "Input", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Input label text color" },
+  "inputFont": { "type": "text", "default": "", "group": "Input", "format": "font-family", "description": "Input value font family" },
+  "inputSize": { "type": "number", "default": null, "group": "Input", "format": "font-size", "min": 8, "max": 120, "description": "Input value font size in px" },
+  "inputWeight": { "type": "text", "default": "", "group": "Input", "format": "font-weight", "description": "Input value font weight" },
+  "inputStyle": { "type": "text", "default": "", "group": "Input", "format": "font-style", "description": "Input value font style" }
 }

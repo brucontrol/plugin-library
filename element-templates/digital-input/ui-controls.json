@@ -29,18 +29,6 @@
     "description": "Show Active Low / Active High indicator",
     "group": "Layout"
   },
-  "onLabel": {
-    "type": "text",
-    "default": "ON",
-    "group": "Display",
-    "description": "Label text when input is high"
-  },
-  "offLabel": {
-    "type": "text",
-    "default": "OFF",
-    "group": "Display",
-    "description": "Label text when input is low"
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -73,39 +61,6 @@
     "group": "Label",
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
-  },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 19,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
@@ -140,5 +95,12 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  }
+  },
+  "onLabel": { "type": "text", "default": "ON", "group": "Status", "description": "Label text when input is high" },
+  "offLabel": { "type": "text", "default": "OFF", "group": "Status", "description": "Label text when input is low" },
+  "statusColor": { "type": "text", "default": "", "group": "Status", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Status text color" },
+  "statusFontFamily": { "type": "text", "default": "", "group": "Status", "format": "font-family", "description": "Status text font family" },
+  "statusFontSize": { "type": "number", "default": 19, "group": "Status", "format": "font-size", "min": 10, "max": 120, "description": "Status text font size" },
+  "statusFontWeight": { "type": "text", "default": "700", "group": "Status", "format": "font-weight", "description": "Status text font weight" },
+  "statusFontStyle": { "type": "text", "default": "normal", "group": "Status", "format": "font-style", "description": "Status text font style" }
 }

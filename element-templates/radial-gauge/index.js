@@ -194,10 +194,10 @@
 
     if (valueNum) {
       valueNum.style.display = d.showValue === false ? 'none' : '';
-      if (d.valueFontFamily) valueNum.setAttribute('font-family', d.valueFontFamily);
-      if (numberOrNull(d.valueFontSize) != null) valueNum.setAttribute('font-size', String(numberOrNull(d.valueFontSize)));
-      if (d.valueFontWeight) valueNum.setAttribute('font-weight', d.valueFontWeight);
-      valueNum.setAttribute('fill', (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : 'var(--accent-green)');
+      if (d.displayFontFamily) valueNum.setAttribute('font-family', d.displayFontFamily);
+      if (numberOrNull(d.displayFontSize) != null) valueNum.setAttribute('font-size', String(numberOrNull(d.displayFontSize)));
+      if (d.displayFontWeight) valueNum.setAttribute('font-weight', d.displayFontWeight);
+      valueNum.setAttribute('fill', (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : 'var(--accent-green, #4ec9b0)');
     }
 
     if (valueUnit) {

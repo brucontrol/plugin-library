@@ -17,17 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "value"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -40,7 +29,7 @@
     "min": 0,
     "max": 6,
     "description": "Decimal places for value display",
-    "group": "Value"
+    "group": "Layout"
   },
   "labelFontFamily": {
     "type": "text",
@@ -75,47 +64,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "valueBackgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary",
-    "description": "Background color of the area behind the value"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -149,5 +97,13 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  }
+  },
+  "showReading": { "type": "boolean", "default": true, "group": "Reading", "description": "Show the value reading section" },
+  "readingColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Reading value text color" },
+  "readingBg": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Reading box background color" },
+  "readingLabelColor": { "type": "text", "default": "", "group": "Reading", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Reading label text color" },
+  "readingFont": { "type": "text", "default": "", "group": "Reading", "format": "font-family", "description": "Reading value font family" },
+  "readingSize": { "type": "number", "default": null, "group": "Reading", "format": "font-size", "min": 8, "max": 120, "description": "Reading value font size in px" },
+  "readingWeight": { "type": "text", "default": "", "group": "Reading", "format": "font-weight", "description": "Reading value font weight" },
+  "readingStyle": { "type": "text", "default": "", "group": "Reading", "format": "font-style", "description": "Reading value font style" }
 }

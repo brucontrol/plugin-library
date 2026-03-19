@@ -78,11 +78,11 @@
 
     if (valueText) {
       valueText.style.display = d.showValue === false ? "none" : "";
-      valueText.style.fontFamily = (typeof d.valueFontFamily === "string" && d.valueFontFamily.trim()) ? d.valueFontFamily.trim() : "";
-      valueText.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      valueText.style.fontWeight = (typeof d.valueFontWeight === "string" && d.valueFontWeight.trim()) ? d.valueFontWeight.trim() : "";
-      valueText.style.fontStyle = (typeof d.valueFontStyle === "string" && d.valueFontStyle.trim()) ? d.valueFontStyle.trim() : "";
-      valueText.style.color = (d.valueColor && String(d.valueColor).trim()) ? String(d.valueColor).trim() : "var(--accent-green, #4ec9b0)";
+      valueText.style.fontFamily = (d.statusFontFamily && String(d.statusFontFamily).trim()) ? String(d.statusFontFamily).trim() : "";
+      valueText.style.fontSize = numberOrNull(d.statusFontSize) !== null ? numberOrNull(d.statusFontSize) + "px" : "";
+      valueText.style.fontWeight = (d.statusFontWeight && String(d.statusFontWeight).trim()) ? String(d.statusFontWeight).trim() : "";
+      valueText.style.fontStyle = (d.statusFontStyle && String(d.statusFontStyle).trim()) ? String(d.statusFontStyle).trim() : "";
+      valueText.style.color = (d.statusColor && String(d.statusColor).trim()) ? String(d.statusColor).trim() : "var(--accent-green, #4ec9b0)";
       valueText.style.textAlign = "center";
       valueText.textContent = getStateLabel(isOn);
       valueText.classList.toggle("on", isOn);

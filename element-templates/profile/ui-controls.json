@@ -17,19 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "source",
-        "destination",
-        "direction"
-      ]
-    }
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -62,32 +49,6 @@
     "group": "Label",
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
-  },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
   },
   "backgroundColor": {
     "type": "text",
@@ -123,20 +84,142 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
+  "showSource": {
+    "type": "boolean",
+    "default": true,
+    "group": "Source",
+    "description": "Show the Source section"
+  },
+  "sourceColor": {
     "type": "text",
     "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
+    "group": "Source",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "sourceLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Source",
     "format": "color-alpha",
     "x-theme-default": "textSecondary"
   },
-  "rowValueColor": {
+  "sourceFont": {
     "type": "text",
     "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
+    "group": "Source",
+    "format": "font-family"
+  },
+  "sourceSize": {
+    "type": "number",
+    "default": null,
+    "group": "Source",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "sourceWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Source",
+    "format": "font-weight"
+  },
+  "sourceStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Source",
+    "format": "font-style"
+  },
+  "showDestination": {
+    "type": "boolean",
+    "default": true,
+    "group": "Destination",
+    "description": "Show the Destination section"
+  },
+  "destinationColor": {
+    "type": "text",
+    "default": "",
+    "group": "Destination",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
+  },
+  "destinationLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Destination",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "destinationFont": {
+    "type": "text",
+    "default": "",
+    "group": "Destination",
+    "format": "font-family"
+  },
+  "destinationSize": {
+    "type": "number",
+    "default": null,
+    "group": "Destination",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "destinationWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Destination",
+    "format": "font-weight"
+  },
+  "destinationStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Destination",
+    "format": "font-style"
+  },
+  "showDirection": {
+    "type": "boolean",
+    "default": true,
+    "group": "Direction",
+    "description": "Show the Direction section"
+  },
+  "directionColor": {
+    "type": "text",
+    "default": "",
+    "group": "Direction",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "directionLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Direction",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "directionFont": {
+    "type": "text",
+    "default": "",
+    "group": "Direction",
+    "format": "font-family"
+  },
+  "directionSize": {
+    "type": "number",
+    "default": null,
+    "group": "Direction",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "directionWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Direction",
+    "format": "font-weight"
+  },
+  "directionStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Direction",
+    "format": "font-style"
   }
 }

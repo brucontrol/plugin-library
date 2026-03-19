@@ -210,11 +210,11 @@
     contentEl.style.padding = "10px";
 
     if (triggerEl) {
-      triggerEl.style.fontFamily = d.valueFontFamily || "";
-      triggerEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      triggerEl.style.fontWeight = d.valueFontWeight || "";
-      triggerEl.style.fontStyle = d.valueFontStyle || "";
-      triggerEl.style.color = d.valueColor || "var(--accent-green, #4ec9b0)";
+      triggerEl.style.fontFamily = d.displayFontFamily || "";
+      triggerEl.style.fontSize = numberOrNull(d.displayFontSize) !== null ? numberOrNull(d.displayFontSize) + "px" : "";
+      triggerEl.style.fontWeight = d.displayFontWeight || "";
+      triggerEl.style.fontStyle = d.displayFontStyle || "";
+      triggerEl.style.color = (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : "var(--accent-green, #4ec9b0)";
     }
   }
 

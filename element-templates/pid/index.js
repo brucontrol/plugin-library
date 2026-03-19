@@ -3,6 +3,9 @@
   var contentEl = document.getElementById("elementContent");
   var footerEl = document.getElementById("elementFooter");
   var currentData = null;
+  var inputLiveValue = null;
+  var inputDisplayNameFromFetch = null;
+  var subscribedInput = null;
 
   function isFooterActive() {
     return footerEl && footerEl.contains(document.activeElement) &&
@@ -20,6 +23,72 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function isEmptyRef(id) {
+    return !id || id === "00000000-0000-0000-0000-000000000000" || String(id).trim() === "";
+  }
+
+  function formatElementValue(data) {
+    if (!data) return null;
+    if (data.value !== undefined && data.value !== null) return String(data.value);
+    if (data.variable !== undefined && data.variable !== null) return String(data.variable);
+    if (data.state !== undefined && data.state !== null) return data.state ? "On" : "Off";
+    return null;
+  }
+
+  function idMatches(a, b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return String(a).toLowerCase() === String(b).toLowerCase();
+  }
+
+  function handleElementUpdate(payload) {
+    var et = payload && payload.elementType;
+    var eid = payload && payload.elementId;
+    var data = payload && payload.data;
+    if (subscribedInput && et === subscribedInput.type && idMatches(eid, subscribedInput.id)) {
+      inputLiveValue = formatElementValue(data);
+      render(currentData);
+    }
+  }
+
+  function unsubscribeInput() {
+    var bc = window.BruControl;
+    if (!bc || !bc.unsubscribeElement || !subscribedInput) return;
+    bc.unsubscribeElement(subscribedInput.type, subscribedInput.id);
+    subscribedInput = null;
+    inputLiveValue = null;
+    inputDisplayNameFromFetch = null;
+  }
+
+  function setupInputSubscription(data) {
+    var bc = window.BruControl;
+    if (!bc || !bc.subscribeElement) return;
+
+    var inputType = String(data.inputElementType || "").trim();
+    var inputId = data.inputElementId ? String(data.inputElementId) : "";
+
+    if (!inputType || !inputId || isEmptyRef(inputId)) {
+      if (subscribedInput) unsubscribeInput();
+      return;
+    }
+
+    if (subscribedInput && subscribedInput.type === inputType && idMatches(subscribedInput.id, inputId)) {
+      return;
+    }
+
+    unsubscribeInput();
+    subscribedInput = { type: inputType, id: inputId };
+
+    bc.subscribeElement(inputType, inputId).then(function (elData) {
+      if (!subscribedInput || subscribedInput.type !== inputType || !idMatches(subscribedInput.id, inputId)) return;
+      inputLiveValue = formatElementValue(elData);
+      if (elData) {
+        inputDisplayNameFromFetch = elData.displayName || elData.name || null;
+      }
+      render(currentData);
+    }).catch(function () {});
+  }
+
   function clear(el) {
     while (el.firstChild) el.removeChild(el.firstChild);
   }
@@ -28,22 +97,11 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -55,7 +113,14 @@
     if (!isPrimary && d.showSecondaryRows === false) {
       return null;
     }
-    if (hiddenRows[key]) {
+    var sectionToggle = {
+      input: "showInput",
+      output: "showOutput",
+      target: "showTarget",
+      kpkikd: "showKpKiKd"
+    };
+    var toggleProp = sectionToggle[key];
+    if (toggleProp && d[toggleProp] === false) {
       return null;
     }
 
@@ -79,8 +144,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -119,6 +184,12 @@
 
   function applyStyles() {
     var d = currentData || {};
+    var sectionPrefix = {
+      input: "input",
+      output: "output",
+      target: "target",
+      kpkikd: "kpKiKd"
+    };
     var elementEl = document.getElementById("element");
     var header = document.querySelector(".element-header");
     var content = document.querySelector(".element-content");
@@ -168,7 +239,12 @@
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      el.style.color = d.rowLabelColor || "";
+      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+      el.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim())
+        ? String(d[pfx + "LabelColor"]).trim()
+        : "";
       el.style.fontFamily = d.labelFontFamily || "";
       el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
       el.style.fontWeight = d.labelFontWeight || "";
@@ -177,22 +253,28 @@
 
     var primaryRows = document.querySelectorAll(".element-row--primary");
     primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueBackgroundColor && String(d.valueBackgroundColor).trim()) ? String(d.valueBackgroundColor).trim() : "";
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      rowEl.style.background = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim())
+        ? String(d[pfx + "Bg"]).trim()
+        : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
       var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+
+      el.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim())
+        ? String(d[pfx + "Color"]).trim()
+        : "var(--accent-green, #4ec9b0)";
+
+      el.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : "";
+      el.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      el.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : "";
+      el.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : "";
       el.style.textAlign = "center";
     });
 
@@ -214,7 +296,7 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
+    setupInputSubscription(currentData);
 
     if (titleEl) {
       titleEl.textContent = displayName;
@@ -223,7 +305,7 @@
     var footerBusy = isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -238,16 +320,19 @@
     return Math.max(0, Math.min(6, Math.round(p)));
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     var prec = getPrecision();
     switch (type) {
       case "pid":
-        appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(prec), "", "output", hiddenRows));
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target", hiddenRows));
-        appendRow(row("Kp/Ki/Kd", toNumber(currentData.kp, 0) + " / " + toNumber(currentData.ki, 0) + " / " + toNumber(currentData.kd, 0), "", { key: "kpkikd" }, hiddenRows));
+        var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
+        var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
+        appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(prec), "", "output"));
+        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target"));
+        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
+        appendRow(row("Kp/Ki/Kd", toNumber(currentData.kp, 0) + " / " + toNumber(currentData.ki, 0) + " / " + toNumber(currentData.kd, 0), "", { key: "kpkikd" }));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }
@@ -277,12 +362,15 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      pid: { elementType: "pid", name: "PID", displayName: "PID", target: 65, output: 49, kp: 2, ki: 0.8, kd: 0.2, userControl: true, enabled: true, deviceConnected: true }
+      pid: { elementType: "pid", name: "PID", displayName: "PID", target: 65, output: 49, kp: 2, ki: 0.8, kd: 0.2, precision: 2, userControl: true, enabled: true, deviceConnected: true, inputDisplayName: "Temp Probe", inputElementId: "", inputElementType: "", showInput: true, inputColor: "", inputBg: "", inputLabelColor: "", inputFont: "", inputSize: null, inputWeight: "", inputStyle: "", showOutput: true, outputColor: "", outputBg: "", outputLabelColor: "", outputFont: "", outputSize: null, outputWeight: "", outputStyle: "", showTarget: true, targetColor: "", targetBg: "", targetLabelColor: "", targetFont: "", targetSize: null, targetWeight: "", targetStyle: "", showKpKiKd: true, kpKiKdColor: "", kpKiKdLabelColor: "", kpKiKdFont: "", kpKiKdSize: null, kpKiKdWeight: "", kpKiKdStyle: "" }
     };
     return map[t] || { elementType: t, displayName: t };
   }
 
   if (window.BruControl) {
+    if (window.BruControl.onElementUpdate) {
+      window.BruControl.onElementUpdate(handleElementUpdate);
+    }
     if (window.BruControl.getData) {
       try {
         var initial = window.BruControl.getData();

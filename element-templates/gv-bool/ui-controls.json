@@ -90,36 +90,36 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
+  "toggleFontFamily": {
     "type": "text",
     "default": "",
-    "group": "Value",
+    "group": "Toggle",
     "format": "font-family"
   },
-  "valueFontSize": {
+  "toggleFontSize": {
     "type": "number",
     "default": 19,
-    "group": "Value",
+    "group": "Toggle",
     "format": "font-size",
     "min": 10,
     "max": 120
   },
-  "valueFontWeight": {
+  "toggleFontWeight": {
     "type": "text",
     "default": "",
-    "group": "Value",
+    "group": "Toggle",
     "format": "font-weight"
   },
-  "valueFontStyle": {
+  "toggleFontStyle": {
     "type": "text",
     "default": "normal",
-    "group": "Value",
+    "group": "Toggle",
     "format": "font-style"
   },
-  "valueColor": {
+  "toggleTextColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
+    "group": "Toggle",
     "format": "color-alpha",
     "x-theme-default": "accentGreen"
   },

@@ -1,26 +1,32 @@
 {
+  "options": {
+    "type": "text",
+    "default": "",
+    "description": "Comma-separated list of selectable options (e.g. Auto, Manual, Off)",
+    "group": "Selector"
+  },
   "showHeader": {
     "type": "boolean",
     "default": true,
     "description": "Show header bar",
     "group": "Layout"
   },
+  "showBackground": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show element background and border",
+    "group": "Layout"
+  },
   "showLabel": {
     "type": "boolean",
     "default": true,
-    "description": "Show variable name label",
+    "description": "Show title label in header",
     "group": "Layout"
   },
   "showValue": {
     "type": "boolean",
     "default": true,
-    "description": "Show value",
-    "group": "Layout"
-  },
-  "showBackground": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show element background and border",
+    "description": "Show value text",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -31,11 +37,11 @@
   },
   "labelFontSize": {
     "type": "number",
-    "default": 11,
+    "default": 12,
     "group": "Label",
     "format": "font-size",
     "min": 8,
-    "max": 24
+    "max": 48
   },
   "labelFontWeight": {
     "type": "text",
@@ -56,11 +62,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "displayColor": { "type": "text", "default": "", "group": "Display", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Value display text color" },
-  "displayFontFamily": { "type": "text", "default": "", "group": "Display", "format": "font-family", "description": "Value display font family" },
-  "displayFontSize": { "type": "number", "default": 26, "group": "Display", "format": "font-size", "min": 10, "max": 120, "description": "Value display font size" },
-  "displayFontWeight": { "type": "text", "default": "", "group": "Display", "format": "font-weight", "description": "Value display font weight" },
-  "displayFontStyle": { "type": "text", "default": "normal", "group": "Display", "format": "font-style", "description": "Value display font style" },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -89,10 +90,15 @@
     "type": "text",
     "default": "",
     "group": "Background & Border",
-    "description": "Use an image as the card background instead of color/border. When set, background, header, and border are replaced by this image.",
+    "description": "Use an image as the card background instead of color/border.",
     "format": "file-upload",
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  }
+  },
+  "displayColor": { "type": "text", "default": "", "group": "Display", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Value display text color" },
+  "displayFontFamily": { "type": "text", "default": "", "group": "Display", "format": "font-family", "description": "Value display font family" },
+  "displayFontSize": { "type": "number", "default": 26, "group": "Display", "format": "font-size", "min": 10, "max": 120, "description": "Value display font size" },
+  "displayFontWeight": { "type": "text", "default": "", "group": "Display", "format": "font-weight", "description": "Value display font weight" },
+  "displayFontStyle": { "type": "text", "default": "normal", "group": "Display", "format": "font-style", "description": "Value display font style" }
 }

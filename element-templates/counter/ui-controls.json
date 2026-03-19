@@ -17,18 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "count",
-        "rate"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -74,103 +62,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "countPrecision": {
-    "type": "number",
-    "default": 0,
-    "group": "Value",
-    "description": "Decimal places for count display",
-    "min": 0,
-    "max": 6
-  },
-  "ratePrecision": {
-    "type": "number",
-    "default": 2,
-    "group": "Value",
-    "description": "Decimal places for rate display",
-    "min": 0,
-    "max": 6
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "valueBackgroundColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary",
-    "description": "Background color of the count value section"
-  },
-  "countLabel": {
-    "type": "text",
-    "default": "Count",
-    "group": "Value",
-    "description": "Label for the count value (e.g. Count, Total)"
-  },
-  "countLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary",
-    "description": "Count label text color"
-  },
-  "countLabelFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "countLabelFontSize": {
-    "type": "number",
-    "default": 10,
-    "group": "Value",
-    "format": "font-size",
-    "min": 8,
-    "max": 24
-  },
-  "countLabelFontWeight": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "countLabelFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -205,20 +96,26 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  }
+  "showCount": { "type": "boolean", "default": true, "group": "Count", "description": "Show the Count section" },
+  "countLabel": { "type": "text", "default": "Count", "group": "Count", "description": "Label for the count value (e.g. Count, Total)" },
+  "countPrecision": { "type": "number", "default": 0, "group": "Count", "description": "Decimal places for count display", "min": 0, "max": 6 },
+  "countColor": { "type": "text", "default": "", "group": "Count", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Count value text color" },
+  "countBg": { "type": "text", "default": "", "group": "Count", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Count box background color" },
+  "countLabelColor": { "type": "text", "default": "", "group": "Count", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Count label text color" },
+  "countFont": { "type": "text", "default": "", "group": "Count", "format": "font-family", "description": "Count value font family" },
+  "countSize": { "type": "number", "default": null, "group": "Count", "format": "font-size", "min": 8, "max": 120, "description": "Count value font size in px" },
+  "countWeight": { "type": "text", "default": "", "group": "Count", "format": "font-weight", "description": "Count value font weight" },
+  "countStyle": { "type": "text", "default": "", "group": "Count", "format": "font-style", "description": "Count value font style" },
+  "countLabelFontFamily": { "type": "text", "default": "", "group": "Count", "format": "font-family", "description": "Count label font family" },
+  "countLabelFontSize": { "type": "number", "default": 10, "group": "Count", "format": "font-size", "min": 8, "max": 24, "description": "Count label font size" },
+  "countLabelFontWeight": { "type": "text", "default": "", "group": "Count", "format": "font-weight", "description": "Count label font weight" },
+  "countLabelFontStyle": { "type": "text", "default": "normal", "group": "Count", "format": "font-style", "description": "Count label font style" },
+  "showRate": { "type": "boolean", "default": true, "group": "Rate", "description": "Show the Rate section" },
+  "ratePrecision": { "type": "number", "default": 2, "group": "Rate", "description": "Decimal places for rate display", "min": 0, "max": 6 },
+  "rateColor": { "type": "text", "default": "", "group": "Rate", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Rate value text color" },
+  "rateLabelColor": { "type": "text", "default": "", "group": "Rate", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Rate label text color" },
+  "rateFont": { "type": "text", "default": "", "group": "Rate", "format": "font-family", "description": "Rate value font family" },
+  "rateSize": { "type": "number", "default": null, "group": "Rate", "format": "font-size", "min": 8, "max": 120, "description": "Rate value font size in px" },
+  "rateWeight": { "type": "text", "default": "", "group": "Rate", "format": "font-weight", "description": "Rate value font weight" },
+  "rateStyle": { "type": "text", "default": "", "group": "Rate", "format": "font-style", "description": "Rate value font style" }
 }

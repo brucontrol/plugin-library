@@ -56,26 +56,29 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
+  "displayColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "font-family"
+    "group": "Display",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen",
+    "description": "Property value text color"
   },
-  "valueFontSize": {
+  "displayFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Display",
+    "format": "font-family",
+    "description": "Property value font family"
+  },
+  "displayFontSize": {
     "type": "number",
     "default": 14,
-    "group": "Value",
+    "group": "Display",
     "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "min": 8,
+    "max": 120,
+    "description": "Property value font size"
   },
   "headerColor": {
     "type": "text",

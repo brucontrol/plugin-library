@@ -35,34 +35,6 @@
     "description": "Show Active Low / Active High indicator",
     "group": "Layout"
   },
-  "onLabel": {
-    "type": "text",
-    "default": "ON",
-    "group": "Toggle",
-    "description": "Toggle text when on"
-  },
-  "offLabel": {
-    "type": "text",
-    "default": "OFF",
-    "group": "Toggle",
-    "description": "Toggle text when off"
-  },
-  "toggleOnColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Toggle track color when on",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "toggleOffColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Toggle track color when off",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary"
-  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -95,39 +67,6 @@
     "group": "Label",
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
-  },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 19,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
@@ -162,5 +101,14 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  }
+  },
+  "onLabel": { "type": "text", "default": "ON", "group": "Toggle", "description": "Toggle text when on" },
+  "offLabel": { "type": "text", "default": "OFF", "group": "Toggle", "description": "Toggle text when off" },
+  "toggleOnColor": { "type": "text", "default": "", "group": "Toggle", "description": "Toggle track color when on", "format": "color-alpha", "x-theme-default": "accentGreen" },
+  "toggleOffColor": { "type": "text", "default": "", "group": "Toggle", "description": "Toggle track color when off", "format": "color-alpha", "x-theme-default": "bgTertiary" },
+  "toggleTextColor": { "type": "text", "default": "", "group": "Toggle", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Toggle label text color" },
+  "toggleFontFamily": { "type": "text", "default": "", "group": "Toggle", "format": "font-family", "description": "Toggle label font family" },
+  "toggleFontSize": { "type": "number", "default": 19, "group": "Toggle", "format": "font-size", "min": 10, "max": 120, "description": "Toggle label font size" },
+  "toggleFontWeight": { "type": "text", "default": "700", "group": "Toggle", "format": "font-weight", "description": "Toggle label font weight" },
+  "toggleFontStyle": { "type": "text", "default": "normal", "group": "Toggle", "format": "font-style", "description": "Toggle label font style" }
 }
