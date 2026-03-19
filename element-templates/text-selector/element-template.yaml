@@ -1,7 +1,7 @@
 name: Text Selector - Card
 collection: BruControl Cards
 description: A selection flyout for string global variables. Users configure a comma-separated list of options, and the card shows the current value with a tap-to-pick selector.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - globalVariable-string
 defaultWidth: 160
