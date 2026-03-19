@@ -1,11 +1,11 @@
 name: Script Element - Card
 collection: BruControl Cards
 description: Built-in script element element template.
-version: 1.0.12
+version: 1.0.13
 supportedTypes:
   - scriptElement
 defaultFor: scriptElement
 defaultWidth: 160
 defaultHeight: 160
 id: 10af8668-d537-4a70-838d-df25c7ba8271
-beta: true
+beta: false

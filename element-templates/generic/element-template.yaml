@@ -1,11 +1,11 @@
 name: Generic Element - Card
 collection: BruControl Cards
 description: Built-in default element template for generic elements. Shows the element name.
-version: 1.0.12
+version: 1.0.13
 supportedTypes:
   - generic
 defaultFor: generic
 defaultWidth: 160
 defaultHeight: 160
 id: e9956a29-972c-4f64-9caf-3cb8b5ecbb7d
-beta: true
+beta: false

@@ -1,11 +1,11 @@
 name: Toggle Switch - Card
 collection: BruControl Cards
 description: Built-in toggle switch element template (matches element template editor default).
-version: 1.0.9
+version: 1.0.10
 supportedTypes:
   - toggleSwitch
 defaultFor: toggleSwitch
 defaultWidth: 160
 defaultHeight: 160
 id: a0d8bff0-93f4-4efe-abfa-4be5d02f0750
-beta: true
+beta: false

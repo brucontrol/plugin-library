@@ -1,11 +1,11 @@
 name: Profile - Card
 collection: BruControl Cards
 description: Built-in profile element template.
-version: 1.0.14
+version: 1.0.15
 supportedTypes:
   - profile
 defaultFor: profile
 defaultWidth: 180
 defaultHeight: 160
 id: ae61e4ee-2d3b-4fd1-b5a9-270919a29943
-beta: true
+beta: false

@@ -1,11 +1,11 @@
 name: Alarm - Card
 collection: BruControl Cards
 description: Built-in alarm element template.
-version: 1.0.16
+version: 1.0.17
 supportedTypes:
   - alarm
 defaultFor: alarm
 defaultWidth: 160
 defaultHeight: 200
 id: 9f6c2274-c028-4205-bf8c-31e22fe125cd
-beta: true
+beta: false
