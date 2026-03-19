@@ -25,7 +25,8 @@
     "title": "Band 1 Color",
     "default": "#4ec9b0",
     "format": "color-alpha",
-    "group": "Bands"
+    "group": "Bands",
+    "x-theme-default": "accentGreen"
   },
   "band1From": {
     "type": "number",
@@ -44,7 +45,8 @@
     "title": "Band 2 Color",
     "default": "#dcdcaa",
     "format": "color-alpha",
-    "group": "Bands"
+    "group": "Bands",
+    "x-theme-default": "accentGreen"
   },
   "band2From": {
     "type": "number",
@@ -63,7 +65,8 @@
     "title": "Band 3 Color",
     "default": "#f14c4c",
     "format": "color-alpha",
-    "group": "Bands"
+    "group": "Bands",
+    "x-theme-default": "accentGreen"
   },
   "band3From": {
     "type": "number",
@@ -83,7 +86,8 @@
     "default": "",
     "format": "color-alpha",
     "description": "Optional",
-    "group": "Bands"
+    "group": "Bands",
+    "x-theme-default": "accentGreen"
   },
   "band4From": {
     "type": "number",
@@ -103,7 +107,8 @@
     "default": "",
     "format": "color-alpha",
     "description": "Optional",
-    "group": "Bands"
+    "group": "Bands",
+    "x-theme-default": "accentGreen"
   },
   "band5From": {
     "type": "number",
@@ -147,32 +152,36 @@
     "description": "Unit suffix (e.g. kw, °C)",
     "group": "Display"
   },
-  "valueFontFamily": {
+  "displayColor": {
     "type": "text",
     "default": "",
-    "group": "Value Style",
-    "format": "font-family"
+    "group": "Display",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen",
+    "description": "Value text color"
   },
-  "valueFontSize": {
+  "displayFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Display",
+    "format": "font-family",
+    "description": "Value text font family"
+  },
+  "displayFontSize": {
     "type": "number",
-    "default": 22,
-    "group": "Value Style",
+    "default": 28,
+    "group": "Display",
     "format": "font-size",
     "min": 10,
-    "max": 72
+    "max": 120,
+    "description": "Value text font size"
   },
-  "valueFontWeight": {
+  "displayFontWeight": {
     "type": "text",
     "default": "700",
-    "group": "Value Style",
-    "format": "font-weight"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value Style",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "group": "Display",
+    "format": "font-weight",
+    "description": "Value text font weight"
   },
   "showBackground": {
     "type": "boolean",

@@ -52,11 +52,11 @@
 
     if (valueDisplayEl) {
       valueDisplayEl.style.display = (d.showValue === false) ? "none" : "";
-      valueDisplayEl.style.fontFamily = d.valueFontFamily || "";
-      valueDisplayEl.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      valueDisplayEl.style.fontWeight = d.valueFontWeight || "";
-      valueDisplayEl.style.fontStyle = d.valueFontStyle || "";
-      valueDisplayEl.style.color = d.valueColor || "";
+      valueDisplayEl.style.fontFamily = d.displayFontFamily || "";
+      valueDisplayEl.style.fontSize = numberOrNull(d.displayFontSize) !== null ? numberOrNull(d.displayFontSize) + "px" : "";
+      valueDisplayEl.style.fontWeight = d.displayFontWeight || "";
+      valueDisplayEl.style.fontStyle = d.displayFontStyle || "";
+      valueDisplayEl.style.color = (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : "var(--accent-green, #4ec9b0)";
     }
 
     if (contentEl) {

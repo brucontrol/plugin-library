@@ -17,22 +17,10 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "showValue": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show active state row",
-    "group": "Layout"
-  },
   "showFooter": {
     "type": "boolean",
     "default": true,
     "description": "Show footer bar",
-    "group": "Layout"
-  },
-  "showSecondaryRows": {
-    "type": "boolean",
-    "default": true,
-    "description": "Show secondary data rows",
     "group": "Layout"
   },
   "labelFontFamily": {
@@ -68,39 +56,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -114,22 +69,6 @@
     "default": "",
     "group": "Background & Border",
     "description": "Override header background color",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary"
-  },
-  "valueSectionBackground": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override value section (Active state) background color",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary"
-  },
-  "buttonColor": {
-    "type": "text",
-    "default": "",
-    "group": "Background & Border",
-    "description": "Override Activate/Deactivate button background color",
     "format": "color-alpha",
     "x-theme-default": "bgTertiary"
   },
@@ -151,20 +90,27 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
+  "buttonColor": {
     "type": "text",
     "default": "",
-    "group": "Rows",
-    "description": "Override base row label color",
+    "group": "Footer",
+    "description": "Override Activate/Deactivate button background color",
     "format": "color-alpha",
-    "x-theme-default": "textSecondary"
+    "x-theme-default": "bgTertiary"
   },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override base row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  }
+  "showActive": { "type": "boolean", "default": true, "group": "Active", "description": "Show the Active section" },
+  "activeColor": { "type": "text", "default": "", "group": "Active", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Active value text color" },
+  "activeBg": { "type": "text", "default": "", "group": "Active", "format": "color-alpha", "x-theme-default": "bgTertiary", "description": "Active box background" },
+  "activeLabelColor": { "type": "text", "default": "", "group": "Active", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Active label text color" },
+  "activeFont": { "type": "text", "default": "", "group": "Active", "format": "font-family" },
+  "activeSize": { "type": "number", "default": null, "group": "Active", "format": "font-size", "min": 8, "max": 120 },
+  "activeWeight": { "type": "text", "default": "", "group": "Active", "format": "font-weight" },
+  "activeStyle": { "type": "text", "default": "", "group": "Active", "format": "font-style" },
+  "showSound": { "type": "boolean", "default": true, "group": "Sound", "description": "Show the Sound section" },
+  "soundColor": { "type": "text", "default": "", "group": "Sound", "format": "color-alpha", "x-theme-default": "accentGreen", "description": "Sound value text color" },
+  "soundLabelColor": { "type": "text", "default": "", "group": "Sound", "format": "color-alpha", "x-theme-default": "textSecondary", "description": "Sound label text color" },
+  "soundFont": { "type": "text", "default": "", "group": "Sound", "format": "font-family" },
+  "soundSize": { "type": "number", "default": null, "group": "Sound", "format": "font-size", "min": 8, "max": 120 },
+  "soundWeight": { "type": "text", "default": "", "group": "Sound", "format": "font-weight" },
+  "soundStyle": { "type": "text", "default": "", "group": "Sound", "format": "font-style" }
 }

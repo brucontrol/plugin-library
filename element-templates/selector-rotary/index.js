@@ -258,11 +258,11 @@
     if (center) {
       var showValue = d.showValue !== false;
       center.style.display = showValue ? "" : "none";
-      center.style.fontFamily = d.valueFontFamily || "";
-      center.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      center.style.fontWeight = d.valueFontWeight || "";
-      center.style.fontStyle = d.valueFontStyle || "";
-      center.style.color = d.valueColor || "";
+      center.style.fontFamily = d.displayFontFamily || "";
+      center.style.fontSize = numberOrNull(d.displayFontSize) !== null ? numberOrNull(d.displayFontSize) + "px" : "";
+      center.style.fontWeight = d.displayFontWeight || "";
+      center.style.fontStyle = d.displayFontStyle || "";
+      center.style.color = (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : "var(--accent-green, #4ec9b0)";
     }
   }
 

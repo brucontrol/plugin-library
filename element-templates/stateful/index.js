@@ -18,22 +18,11 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -43,9 +32,6 @@
       return null;
     }
     if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
       return null;
     }
 
@@ -126,26 +112,17 @@
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
       var el = node;
-      el.style.color = d.rowLabelColor || "";
-      if (d.labelFontFamily) el.style.fontFamily = d.labelFontFamily;
-      if (numberOrNull(d.labelFontSize) !== null) el.style.fontSize = numberOrNull(d.labelFontSize) + "px";
-      if (d.labelFontWeight) el.style.fontWeight = d.labelFontWeight;
-      if (d.labelFontStyle) el.style.fontStyle = d.labelFontStyle;
+      el.style.color = (d.propertiesLabelColor && String(d.propertiesLabelColor).trim()) ? String(d.propertiesLabelColor).trim() : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
       var el = node;
-      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      if (d.valueFontFamily) el.style.fontFamily = d.valueFontFamily;
-      if (numberOrNull(d.valueFontSize) !== null) el.style.fontSize = numberOrNull(d.valueFontSize) + "px";
-      if (d.valueFontWeight) el.style.fontWeight = d.valueFontWeight;
-      if (d.valueFontStyle) el.style.fontStyle = d.valueFontStyle;
+      el.style.color = (d.propertiesColor && String(d.propertiesColor).trim()) ? String(d.propertiesColor).trim() : "var(--accent-green, #4ec9b0)";
+      el.style.fontFamily = (d.propertiesFont && String(d.propertiesFont).trim()) ? String(d.propertiesFont).trim() : "";
+      el.style.fontSize = (numberOrNull(d.propertiesSize) !== null) ? numberOrNull(d.propertiesSize) + "px" : "";
+      el.style.fontWeight = (d.propertiesWeight && String(d.propertiesWeight).trim()) ? String(d.propertiesWeight).trim() : "";
+      el.style.fontStyle = (d.propertiesStyle && String(d.propertiesStyle).trim()) ? String(d.propertiesStyle).trim() : "";
       el.style.textAlign = "center";
     });
 
@@ -161,38 +138,37 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (titleEl) {
       titleEl.textContent = displayName;
     }
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
     clear(footerEl);
 
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "stateful":
         var reserved = ['id','workspaceId','name','displayName','enabled','userControl','visibility','uiControls','elementType'];
         var keys = Object.keys(currentData).filter(function(k) { return reserved.indexOf(k) === -1; });
         if (keys.length === 0) {
-          appendRow(row("Properties", "(empty)", "value--warn", { key: "properties" }, hiddenRows));
+          appendRow(row("Properties", "(empty)", "value--warn", { key: "properties" }));
         } else {
           for (var pi = 0; pi < keys.length; pi++) {
             var pk = keys[pi];
             var pv = currentData[pk];
             var display = pv === true ? "true" : pv === false ? "false" : pv == null ? "null" : String(pv);
             var cls = typeof pv === "boolean" ? (pv ? "value--ok" : "value--warn") : "";
-            appendRow(row(pk, display, cls, { key: pk }, hiddenRows));
+            appendRow(row(pk, display, cls, { key: pk }));
           }
         }
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

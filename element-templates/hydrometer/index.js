@@ -23,22 +23,14 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  var sectionToggle = { temperature: "showTemperature", specificgravity: "showSpecificGravity" };
+  var sectionPrefix = { temperature: "temp", specificgravity: "sg" };
+
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
@@ -47,10 +39,8 @@
     if (isPrimary && d.showValue === false) {
       return null;
     }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
+    var toggle = sectionToggle[key];
+    if (toggle && d[toggle] === false) {
       return null;
     }
 
@@ -74,8 +64,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -132,30 +122,37 @@
       titleEl.style.textAlign = "left";
     }
 
+    var rowEls = document.querySelectorAll(".element-row");
+    rowEls.forEach(function (rowEl) {
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      rowEl.style.background = (pfx && d[pfx + "Bg"]) ? String(d[pfx + "Bg"]).trim() : "";
+    });
+
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      el.style.fontFamily = d.labelFontFamily || "";
-      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      el.style.fontWeight = d.labelFontWeight || "";
-      el.style.fontStyle = d.labelFontStyle || "";
+      var rowEl = node.closest ? node.closest(".element-row") : node.parentElement;
+      var key = rowEl ? (rowEl.getAttribute("data-row-key") || "") : "";
+      var pfx = sectionPrefix[key] || "";
+      node.style.color = (pfx && d[pfx + "LabelColor"]) ? String(d[pfx + "LabelColor"]).trim() : "";
+      node.style.fontFamily = (pfx && d[pfx + "Font"]) ? String(d[pfx + "Font"]).trim() : "";
+      node.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      node.style.fontWeight = (pfx && d[pfx + "Weight"]) ? String(d[pfx + "Weight"]).trim() : "";
+      node.style.fontStyle = (pfx && d[pfx + "Style"]) ? String(d[pfx + "Style"]).trim() : "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
-      var el = node;
-      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green, #4ec9b0)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green, #4ec9b0)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
-      el.style.textAlign = "center";
+      var rowEl = node.closest ? node.closest(".element-row") : node.parentElement;
+      var key = rowEl ? (rowEl.getAttribute("data-row-key") || "") : "";
+      var pfx = sectionPrefix[key] || "";
+      var valColor = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim()) ? String(d[pfx + "Color"]).trim() : "var(--accent-green, #4ec9b0)";
+      node.style.color = valColor;
+      node.style.fontFamily = (pfx && d[pfx + "Font"]) ? String(d[pfx + "Font"]).trim() : "";
+      node.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      node.style.fontWeight = (pfx && d[pfx + "Weight"]) ? String(d[pfx + "Weight"]).trim() : "";
+      node.style.fontStyle = (pfx && d[pfx + "Style"]) ? String(d[pfx + "Style"]).trim() : "";
+      node.style.textAlign = "center";
     });
 
     if (!footerEl) return;
@@ -170,30 +167,29 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (titleEl) {
       titleEl.textContent = displayName;
     }
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
     clear(footerEl);
 
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     var d = currentData || {};
-    var tempPrec = Math.max(0, Math.min(6, numberOrNull(d.tempPrecision) ?? 2));
+    var tempPrec = Math.max(0, Math.min(6, numberOrNull(d.tempPrecision) ?? 1));
     var sgPrec = Math.max(0, Math.min(6, numberOrNull(d.sgPrecision) ?? 3));
     switch (type) {
       case "hydrometer":
-        appendRow(primaryRow("Temperature", toNumber(d.temperature || d.temp, 0).toFixed(tempPrec), "", "temperature", hiddenRows));
-        appendRow(primaryRow("Specific Gravity", toNumber(d.specificGravity || d.sg, 0).toFixed(sgPrec), "", "specificgravity", hiddenRows));
+        appendRow(primaryRow("Temperature", toNumber(d.temperature || d.temp, 0).toFixed(tempPrec), "", "temperature"));
+        appendRow(primaryRow("Specific Gravity", toNumber(d.specificGravity || d.sg, 0).toFixed(sgPrec), "", "specificgravity"));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }

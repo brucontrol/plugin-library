@@ -56,38 +56,51 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
+  "propertiesColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
+    "group": "Properties",
     "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "x-theme-default": "accentGreen",
+    "description": "Property value text color"
+  },
+  "propertiesLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Properties",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary",
+    "description": "Property label text color"
+  },
+  "propertiesFont": {
+    "type": "text",
+    "default": "",
+    "group": "Properties",
+    "format": "font-family",
+    "description": "Property value font family"
+  },
+  "propertiesSize": {
+    "type": "number",
+    "default": null,
+    "group": "Properties",
+    "format": "font-size",
+    "min": 8,
+    "max": 120,
+    "description": "Property value font size"
+  },
+  "propertiesWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Properties",
+    "format": "font-weight",
+    "description": "Property value font weight"
+  },
+  "propertiesStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Properties",
+    "format": "font-style",
+    "description": "Property value font style"
   },
   "backgroundColor": {
     "type": "text",
@@ -122,21 +135,5 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   }
 }

@@ -17,18 +17,6 @@
     "description": "Show title label in header",
     "group": "Layout"
   },
-  "hiddenRowKeys": {
-    "type": "array",
-    "description": "Hide selected data rows",
-    "group": "Layout",
-    "items": {
-      "type": "string",
-      "enum": [
-        "temperature",
-        "specificgravity"
-      ]
-    }
-  },
   "showValue": {
     "type": "boolean",
     "default": true,
@@ -68,39 +56,6 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
   "backgroundColor": {
     "type": "text",
     "default": "",
@@ -135,36 +90,129 @@
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
   },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+  "showTemperature": {
+    "type": "boolean",
+    "default": true,
+    "group": "Temperature",
+    "description": "Show the Temperature section"
   },
   "tempPrecision": {
     "type": "number",
-    "default": 2,
+    "default": 1,
     "min": 0,
     "max": 6,
-    "description": "Decimal places for temperature display",
-    "group": "Rows"
+    "group": "Temperature",
+    "description": "Decimal places for temperature"
+  },
+  "tempColor": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen",
+    "description": "Temperature value text color"
+  },
+  "tempBg": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary",
+    "description": "Temperature box background"
+  },
+  "tempLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary",
+    "description": "Temperature label text color"
+  },
+  "tempFont": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "font-family"
+  },
+  "tempSize": {
+    "type": "number",
+    "default": null,
+    "group": "Temperature",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "tempWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "font-weight"
+  },
+  "tempStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Temperature",
+    "format": "font-style"
+  },
+  "showSpecificGravity": {
+    "type": "boolean",
+    "default": true,
+    "group": "Specific Gravity",
+    "description": "Show the Specific Gravity section"
   },
   "sgPrecision": {
     "type": "number",
     "default": 3,
     "min": 0,
     "max": 6,
-    "description": "Decimal places for specific gravity display",
-    "group": "Rows"
+    "group": "Specific Gravity",
+    "description": "Decimal places for specific gravity"
+  },
+  "sgColor": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "sgBg": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
+  },
+  "sgLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "sgFont": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "font-family"
+  },
+  "sgSize": {
+    "type": "number",
+    "default": null,
+    "group": "Specific Gravity",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "sgWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "font-weight"
+  },
+  "sgStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Specific Gravity",
+    "format": "font-style"
   }
 }

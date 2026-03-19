@@ -68,46 +68,153 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
+  "showTimer": {
+    "type": "boolean",
+    "default": true,
+    "group": "Timer",
+    "description": "Show the Timer value section"
+  },
+  "timerColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 14,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
+    "group": "Timer",
     "format": "color-alpha",
-    "x-theme-default": "accentPrimary"
+    "x-theme-default": "accentGreen",
+    "description": "Timer value text color"
   },
-  "valueBackgroundColor": {
+  "timerBg": {
     "type": "text",
     "default": "",
-    "group": "Value",
+    "group": "Timer",
     "format": "color-alpha",
     "x-theme-default": "bgTertiary",
-    "description": "Background color of the area behind the timer value"
+    "description": "Timer box background"
+  },
+  "timerLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Timer",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary",
+    "description": "Timer label text color"
+  },
+  "timerFont": {
+    "type": "text",
+    "default": "",
+    "group": "Timer",
+    "format": "font-family"
+  },
+  "timerSize": {
+    "type": "number",
+    "default": null,
+    "group": "Timer",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "timerWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Timer",
+    "format": "font-weight"
+  },
+  "timerStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Timer",
+    "format": "font-style"
+  },
+  "showType": {
+    "type": "boolean",
+    "default": true,
+    "group": "Type",
+    "description": "Show the Type section"
+  },
+  "typeColor": {
+    "type": "text",
+    "default": "",
+    "group": "Type",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "typeLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Type",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "typeFont": {
+    "type": "text",
+    "default": "",
+    "group": "Type",
+    "format": "font-family"
+  },
+  "typeSize": {
+    "type": "number",
+    "default": null,
+    "group": "Type",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "typeWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Type",
+    "format": "font-weight"
+  },
+  "typeStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Type",
+    "format": "font-style"
+  },
+  "showRunning": {
+    "type": "boolean",
+    "default": true,
+    "group": "Running",
+    "description": "Show the Running section"
+  },
+  "runningColor": {
+    "type": "text",
+    "default": "",
+    "group": "Running",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "runningLabelColor": {
+    "type": "text",
+    "default": "",
+    "group": "Running",
+    "format": "color-alpha",
+    "x-theme-default": "textSecondary"
+  },
+  "runningFont": {
+    "type": "text",
+    "default": "",
+    "group": "Running",
+    "format": "font-family"
+  },
+  "runningSize": {
+    "type": "number",
+    "default": null,
+    "group": "Running",
+    "format": "font-size",
+    "min": 8,
+    "max": 120
+  },
+  "runningWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Running",
+    "format": "font-weight"
+  },
+  "runningStyle": {
+    "type": "text",
+    "default": "",
+    "group": "Running",
+    "format": "font-style"
   },
   "backgroundColor": {
     "type": "text",
@@ -142,22 +249,6 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  },
-  "rowLabelColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row label color",
-    "format": "color-alpha",
-    "x-theme-default": "textSecondary"
-  },
-  "rowValueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Rows",
-    "description": "Override generic row value color",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "footerButtonColor": {
     "type": "text",

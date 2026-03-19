@@ -41,6 +41,55 @@
     "group": "Toggle",
     "description": "Toggle text when false"
   },
+  "toggleFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "format": "font-family"
+  },
+  "toggleFontSize": {
+    "type": "number",
+    "default": 19,
+    "group": "Toggle",
+    "format": "font-size",
+    "min": 10,
+    "max": 120
+  },
+  "toggleFontWeight": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "format": "font-weight"
+  },
+  "toggleFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Toggle",
+    "format": "font-style"
+  },
+  "toggleTextColor": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "toggleOnColor": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "description": "Color when toggle is ON",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen"
+  },
+  "toggleOffColor": {
+    "type": "text",
+    "default": "",
+    "group": "Toggle",
+    "description": "Color when toggle is OFF",
+    "format": "color-alpha",
+    "x-theme-default": "bgTertiary"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",
@@ -73,39 +122,6 @@
     "group": "Label",
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
-  },
-  "valueFontFamily": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-family"
-  },
-  "valueFontSize": {
-    "type": "number",
-    "default": 19,
-    "group": "Value",
-    "format": "font-size",
-    "min": 10,
-    "max": 120
-  },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
-    "type": "text",
-    "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
   },
   "backgroundColor": {
     "type": "text",
@@ -140,21 +156,5 @@
     "title": "Background Image",
     "x-accept": "image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp,.ico,.avif",
     "x-picker-title": "Select Background Image"
-  },
-  "toggleOnColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Color when toggle is ON",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
-  },
-  "toggleOffColor": {
-    "type": "text",
-    "default": "",
-    "group": "Toggle",
-    "description": "Color when toggle is OFF",
-    "format": "color-alpha",
-    "x-theme-default": "bgTertiary"
   }
 }

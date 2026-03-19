@@ -77,11 +77,11 @@
 
     if (toggleLabel) {
       toggleLabel.style.display = d.showToggleLabel === false ? "none" : "";
-      toggleLabel.style.fontFamily = d.valueFontFamily || "";
-      toggleLabel.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      toggleLabel.style.fontWeight = d.valueFontWeight || "";
-      toggleLabel.style.fontStyle = d.valueFontStyle || "";
-      toggleLabel.style.color = d.valueColor || "";
+      toggleLabel.style.fontFamily = d.toggleFontFamily || "";
+      toggleLabel.style.fontSize = numberOrNull(d.toggleFontSize) !== null ? numberOrNull(d.toggleFontSize) + "px" : "";
+      toggleLabel.style.fontWeight = d.toggleFontWeight || "";
+      toggleLabel.style.fontStyle = d.toggleFontStyle || "";
+      toggleLabel.style.color = (d.toggleTextColor && String(d.toggleTextColor).trim()) ? String(d.toggleTextColor).trim() : "var(--accent-green, #4ec9b0)";
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
     }

@@ -95,38 +95,43 @@
     "format": "color-alpha",
     "x-theme-default": "textPrimary"
   },
-  "valueFontFamily": {
+  "displayColor": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "font-family"
+    "group": "Display",
+    "format": "color-alpha",
+    "x-theme-default": "accentGreen",
+    "description": "Value display text color"
   },
-  "valueFontSize": {
+  "displayFontFamily": {
+    "type": "text",
+    "default": "",
+    "group": "Display",
+    "format": "font-family",
+    "description": "Value display font family"
+  },
+  "displayFontSize": {
     "type": "number",
-    "default": 28,
-    "group": "Value",
+    "default": 26,
+    "group": "Display",
     "format": "font-size",
     "min": 10,
-    "max": 120
+    "max": 120,
+    "description": "Value display font size"
   },
-  "valueFontWeight": {
-    "type": "text",
-    "default": "700",
-    "group": "Value",
-    "format": "font-weight"
-  },
-  "valueFontStyle": {
-    "type": "text",
-    "default": "normal",
-    "group": "Value",
-    "format": "font-style"
-  },
-  "valueColor": {
+  "displayFontWeight": {
     "type": "text",
     "default": "",
-    "group": "Value",
-    "format": "color-alpha",
-    "x-theme-default": "accentGreen"
+    "group": "Display",
+    "format": "font-weight",
+    "description": "Value display font weight"
+  },
+  "displayFontStyle": {
+    "type": "text",
+    "default": "normal",
+    "group": "Display",
+    "format": "font-style",
+    "description": "Value display font style"
   },
   "backgroundColor": {
     "type": "text",

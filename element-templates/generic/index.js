@@ -4,7 +4,7 @@
   var UI_CONTROL_KEYS = new Set([
     'showHeader', 'showLabel', 'showBackground', 'showValue',
     'labelFontFamily', 'labelFontSize', 'labelFontWeight', 'labelFontStyle', 'labelColor',
-    'valueFontFamily', 'valueFontSize', 'valueColor',
+    'displayFontFamily', 'displayFontSize', 'displayColor',
     'headerColor', 'backgroundColor', 'borderColor', 'image'
   ]);
 
@@ -82,9 +82,9 @@
     if (propertyList) {
       propertyList.innerHTML = "";
       var props = getNonBaseProperties(d);
-      var valueColorResolved = resolveColor(d.valueColor, "--accent-green", "#4ec9b0");
-      var valueFontFamily = (d.valueFontFamily && String(d.valueFontFamily).trim()) ? String(d.valueFontFamily).trim() : "";
-      var valueFontSizePx = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
+      var valueColorResolved = (d.displayColor && String(d.displayColor).trim()) ? String(d.displayColor).trim() : "var(--accent-green, #4ec9b0)";
+      var dispFont = (d.displayFontFamily && String(d.displayFontFamily).trim()) ? String(d.displayFontFamily).trim() : "";
+      var dispSizePx = numberOrNull(d.displayFontSize) !== null ? numberOrNull(d.displayFontSize) + "px" : "";
       props.forEach(function (p) {
         var row = document.createElement("div");
         row.className = "property-row";
@@ -95,8 +95,8 @@
         valueSpan.className = "property-value";
         valueSpan.textContent = p.value;
         valueSpan.style.color = valueColorResolved;
-        if (valueFontFamily) valueSpan.style.fontFamily = valueFontFamily;
-        if (valueFontSizePx) valueSpan.style.fontSize = valueFontSizePx;
+        if (dispFont) valueSpan.style.fontFamily = dispFont;
+        if (dispSizePx) valueSpan.style.fontSize = dispSizePx;
         row.appendChild(nameSpan);
         row.appendChild(valueSpan);
         propertyList.appendChild(row);

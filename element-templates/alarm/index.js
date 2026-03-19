@@ -38,34 +38,21 @@
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   }
 
-  function getHiddenRowsMap() {
-    var d = currentData || {};
-    var map = Object.create(null);
-    if (!Array.isArray(d.hiddenRowKeys)) return map;
-    for (var i = 0; i < d.hiddenRowKeys.length; i += 1) {
-      var key = toRowKey(d.hiddenRowKeys[i]);
-      if (key) map[key] = true;
-    }
-    return map;
-  }
-
   function numberOrNull(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
 
-  function row(label, value, cls, options, hiddenRows) {
+  var sectionToggle = { active: "showActive", soundfile: "showSound" };
+  var sectionPrefix = { active: "active", soundfile: "sound" };
+
+  function row(label, value, cls, options) {
     var d = currentData || {};
     var opts = options || {};
     var key = toRowKey(opts.key || label);
     var isPrimary = !!opts.primary;
 
-    if (isPrimary && d.showValue === false) {
-      return null;
-    }
-    if (!isPrimary && d.showSecondaryRows === false) {
-      return null;
-    }
-    if (hiddenRows[key]) {
+    var toggle = sectionToggle[key];
+    if (toggle && d[toggle] === false) {
       return null;
     }
 
@@ -89,8 +76,8 @@
     return r;
   }
 
-  function primaryRow(label, value, cls, key, hiddenRows) {
-    return row(label, value, cls, { primary: true, key: key }, hiddenRows);
+  function primaryRow(label, value, cls, key) {
+    return row(label, value, cls, { primary: true, key: key });
   }
 
   function appendRow(rowEl) {
@@ -156,7 +143,9 @@
 
     var primaryRows = document.querySelectorAll(".element-row--primary");
     primaryRows.forEach(function (rowEl) {
-      rowEl.style.background = (d.valueSectionBackground && String(d.valueSectionBackground).trim()) ? String(d.valueSectionBackground).trim() : "";
+      var key = rowEl.getAttribute("data-row-key") || "";
+      var pfx = sectionPrefix[key] || "";
+      rowEl.style.background = (pfx && d[pfx + "Bg"] && String(d[pfx + "Bg"]).trim()) ? String(d[pfx + "Bg"]).trim() : "";
     });
 
     var footerButtons = document.querySelectorAll(".element-footer button");
@@ -176,28 +165,27 @@
 
     var labelNodes = document.querySelectorAll(".element-row .row-label");
     labelNodes.forEach(function (node) {
-      var el = node;
-      el.style.color = d.rowLabelColor || "";
-      el.style.fontFamily = d.labelFontFamily || "";
-      el.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
-      el.style.fontWeight = d.labelFontWeight || "";
-      el.style.fontStyle = d.labelFontStyle || "";
+      var rowEl = node.closest ? node.closest(".element-row") : node.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+      node.style.color = (pfx && d[pfx + "LabelColor"] && String(d[pfx + "LabelColor"]).trim()) ? String(d[pfx + "LabelColor"]).trim() : "";
+      node.style.fontFamily = d.labelFontFamily || "";
+      node.style.fontSize = numberOrNull(d.labelFontSize) !== null ? numberOrNull(d.labelFontSize) + "px" : "";
+      node.style.fontWeight = d.labelFontWeight || "";
+      node.style.fontStyle = d.labelFontStyle || "";
     });
 
     var valueNodes = document.querySelectorAll(".element-row .row-value");
     valueNodes.forEach(function (node) {
-      var el = node;
-      var rowEl = el.closest ? el.closest(".element-row") : el.parentElement;
-      var isPrimary = rowEl && rowEl.classList && rowEl.classList.contains("element-row--primary");
-      var valColor = isPrimary
-        ? (d.valueColor && String(d.valueColor).trim() ? String(d.valueColor).trim() : "var(--accent-green)")
-        : (d.rowValueColor && String(d.rowValueColor).trim() ? String(d.rowValueColor).trim() : "var(--accent-green)");
-      el.style.color = valColor;
-      el.style.fontFamily = d.valueFontFamily || "";
-      el.style.fontSize = numberOrNull(d.valueFontSize) !== null ? numberOrNull(d.valueFontSize) + "px" : "";
-      el.style.fontWeight = d.valueFontWeight || "";
-      el.style.fontStyle = d.valueFontStyle || "";
-      el.style.textAlign = "center";
+      var rowEl = node.closest ? node.closest(".element-row") : node.parentElement;
+      var key = rowEl ? rowEl.getAttribute("data-row-key") : "";
+      var pfx = sectionPrefix[key] || "";
+      node.style.color = (pfx && d[pfx + "Color"] && String(d[pfx + "Color"]).trim()) ? String(d[pfx + "Color"]).trim() : "var(--accent-green, #4ec9b0)";
+      node.style.fontFamily = (pfx && d[pfx + "Font"] && String(d[pfx + "Font"]).trim()) ? String(d[pfx + "Font"]).trim() : "";
+      node.style.fontSize = (pfx && numberOrNull(d[pfx + "Size"]) !== null) ? numberOrNull(d[pfx + "Size"]) + "px" : "";
+      node.style.fontWeight = (pfx && d[pfx + "Weight"] && String(d[pfx + "Weight"]).trim()) ? String(d[pfx + "Weight"]).trim() : "";
+      node.style.fontStyle = (pfx && d[pfx + "Style"] && String(d[pfx + "Style"]).trim()) ? String(d[pfx + "Style"]).trim() : "";
+      node.style.textAlign = "center";
     });
 
     if (!footerEl) return;
@@ -212,7 +200,6 @@
     currentData = data || {};
     var type = getType(currentData);
     var displayName = currentData.displayName || currentData.name || type;
-    var hiddenRows = getHiddenRowsMap();
 
     if (titleEl) {
       titleEl.textContent = displayName;
@@ -221,7 +208,7 @@
     var footerBusy = type === "alarm" ? false : isFooterActive();
 
     clear(contentEl);
-    renderContentRows(type, hiddenRows);
+    renderContentRows(type);
 
     if (!footerBusy) {
       clear(footerEl);
@@ -231,14 +218,14 @@
     applyStyles();
   }
 
-  function renderContentRows(type, hiddenRows) {
+  function renderContentRows(type) {
     switch (type) {
       case "alarm":
-        appendRow(primaryRow("Active", boolText(asBool(currentData.active)), asBool(currentData.active) ? "value--bad" : "value--ok", "active", hiddenRows));
-        appendRow(row("Sound", (currentData.soundFile && String(currentData.soundFile).trim()) ? currentData.soundFile : "/sounds/alarm.wav", "", { key: "soundFile" }, hiddenRows));
+        appendRow(primaryRow("Active", boolText(asBool(currentData.active)), asBool(currentData.active) ? "value--bad" : "value--ok", "active"));
+        appendRow(row("Sound", (currentData.soundFile && String(currentData.soundFile).trim()) ? currentData.soundFile : "/sounds/alarm.wav", "", { key: "soundFile" }));
         break;
       default:
-        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }, hiddenRows));
+        appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
     }
   }
