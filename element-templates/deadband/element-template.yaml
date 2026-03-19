@@ -1,7 +1,7 @@
 name: Deadband - Card
 collection: BruControl Cards
 description: Built-in deadband element template.
-version: 1.0.12
+version: 1.0.13
 supportedTypes:
   - deadband
 defaultFor: deadband

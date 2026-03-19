@@ -1,7 +1,7 @@
 name: PID - Card
 collection: BruControl Cards
 description: Built-in PID element template.
-version: 1.0.12
+version: 1.0.13
 supportedTypes:
   - pid
 defaultFor: pid
