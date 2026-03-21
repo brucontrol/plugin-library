@@ -1,4 +1,4 @@
-// Kokoro TTS: float32 WAV from RawAudio.toBlob() decodes poorly in <audio> in many browsers — use 16-bit PCM WAV + cleaned float PCM for Web Audio.
+// Kokoro TTS: float32 WAV from RawAudio.toBlob() decodes poorly in <audio> in many browsers — use 16-bit PCM WAV + cleaned float PCM for Web Audio .
 (function () {
   var KOKORO_IMPORT = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm';
   var MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
