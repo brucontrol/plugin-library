@@ -190,13 +190,19 @@
       var labelNode = rowEl.querySelector(".row-label");
       var valueNode = rowEl.querySelector(".row-value");
       if (prefix === "timer") {
-        rowEl.style.background = (d.timerBg && String(d.timerBg).trim()) ? String(d.timerBg).trim() : "";
+        var tbg = (d.timerBg && String(d.timerBg).trim()) ? String(d.timerBg).trim() : "";
+        if (tbg) rowEl.style.background = tbg;
+        else rowEl.style.background = "var(--bg-tertiary, #2d2d2d)";
       } else {
         rowEl.style.background = "";
       }
       if (labelNode) {
         var labelColorKey = prefix + "LabelColor";
-        labelNode.style.color = (d[labelColorKey] && String(d[labelColorKey]).trim()) ? String(d[labelColorKey]).trim() : "";
+        var labC = (d[labelColorKey] && String(d[labelColorKey]).trim()) ? String(d[labelColorKey]).trim() : "";
+        if (labC) labelNode.style.color = labC;
+        else if (prefix === "timer" || prefix === "type" || prefix === "running") {
+          labelNode.style.color = "var(--text-secondary, #9a9a9a)";
+        } else labelNode.style.removeProperty("color");
         labelNode.style.fontFamily = d[prefix + "Font"] || "";
         labelNode.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
         labelNode.style.fontWeight = d[prefix + "Weight"] || "";
@@ -204,7 +210,9 @@
       }
       if (valueNode) {
         var valColorKey = prefix + "Color";
-        valueNode.style.color = (d[valColorKey] && String(d[valColorKey]).trim()) ? String(d[valColorKey]).trim() : "";
+        var valC = (d[valColorKey] && String(d[valColorKey]).trim()) ? String(d[valColorKey]).trim() : "";
+        if (valC) valueNode.style.color = valC;
+        else valueNode.style.removeProperty("color");
         valueNode.style.fontFamily = d[prefix + "Font"] || "";
         valueNode.style.fontSize = numberOrNull(d[prefix + "Size"]) !== null ? numberOrNull(d[prefix + "Size"]) + "px" : "";
         valueNode.style.fontWeight = d[prefix + "Weight"] || "";

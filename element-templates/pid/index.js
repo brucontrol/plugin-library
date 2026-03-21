@@ -23,6 +23,30 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function stripNumericParseNoise(s) {
+    return String(s).replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/,/g, "").trim();
+  }
+
+  function formatLiveReadingWithPrecision(raw, prec) {
+    if (raw === null || raw === undefined) return "\u2014";
+    if (typeof raw === "boolean") return raw ? "ON" : "OFF";
+    var cleaned = stripNumericParseNoise(raw);
+    if (cleaned === "") return "\u2014";
+    var lowered = cleaned.toLowerCase();
+    if (lowered === "true") return "ON";
+    if (lowered === "false") return "OFF";
+    var n = Number(cleaned);
+    if (!Number.isFinite(n)) {
+      n = parseFloat(cleaned);
+    }
+    if (Number.isFinite(n)) return n.toFixed(prec);
+    return String(raw);
+  }
+
+  function typesMatch(a, b) {
+    return String(a || "").toLowerCase() === String(b || "").toLowerCase();
+  }
+
   function isEmptyRef(id) {
     return !id || id === "00000000-0000-0000-0000-000000000000" || String(id).trim() === "";
   }
@@ -30,6 +54,9 @@
   function formatElementValue(data) {
     if (!data) return null;
     if (data.value !== undefined && data.value !== null) return String(data.value);
+    if (data.rawValue !== undefined && data.rawValue !== null) return String(data.rawValue);
+    if (data.total !== undefined && data.total !== null) return String(data.total);
+    if (data.temp !== undefined && data.temp !== null) return String(data.temp);
     if (data.variable !== undefined && data.variable !== null) return String(data.variable);
     if (data.state !== undefined && data.state !== null) return data.state ? "On" : "Off";
     return null;
@@ -45,7 +72,7 @@
     var et = payload && payload.elementType;
     var eid = payload && payload.elementId;
     var data = payload && payload.data;
-    if (subscribedInput && et === subscribedInput.type && idMatches(eid, subscribedInput.id)) {
+    if (subscribedInput && typesMatch(et, subscribedInput.type) && idMatches(eid, subscribedInput.id)) {
       inputLiveValue = formatElementValue(data);
       render(currentData);
     }
@@ -320,14 +347,21 @@
     return Math.max(0, Math.min(6, Math.round(p)));
   }
 
+  function formatCalibratedReading(d, numStr) {
+    var pre = d.prefix != null && String(d.prefix) !== "" ? String(d.prefix) : "";
+    var suf = d.suffix != null && String(d.suffix).trim() !== "" ? String(d.suffix).trim() : "";
+    return pre + numStr + (suf ? " " + suf : "");
+  }
+
   function renderContentRows(type) {
     var prec = getPrecision();
+    var d = currentData || {};
     switch (type) {
       case "pid":
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
-        var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
-        appendRow(primaryRow("Output", toNumber(currentData.output || currentData.value, 0).toFixed(prec), "", "output"));
-        appendRow(primaryRow("Target", toNumber(currentData.target, 0).toFixed(prec), "", "target"));
+        var inputVal = formatLiveReadingWithPrecision(inputLiveValue, prec);
+        appendRow(primaryRow("Output", formatCalibratedReading(d, toNumber(d.output || d.value, 0).toFixed(prec)), "", "output"));
+        appendRow(primaryRow("Target", formatCalibratedReading(d, toNumber(d.target, 0).toFixed(prec)), "", "target"));
         appendRow(primaryRow(inputLabel, inputVal, "", "input"));
         appendRow(row("Kp/Ki/Kd", toNumber(currentData.kp, 0) + " / " + toNumber(currentData.ki, 0) + " / " + toNumber(currentData.kd, 0), "", { key: "kpkikd" }));
         break;

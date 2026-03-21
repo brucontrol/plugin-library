@@ -98,6 +98,13 @@ body {
   line-height: 1;
   font-weight: 700;
   text-align: left;
+  /* Matches ui-controls timerColor x-theme-default (accentGreen); overrides .element-row .value text-primary */
+  color: var(--accent-green, #4ec9b0);
+}
+
+.element-row[data-row-key="type"] .value {
+  /* Matches ui-controls typeColor x-theme-default */
+  color: var(--accent-green, #4ec9b0);
 }
 
 .element-row .value--ok {

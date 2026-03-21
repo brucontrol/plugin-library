@@ -17,6 +17,9 @@
   var previewTimerHandle = null;
   var realtimeTickHandle = null;
   var isRefreshing = false;
+  var visibilityResyncHandle = null;
+  /** Debounce visibility/focus so we do not hammer the API when switching windows. */
+  var VISIBILITY_RESYNC_DEBOUNCE_MS = 400;
 
   // Fallback palette when theme is unavailable (VS Code Dark–style)
   var COLOR_PALETTE = ["#4EC9B0", "#DCDCAA", "#569CD6", "#C586C0", "#CE9178", "#9CDCFE"];
@@ -655,6 +658,26 @@
     }, 60);
   }
 
+  /**
+   * After long backgrounding or hub gaps, live samples may miss a large window.
+   * Re-fetch the visible time range from the API when the user returns (visibility / focus).
+   */
+  function scheduleHistoryResync() {
+    if (!window.BruControl || !window.BruControl.fetchSamples) return;
+    if (visibilityResyncHandle) {
+      clearTimeout(visibilityResyncHandle);
+      visibilityResyncHandle = null;
+    }
+    visibilityResyncHandle = setTimeout(function () {
+      visibilityResyncHandle = null;
+      if (document.visibilityState !== "visible") return;
+      if (!chart || !currentData) return;
+      var channels = getConfiguredChannels();
+      if (channels.length === 0) return;
+      loadInitialData();
+    }, VISIBILITY_RESYNC_DEBOUNCE_MS);
+  }
+
   function loadInitialData() {
     if (!window.BruControl || !window.BruControl.fetchSamples || !chart) {
       isRefreshing = false;
@@ -872,7 +895,20 @@
     startPreviewMode();
   }
 
+  document.addEventListener("visibilitychange", function onChartDocVisibility() {
+    if (document.visibilityState === "visible") {
+      scheduleHistoryResync();
+    }
+  });
+  window.addEventListener("focus", function onChartWindowFocus() {
+    scheduleHistoryResync();
+  });
+
   window.addEventListener("beforeunload", function () {
+    if (visibilityResyncHandle) {
+      clearTimeout(visibilityResyncHandle);
+      visibilityResyncHandle = null;
+    }
     clearPreviewTimer();
     clearRealtimeTick();
   });

@@ -23,6 +23,35 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  /** Strip ZWSP/BOM and grouping commas so Number() matches template precision like target/offset. */
+  function stripNumericParseNoise(s) {
+    return String(s).replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/,/g, "").trim();
+  }
+
+  /**
+   * Format subscribed input reading using template precision (same as Target / On Offset).
+   * Falls back to parseFloat when Number() fails (e.g. stray invisible chars in serialized text).
+   */
+  function formatLiveReadingWithPrecision(raw, prec) {
+    if (raw === null || raw === undefined) return "\u2014";
+    if (typeof raw === "boolean") return boolText(asBool(raw));
+    var cleaned = stripNumericParseNoise(raw);
+    if (cleaned === "") return "\u2014";
+    var lowered = cleaned.toLowerCase();
+    if (lowered === "true") return boolText(true);
+    if (lowered === "false") return boolText(false);
+    var n = Number(cleaned);
+    if (!Number.isFinite(n)) {
+      n = parseFloat(cleaned);
+    }
+    if (Number.isFinite(n)) return n.toFixed(prec);
+    return String(raw);
+  }
+
+  function typesMatch(a, b) {
+    return String(a || "").toLowerCase() === String(b || "").toLowerCase();
+  }
+
   function boolText(value) {
     return value ? "ON" : "OFF";
   }
@@ -44,6 +73,9 @@
   function formatElementValue(data) {
     if (!data) return null;
     if (data.value !== undefined && data.value !== null) return String(data.value);
+    if (data.rawValue !== undefined && data.rawValue !== null) return String(data.rawValue);
+    if (data.total !== undefined && data.total !== null) return String(data.total);
+    if (data.temp !== undefined && data.temp !== null) return String(data.temp);
     if (data.variable !== undefined && data.variable !== null) return String(data.variable);
     if (data.state !== undefined && data.state !== null) return data.state ? "On" : "Off";
     return null;
@@ -59,7 +91,7 @@
     var et = payload && payload.elementType;
     var eid = payload && payload.elementId;
     var data = payload && payload.data;
-    if (subscribedInput && et === subscribedInput.type && idMatches(eid, subscribedInput.id)) {
+    if (subscribedInput && typesMatch(et, subscribedInput.type) && idMatches(eid, subscribedInput.id)) {
       inputLiveValue = formatElementValue(data);
       render(currentData);
     }
@@ -336,14 +368,14 @@
 
   function renderContentRows(type) {
     var d = currentData || {};
-    var prec = Math.max(0, Math.min(6, numberOrNull(d.precision) ?? 2));
+    var prec = Math.max(0, Math.min(6, Math.round(toNumber(d.precision, 2))));
     switch (type) {
       case "hysteresis":
         var inputLabel = currentData.inputDisplayName || inputDisplayNameFromFetch || "Input";
-        var inputVal = inputLiveValue !== null ? inputLiveValue : "\u2014";
+        var inputFormatted = formatLiveReadingWithPrecision(inputLiveValue, prec);
         appendRow(primaryRow("Output", boolText(asBool(d.output || d.value)), asBool(d.output || d.value) ? "value--ok" : "value--warn", "output"));
         appendRow(primaryRow("Target", toNumber(d.target, 0).toFixed(prec), "", "target"));
-        appendRow(primaryRow(inputLabel, inputVal, "", "input"));
+        appendRow(primaryRow(inputLabel, inputFormatted, "", "input"));
         appendRow(row("On Offset", toNumber(d.onOffset, 0).toFixed(prec), "", { key: "onoffset" }));
         break;
       default:
@@ -363,7 +395,7 @@
   }
 
   function renderTargetSetter(data) {
-    var prec = Math.max(0, Math.min(6, numberOrNull(data.precision) ?? 2));
+    var prec = Math.max(0, Math.min(6, Math.round(toNumber(data.precision, 2))));
     footerEl.appendChild(
       makeButton("Set Target", function () {
         var displayName = currentData ? (currentData.displayName || currentData.name || "Target") : "Target";

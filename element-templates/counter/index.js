@@ -215,11 +215,19 @@
     return n;
   }
 
+  function affixedCountRate(d, kind, numStr) {
+    var preKey = kind === "count" ? "countPrefix" : "ratePrefix";
+    var sufKey = kind === "count" ? "countSuffix" : "rateSuffix";
+    var pre = d[preKey] != null && String(d[preKey]) !== "" ? String(d[preKey]) : "";
+    var suf = d[sufKey] != null && String(d[sufKey]).trim() !== "" ? String(d[sufKey]).trim() : "";
+    return pre + numStr + (suf ? " " + suf : "");
+  }
+
   function renderContentRows(type) {
     switch (type) {
       case "counter":
-        appendRow(primaryRow((currentData.countLabel && String(currentData.countLabel).trim()) ? String(currentData.countLabel).trim() : "Count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0)), "", "count"));
-        appendRow(row("Rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2)), "", { key: "rate" }));
+        appendRow(primaryRow((currentData.countLabel && String(currentData.countLabel).trim()) ? String(currentData.countLabel).trim() : "Count", affixedCountRate(currentData, "count", toNumber(currentData.count || currentData.total, 0).toFixed(getPrecision("count", 0))), "", "count"));
+        appendRow(row("Rate", affixedCountRate(currentData, "rate", toNumber(currentData.rate, 0).toFixed(getPrecision("rate", 2))), "", { key: "rate" }));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));

@@ -3,9 +3,9 @@ collection: BruControl Cards
 defaultWidth: 220
 defaultHeight: 220
 description: Built-in timer element template.
-version: 1.0.16
+version: 1.0.17
 supportedTypes:
   - timer
 defaultFor: timer
 id: 05a2a7d6-6d0e-4c94-9fdf-a5f1c4909eae
-beta: false
+beta: true

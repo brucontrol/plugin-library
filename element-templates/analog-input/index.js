@@ -196,11 +196,20 @@
     applyStyles();
   }
 
+  function formatCalibratedReading(d, numStr) {
+    var pre = d.prefix != null && String(d.prefix) !== "" ? String(d.prefix) : "";
+    var suf = d.suffix != null && String(d.suffix).trim() !== "" ? String(d.suffix).trim() : "";
+    return pre + numStr + (suf ? " " + suf : "");
+  }
+
   function renderContentRows(type) {
     switch (type) {
-      case "analogInput":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(Math.max(0, Math.min(6, numberOrNull(currentData.precision) ?? 2))) + " " + (currentData.suffix || ""), "", "value"));
+      case "analogInput": {
+        var prec = Math.max(0, Math.min(6, toNumber(currentData.precision, 2)));
+        var numStr = toNumber(currentData.value, 0).toFixed(prec);
+        appendRow(primaryRow("Value", formatCalibratedReading(currentData, numStr), "", "value"));
         break;
+      }
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
@@ -213,7 +222,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      analogInput: { elementType: "analogInput", name: "Analog In", displayName: "Analog In", value: 12.34, suffix: "V", enabled: true, deviceConnected: true }
+      analogInput: { elementType: "analogInput", name: "Analog In", displayName: "Analog In", value: 12.34, prefix: "", suffix: "V", enabled: true, deviceConnected: true }
     };
     return map[t] || { elementType: t, displayName: t };
   }
