@@ -1,9 +1,9 @@
 name: Hysteresis - Card
 collection: BruControl Cards
 description: Built-in hysteresis element template.
-version: 1.0.12
+version: 1.0.13
 supportedTypes:
   - hysteresis
 defaultFor: hysteresis
 id: a351f3c7-5a2e-459a-9ea0-a81b4e47232e
-beta: false
+beta: true

@@ -1,11 +1,11 @@
 name: PID - Card
 collection: BruControl Cards
 description: Built-in PID element template.
-version: 1.0.14
+version: 1.0.15
 supportedTypes:
   - pid
 defaultFor: pid
 defaultWidth: 190
 defaultHeight: 250
 id: c9f71aaf-385f-4a8b-8b3b-8ab6b2a2b41d
-beta: false
+beta: true
