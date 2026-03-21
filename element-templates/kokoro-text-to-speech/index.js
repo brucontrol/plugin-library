@@ -1,4 +1,4 @@
-// Kokoro TTS: float32 WAV from RawAudio.toBlob() decodes poorly in <audio> in many browsers — use 16-bit PCM WAV + cleaned float PCM for Web Audio .
+// Kokoro TTS: WASM + q8 only. 16-bit PCM WAV + cleaned float PCM for Web Audio (float WAV in <audio> is unreliable).
 (function () {
   var KOKORO_IMPORT = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm';
   var MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
@@ -7,7 +7,6 @@
   var textEl = document.getElementById('text-display');
 
   var model = null;
-  var modelDevice = null;
   var modelPromise = null;
 
   var synthSeq = 0;
@@ -20,7 +19,11 @@
   var htmlAudio = null;
   var audioCtx = null;
 
-  var live = { text: '', voice: 'af_heart', device: 'wasm', deviceMode: 'auto', speak: false };
+  var live = {
+    text: '',
+    voice: 'af_bella',
+    speak: false,
+  };
 
   function setStatus(msg, isError) {
     if (statusEl) {
@@ -32,31 +35,14 @@
   function getPreviewData() {
     return {
       elementType: 'globalVariable',
-      text: 'Hello from Kokoro',
+      text: "Welcome to BruControl, I'm Bella, your personal text to speech assistant.",
       speak: false,
-      voice: 'af_heart',
-      device: 'auto',
+      voice: 'af_bella',
     };
   }
 
-  function webGpuPresent() {
-    return typeof navigator !== 'undefined' && !!navigator.gpu;
-  }
-
-  function resolveDeviceMode(raw) {
-    var s = String(raw == null || raw === '' ? 'auto' : raw).trim().toLowerCase();
-    if (s === 'webgpu' || s === 'wasm' || s === 'auto') return s;
-    return 'auto';
-  }
-
-  function pickBackend(mode) {
-    if (mode === 'webgpu') return 'webgpu';
-    if (mode === 'wasm') return 'wasm';
-    return webGpuPresent() ? 'webgpu' : 'wasm';
-  }
-
-  function contentKey(text, voice, dev) {
-    return text + '\n' + voice + '\n' + dev;
+  function contentKey(text, voice) {
+    return text + '\n' + voice;
   }
 
   function resetSpeakProp() {
@@ -231,20 +217,14 @@
     return true;
   }
 
-  function getModel(backend, mode) {
-    if (model && modelDevice === backend) return Promise.resolve(model);
-    if (modelDevice !== backend) {
-      model = null;
-      modelPromise = null;
-    }
-    modelDevice = backend;
+  function getModel() {
+    if (model) return Promise.resolve(model);
     if (modelPromise) return modelPromise;
 
-    var dtype = backend === 'webgpu' ? 'fp32' : 'q8';
     setStatus('Loading Kokoro model (first load may take a while)...', false);
     modelPromise = import(KOKORO_IMPORT)
       .then(function (m) {
-        return m.KokoroTTS.from_pretrained(MODEL_ID, { device: backend, dtype: dtype });
+        return m.KokoroTTS.from_pretrained(MODEL_ID, { device: 'wasm', dtype: 'q8' });
       })
       .then(function (m) {
         model = m;
@@ -255,18 +235,13 @@
         console.error('[Kokoro TTS] model load failed:', e);
         model = null;
         modelPromise = null;
-        modelDevice = null;
-        if (mode === 'auto' && backend === 'webgpu') {
-          setStatus('WebGPU failed; using WASM...', false);
-          return getModel('wasm', 'wasm');
-        }
         setStatus('TTS unavailable', true);
         throw e;
       });
     return modelPromise;
   }
 
-  function ensureSynth(text, voice, backend, mode) {
+  function ensureSynth(text, voice) {
     if (!text) {
       synthSeq++;
       cacheKey = '';
@@ -275,7 +250,7 @@
       return Promise.resolve(null);
     }
 
-    var key = contentKey(text, voice, backend);
+    var key = contentKey(text, voice);
     if (cacheKey === key && cachePcm && cachePcm.length) {
       setStatus('Ready (cached)', false);
       return Promise.resolve(true);
@@ -285,10 +260,10 @@
     var seq = synthSeq;
     setStatus('Synthesizing...', false);
 
-    return getModel(backend, mode)
+    return getModel()
       .then(function () {
         if (seq !== synthSeq) return null;
-        return model.generate(text, { voice: voice || 'af_heart' });
+        return model.generate(text, { voice: voice || 'af_bella' });
       })
       .then(function (raw) {
         if (seq !== synthSeq || !raw) return null;
@@ -321,7 +296,7 @@
 
   function tryPlay() {
     if (!live.speak || !live.text) return;
-    var key = contentKey(live.text, live.voice, live.device);
+    var key = contentKey(live.text, live.voice);
     if (cacheKey !== key || !cachePcm) return;
 
     var ctx;
@@ -358,15 +333,11 @@
   function render(data) {
     data = data || {};
     var text = String(data.text || '').trim();
-    var voice = String(data.voice || 'af_heart').trim() || 'af_heart';
-    var deviceMode = resolveDeviceMode(data.device);
-    var backend = pickBackend(deviceMode);
+    var voice = String(data.voice || 'af_bella').trim() || 'af_bella';
     var speak = data.speak === true;
 
     live.text = text;
     live.voice = voice;
-    live.device = backend;
-    live.deviceMode = deviceMode;
     live.speak = speak;
 
     if (textEl) textEl.textContent = text || '(no text)';
@@ -377,7 +348,7 @@
       return;
     }
 
-    ensureSynth(text, voice, backend, deviceMode)
+    ensureSynth(text, voice)
       .then(function () {
         tryPlay();
       })
