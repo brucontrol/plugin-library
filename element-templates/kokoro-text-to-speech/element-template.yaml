@@ -1,7 +1,7 @@
 id: f4a2c8e1-6d43-4f91-b2a7-9e3c1d5f7a8b
 name: Kokoro Text to Speech
 description: Speaks text using Kokoro neural TTS in the browser. Audio is synthesized when text or voice changes so playback can start quickly when speak is set true. Resets speak to false after playback.
-version: 1.0.1
+version: 1.0.2
 supportedTypes:
   - globalVariable-string
   - generic
