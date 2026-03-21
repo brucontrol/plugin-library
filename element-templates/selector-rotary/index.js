@@ -207,7 +207,8 @@
     }
 
     var num = parseFloat(currentData.value);
-    var precision = typeof currentData.precision === "number" ? currentData.precision : 0;
+    var rawPrec = Number(currentData.precision);
+    var precision = Number.isFinite(rawPrec) ? rawPrec : 0;
     center.textContent = Number.isFinite(num) ? num.toFixed(precision) : String(currentData.value);
   }
 

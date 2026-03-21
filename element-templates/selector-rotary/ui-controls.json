@@ -23,6 +23,14 @@
     "description": "Show numeric value in dial center",
     "group": "Layout"
   },
+  "precision": {
+    "type": "number",
+    "default": 0,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for numeric displays",
+    "group": "Layout"
+  },
   "selectOptions": {
     "type": "array",
     "description": "Numeric values to place around the dial",

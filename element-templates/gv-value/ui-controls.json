@@ -23,6 +23,14 @@
     "description": "Show value text",
     "group": "Layout"
   },
+  "precision": {
+    "type": "number",
+    "default": 0,
+    "min": 0,
+    "max": 6,
+    "description": "Decimal places for numeric displays",
+    "group": "Layout"
+  },
   "labelFontFamily": {
     "type": "text",
     "default": "",

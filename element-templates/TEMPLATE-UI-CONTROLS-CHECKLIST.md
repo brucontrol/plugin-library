@@ -59,17 +59,45 @@ Some sections need controls beyond the standard set. Add these to the same group
 - **Per-section precision** — e.g., `countPrecision`, `ratePrecision` when different sections need different decimal places.
 - **Per-section label font overrides** — e.g., `countLabelFontFamily`, `countLabelFontSize`, `countLabelFontWeight`, `countLabelFontStyle` when a section's label needs independent font control beyond just color. In the JS label loop, check for `key === "count"` to apply these with global fallback.
 
-### Non-Row Templates (e.g., Button)
+### Non-Row Templates
 
-Templates without rows follow a simpler pattern:
+Templates without rows follow simpler patterns. There are two sub-types:
+
+**Button-like** (colored background with text overlay, e.g., Button):
 - Controls go in a single group named after the element (e.g., `"Button"`).
 - Include: `show{ElementText}` (text visibility toggle), `{element}Color` (background), `{element}TextColor` (text color), `{element}FontFamily/Size/Weight/Style`, `image`.
 - `{element}TextColor` uses `x-theme-default: "textOnAccent"` for text on colored backgrounds.
 
-### Naming Collisions
+**Value-display** (single value readout, e.g., gv-value, text-selector):
+- Controls go in a **"Display"** group.
+- Include: `displayColor`, `displayFontFamily`, `displayFontSize`, `displayFontWeight`, `displayFontStyle`.
+- `displayColor` uses `x-theme-default: "accentGreen"`.
+- Visibility uses `showValue` in the Layout group (not a per-section toggle).
+- In `applyStyles()`, target `#valueDisplay` directly and fall back to `"var(--accent-green, #4ec9b0)"` for color.
 
-If a section name collides with a global property prefix, use an alternate prefix:
-- Example: Deadband's "Value" row uses prefix `reading` (`readingColor`, `readingBg`, etc.) to avoid collision with the global `value*` namespace.
+### Template-Specific Config Groups
+
+Some templates have configuration that is not styling — these go in their own group:
+- Example: text-selector has a **"Selector"** group with `options` (comma-separated list of choices).
+- These groups appear before Layout in the JSON to keep configuration prominent.
+- Do not mix styling controls into config groups or vice versa.
+
+### Naming Collisions (row key ≠ property prefix)
+
+When a row's `data-row-key` would collide with the old global `value*` namespace or is not descriptive enough, use a different property prefix via the `sectionPrefix` map:
+
+| Template | Row label | Row key | Property prefix | Why |
+|----------|-----------|---------|-----------------|-----|
+| Deadband | Value | `value` | `reading` | Avoids `value*` collision |
+| Analog Input | Value | `value` | `reading` | Same reason |
+| Duty Cycle | Duty | `value` | `duty` | Semantic clarity |
+| PWM Output | Value | `value` | `current` | Distinguishes from "Requested" |
+
+The `sectionPrefix` map decouples the HTML row key from the property prefix:
+```js
+var sectionPrefix = { value: "current", requested: "requested" };
+```
+This means `d["currentColor"]` styles the row with `data-row-key="value"`.
 
 ### x-theme-default is Required on Every color-alpha Property
 

@@ -179,14 +179,20 @@
     applyStyles();
   }
 
+  function affixedReading(d, preKey, sufKey, numStr) {
+    var pre = d[preKey] != null && String(d[preKey]) !== "" ? String(d[preKey]) : "";
+    var suf = d[sufKey] != null && String(d[sufKey]).trim() !== "" ? String(d[sufKey]).trim() : "";
+    return pre + numStr + (suf ? " " + suf : "");
+  }
+
   function renderContentRows(type) {
     var d = currentData || {};
-    var tempPrec = Math.max(0, Math.min(6, numberOrNull(d.tempPrecision) ?? 1));
-    var sgPrec = Math.max(0, Math.min(6, numberOrNull(d.sgPrecision) ?? 3));
+    var tempPrec = Math.max(0, Math.min(6, toNumber(d.tempPrecision, 1)));
+    var sgPrec = Math.max(0, Math.min(6, toNumber(d.sgPrecision, 3)));
     switch (type) {
       case "hydrometer":
-        appendRow(primaryRow("Temperature", toNumber(d.temperature || d.temp, 0).toFixed(tempPrec), "", "temperature"));
-        appendRow(primaryRow("Specific Gravity", toNumber(d.specificGravity || d.sg, 0).toFixed(sgPrec), "", "specificgravity"));
+        appendRow(primaryRow("Temperature", affixedReading(d, "tempPrefix", "tempSuffix", toNumber(d.temperature || d.temp, 0).toFixed(tempPrec)), "", "temperature"));
+        appendRow(primaryRow("Specific Gravity", affixedReading(d, "sgPrefix", "sgSuffix", toNumber(d.specificGravity || d.sg, 0).toFixed(sgPrec)), "", "specificgravity"));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));

@@ -180,11 +180,19 @@
     applyStyles();
   }
 
+  function formatSpiReading(d, prec) {
+    var pre = d.prefix != null && String(d.prefix) !== "" ? String(d.prefix) : "";
+    var numStr = toNumber(d.value, 0).toFixed(prec);
+    var suf = d.suffix != null && String(d.suffix).trim() !== "" ? String(d.suffix).trim() : "";
+    var sufPart = suf ? " " + suf : "";
+    return pre + numStr + sufPart;
+  }
+
   function renderContentRows(type) {
     switch (type) {
       case "spiSensor":
-        var prec = typeof currentData.precision === "number" && currentData.precision >= 0 && currentData.precision <= 6 ? currentData.precision : 2;
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec) + " " + (currentData.suffix || ""), "", "value"));
+        var prec = Math.max(0, Math.min(6, toNumber(currentData.precision, 2)));
+        appendRow(primaryRow("Value", formatSpiReading(currentData, prec), "", "value"));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
@@ -195,7 +203,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      spiSensor: { elementType: "spiSensor", name: "SPI Sensor", displayName: "SPI Sensor", value: 57.2, suffix: "", enabled: true, deviceConnected: true }
+      spiSensor: { elementType: "spiSensor", name: "SPI Sensor", displayName: "SPI Sensor", value: 57.2, prefix: "", suffix: "", enabled: true, deviceConnected: true }
     };
     return map[t] || { elementType: t, displayName: t };
   }

@@ -189,14 +189,35 @@
     applyStyles();
   }
 
+  /** Unit from API is numeric (0=C, 1=F); suffix has display text. Never append raw unit number. */
+  function temperatureUnitSuffix(d) {
+    var sfx = d && d.suffix;
+    if (sfx != null && String(sfx).trim() !== "") {
+      return " " + String(sfx).trim();
+    }
+    var u = d && d.unit;
+    if (u === 0 || u === "0") return " \u00b0C";
+    if (u === 1 || u === "1") return " \u00b0F";
+    if (typeof u === "number" && Number.isFinite(u)) {
+      return "";
+    }
+    if (u != null && String(u).trim() !== "") {
+      return " " + String(u).trim();
+    }
+    return "";
+  }
+
   function renderContentRows(type) {
     var decimals = numberOrNull(currentData.decimalPlaces);
     if (decimals === null) decimals = 1;
     decimals = Math.max(0, Math.min(5, Math.round(decimals)));
     switch (type) {
-      case "owTemp":
-        appendRow(primaryRow("Temperature", toNumber(currentData.value, 0).toFixed(decimals) + " " + (currentData.unit || currentData.suffix || ""), "", "temperature"));
+      case "owTemp": {
+        var pre = currentData.prefix != null && String(currentData.prefix) !== "" ? String(currentData.prefix) : "";
+        var numStr = toNumber(currentData.value, 0).toFixed(decimals);
+        appendRow(primaryRow("Temperature", pre + numStr + temperatureUnitSuffix(currentData), "", "temperature"));
         break;
+      }
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
         break;
@@ -206,7 +227,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      owTemp: { elementType: "owTemp", name: "OW Temp", displayName: "OW Temp", value: 68.9, unit: "F", enabled: true, deviceConnected: true }
+      owTemp: { elementType: "owTemp", name: "OW Temp", displayName: "OW Temp", value: 68.9, unit: 1, prefix: "", suffix: "\u00b0F", enabled: true, deviceConnected: true }
     };
     return map[t] || { elementType: t, displayName: t };
   }

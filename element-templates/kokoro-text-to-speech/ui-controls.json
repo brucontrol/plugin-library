@@ -1,0 +1,26 @@
+{
+  "text": {
+    "type": "text",
+    "title": "Text",
+    "default": "",
+    "description": "Text to speak"
+  },
+  "speak": {
+    "type": "boolean",
+    "title": "Speak",
+    "default": false,
+    "description": "Set to true to play pre-built audio. Resets to false after playback."
+  },
+  "voice": {
+    "type": "text",
+    "title": "Voice",
+    "default": "af_heart",
+    "description": "Kokoro voice id (e.g. af_heart, af_bella, am_michael)."
+  },
+  "device": {
+    "type": "text",
+    "title": "Device",
+    "default": "auto",
+    "description": "auto: WebGPU if available, else WASM; tries WASM if WebGPU init fails. Or force wasm / webgpu."
+  }
+}

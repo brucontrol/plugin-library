@@ -233,12 +233,19 @@
     return Math.max(0, Math.min(6, Math.round(p)));
   }
 
+  function formatCalibratedReading(d, numStr) {
+    var pre = d.prefix != null && String(d.prefix) !== "" ? String(d.prefix) : "";
+    var suf = d.suffix != null && String(d.suffix).trim() !== "" ? String(d.suffix).trim() : "";
+    return pre + numStr + (suf ? " " + suf : "");
+  }
+
   function renderContentRows(type) {
     var prec = getPrecision();
+    var d = currentData || {};
     switch (type) {
       case "pwmOutput":
-        appendRow(primaryRow("Value", toNumber(currentData.value, 0).toFixed(prec), "", "value"));
-        appendRow(primaryRow("Requested", toNumber(currentData.requestedValue, 0).toFixed(prec), "", "requested"));
+        appendRow(primaryRow("Value", formatCalibratedReading(d, toNumber(d.value, 0).toFixed(prec)), "", "value"));
+        appendRow(primaryRow("Requested", formatCalibratedReading(d, toNumber(d.requestedValue, 0).toFixed(prec)), "", "requested"));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));

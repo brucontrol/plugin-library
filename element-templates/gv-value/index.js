@@ -90,7 +90,8 @@
       return formatDateTimeLocal(data.value);
     }
     var num = parseFloat(data.value);
-    var precision = typeof data.precision === "number" ? data.precision : 0;
+    var rawPrec = Number(data.precision);
+    var precision = Number.isFinite(rawPrec) ? rawPrec : 0;
     return Number.isFinite(num) ? num.toFixed(precision) : String(data.value ?? "--");
   }
 
@@ -179,7 +180,8 @@
     if (!window.BruControl || !window.BruControl.requestKeypad) return;
 
     var currentVal = currentData ? String(currentData.value || "0") : "0";
-    var precision = currentData && typeof currentData.precision === "number" ? currentData.precision : undefined;
+    var rawPrec = currentData ? Number(currentData.precision) : NaN;
+    var precision = Number.isFinite(rawPrec) ? rawPrec : undefined;
     var label = (currentData ? (currentData.displayName || currentData.name) : "Value") || "Set Value";
 
     window.BruControl.requestKeypad({

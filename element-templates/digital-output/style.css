@@ -107,12 +107,9 @@ body {
 .toggle-label {
   font-size: 1.2em;
   font-weight: 600;
-  color: var(--text-primary, #d4d4d4);
-  transition: color 0.3s ease;
-}
-
-.toggle-label.on {
+  /* Default matches ui-controls toggleTextColor x-theme-default (accentGreen); JS sets explicit or same var when unset */
   color: var(--accent-green, #4ec9b0);
+  transition: color 0.3s ease;
 }
 
 /* Active Low / Active High indicator - smaller, subtle */

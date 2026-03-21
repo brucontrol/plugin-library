@@ -51,6 +51,18 @@
     return data.suffix != null ? String(data.suffix) : '';
   }
 
+  function getPrefix(data) {
+    if (!data) return '';
+    var t = getType(data);
+    if (t === 'counter') {
+      return data.primaryDisplayChannel === 1 ? (data.ratePrefix || '') : (data.countPrefix || '');
+    }
+    if (t === 'hydrometer') {
+      return data.primaryDisplayChannel === 1 ? (data.sgPrefix || '') : (data.tempPrefix || '');
+    }
+    return data.prefix != null ? String(data.prefix) : '';
+  }
+
   function getPrecision(data) {
     if (!data) return 2;
     var t = getType(data);
@@ -225,6 +237,7 @@
     var rawVal = getValue(d);
     var value = rawVal != null ? rawVal : min;
     var precision = getPrecision(d);
+    var prefix = getPrefix(d);
     var suffix = d.suffix != null ? String(d.suffix) : getSuffix(d);
     var bands = parseBands(d);
 
@@ -237,7 +250,7 @@
     var ticksEl = document.getElementById('gauge-ticks');
 
     if (titleEl) titleEl.textContent = d.displayName || d.name || '';
-    if (valueNum) valueNum.textContent = rawVal != null ? Number(value).toFixed(precision) : '—';
+    if (valueNum) valueNum.textContent = rawVal != null ? (prefix + Number(value).toFixed(precision)) : '—';
     if (valueUnit) valueUnit.textContent = suffix;
     if (minLabel) minLabel.textContent = formatLabel(min);
     if (maxLabel) maxLabel.textContent = formatLabel(max);

@@ -94,7 +94,9 @@
       if (tfs) toggleLabel.style.fontSize = tfs; else toggleLabel.style.removeProperty("font-size");
       if (tfw) toggleLabel.style.fontWeight = tfw; else toggleLabel.style.removeProperty("font-weight");
       if (tfst) toggleLabel.style.fontStyle = tfst; else toggleLabel.style.removeProperty("font-style");
-      if (tc) toggleLabel.style.color = tc; else toggleLabel.style.removeProperty("color");
+      // Empty = use theme accent (matches ui-controls x-theme-default: accentGreen). removeProperty
+      // fell back to .toggle-label { color: var(--text-primary) } which reads as white on dark themes.
+      if (tc) toggleLabel.style.color = tc; else toggleLabel.style.color = "var(--accent-green, #4ec9b0)";
       toggleLabel.style.textAlign = "center";
       toggleLabel.textContent = getStateLabel(isOn);
       toggleLabel.classList.toggle("on", isOn);

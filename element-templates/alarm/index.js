@@ -44,6 +44,12 @@
 
   var sectionToggle = { active: "showActive", soundfile: "showSound" };
   var sectionPrefix = { active: "active", soundfile: "sound" };
+  var DEFAULT_ALARM_SOUND_FILE = "/sounds/alarm.wav";
+
+  function effectiveSoundFile(data) {
+    var s = data && data.soundFile != null ? String(data.soundFile).trim() : "";
+    return s || DEFAULT_ALARM_SOUND_FILE;
+  }
 
   function row(label, value, cls, options) {
     var d = currentData || {};
@@ -222,7 +228,7 @@
     switch (type) {
       case "alarm":
         appendRow(primaryRow("Active", boolText(asBool(currentData.active)), asBool(currentData.active) ? "value--bad" : "value--ok", "active"));
-        appendRow(row("Sound", (currentData.soundFile && String(currentData.soundFile).trim()) ? currentData.soundFile : "/sounds/alarm.wav", "", { key: "soundFile" }));
+        appendRow(row("Sound", effectiveSoundFile(currentData), "", { key: "soundFile" }));
         break;
       default:
         appendRow(row("Value", JSON.stringify(currentData), "", { key: "value" }));
@@ -247,7 +253,7 @@
   function getPreviewData() {
     var t = getType(null);
     var map = {
-      alarm: { elementType: "alarm", name: "Alarm", displayName: "Alarm", active: false, soundFile: "/sounds/alarm.wav", userControl: true, enabled: true }
+      alarm: { elementType: "alarm", name: "Alarm", displayName: "Alarm", active: false, soundFile: DEFAULT_ALARM_SOUND_FILE, userControl: true, enabled: true }
     };
     return map[t] || { elementType: t, displayName: t };
   }
