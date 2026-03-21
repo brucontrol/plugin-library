@@ -1,6 +1,7 @@
-// Kokoro TTS via dynamic ESM import; generate() returns RawAudio (.audio Float32Array, .sampling_rate). Prefer WAV decode for playback.
+// Kokoro TTS: load with Transformers env tuned for sandboxed srcdoc (no Cache API). Play via <audio> + WAV blob; Web Audio PCM fallback.
 (function () {
   var KOKORO_IMPORT = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm';
+  var TRANSFORMERS_IMPORT = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/+esm';
   var MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
 
   var statusEl = document.getElementById('status');
@@ -12,9 +13,12 @@
 
   var synthSeq = 0;
   var cacheKey = '';
-  var cacheBuffer = null;
+  var cacheAudioUrl = null;
+  var cachePcm = null;
+  var cacheSr = 24000;
 
   var playingSource = null;
+  var htmlAudio = null;
   var audioCtx = null;
 
   var live = { text: '', voice: 'af_heart', device: 'wasm', deviceMode: 'auto', speak: false };
@@ -62,23 +66,45 @@
     }
   }
 
+  function revokeCacheMedia() {
+    if (cacheAudioUrl) {
+      try {
+        URL.revokeObjectURL(cacheAudioUrl);
+      } catch (e) {}
+      cacheAudioUrl = null;
+    }
+    cachePcm = null;
+  }
+
   function ensureAudioContext() {
     if (!audioCtx) {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) throw new Error('Web Audio not supported');
-      audioCtx = new AC();
+      try {
+        audioCtx = new AC({ sampleRate: 24000 });
+      } catch (e) {
+        audioCtx = new AC();
+      }
     }
     return audioCtx;
   }
 
   function stopPlayback() {
+    if (htmlAudio) {
+      try {
+        htmlAudio.pause();
+        htmlAudio.removeAttribute('src');
+        htmlAudio.load();
+      } catch (e) {}
+      htmlAudio = null;
+    }
     if (playingSource) {
       try {
         playingSource.stop();
-      } catch (e) {}
+      } catch (e2) {}
       try {
         playingSource.disconnect();
-      } catch (e2) {}
+      } catch (e3) {}
       playingSource = null;
     }
   }
@@ -94,36 +120,38 @@
     return samples;
   }
 
-  function pcmToBuffer(ctx, samples, sr) {
-    var copy = new Float32Array(samples);
-    var buffer = ctx.createBuffer(1, copy.length, sr);
-    buffer.getChannelData(0).set(copy);
-    return buffer;
+  function playPcmFallback(ctx) {
+    if (!cachePcm || !cachePcm.length) return false;
+    try {
+      var buf = ctx.createBuffer(1, cachePcm.length, cacheSr);
+      buf.getChannelData(0).set(cachePcm);
+      stopPlayback();
+      var src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      playingSource = src;
+      setStatus('Speaking...', false);
+      src.onended = function () {
+        playingSource = null;
+        setStatus('Ready (cached)', false);
+        resetSpeakProp();
+      };
+      src.start(0);
+      return true;
+    } catch (e) {
+      console.error('[Kokoro TTS] PCM fallback failed:', e);
+      return false;
+    }
   }
 
-  /** Prefer float WAV decode; fall back to PCM buffer if decodeAudioData fails. */
-  function rawToDecodedBuffer(raw) {
-    var ctx = ensureAudioContext();
-    var sr = raw.sampling_rate || raw.sample_rate || 24000;
-    if (raw && typeof raw.toBlob === 'function') {
-      return raw
-        .toBlob()
-        .arrayBuffer()
-        .then(function (ab) {
-          return ctx.decodeAudioData(ab.slice(0));
-        })
-        .catch(function (e) {
-          console.warn('[Kokoro TTS] decodeAudioData failed, using PCM path:', e);
-          var samples = getRawSamples(raw);
-          if (!samples) throw e;
-          return pcmToBuffer(ctx, samples, sr);
-        });
-    }
-    var samples = getRawSamples(raw);
-    if (!samples) {
-      return Promise.reject(new Error('Unexpected Kokoro audio format'));
-    }
-    return Promise.resolve(pcmToBuffer(ctx, samples, sr));
+  function importTransformersConfigureThenKokoro() {
+    return import(TRANSFORMERS_IMPORT).then(function (tr) {
+      if (tr.env) {
+        tr.env.useBrowserCache = false;
+        tr.env.useWasmCache = false;
+      }
+      return import(KOKORO_IMPORT);
+    });
   }
 
   function getModel(backend, mode) {
@@ -137,7 +165,7 @@
 
     var dtype = backend === 'webgpu' ? 'fp32' : 'q8';
     setStatus('Loading Kokoro model (first load may take a while)...', false);
-    modelPromise = import(KOKORO_IMPORT)
+    modelPromise = importTransformersConfigureThenKokoro()
       .then(function (m) {
         return m.KokoroTTS.from_pretrained(MODEL_ID, { device: backend, dtype: dtype });
       })
@@ -165,15 +193,15 @@
     if (!text) {
       synthSeq++;
       cacheKey = '';
-      cacheBuffer = null;
+      revokeCacheMedia();
       setStatus('Ready', false);
       return Promise.resolve(null);
     }
 
     var key = contentKey(text, voice, backend);
-    if (cacheKey === key && cacheBuffer) {
+    if (cacheKey === key && cachePcm && cachePcm.length) {
       setStatus('Ready (cached)', false);
-      return Promise.resolve(cacheBuffer);
+      return Promise.resolve(true);
     }
 
     synthSeq++;
@@ -187,13 +215,24 @@
       })
       .then(function (raw) {
         if (seq !== synthSeq || !raw) return null;
-        return rawToDecodedBuffer(raw).then(function (buf) {
-          if (seq !== synthSeq || !buf) return null;
-          cacheKey = key;
-          cacheBuffer = buf;
-          setStatus('Ready (cached)', false);
-          return buf;
-        });
+        var samples = getRawSamples(raw);
+        if (!samples) {
+          throw new Error('No audio samples from Kokoro');
+        }
+        var sr = raw.sampling_rate || raw.sample_rate || 24000;
+        revokeCacheMedia();
+        cacheKey = key;
+        cacheSr = sr;
+        cachePcm = new Float32Array(samples);
+        if (typeof raw.toBlob === 'function') {
+          try {
+            cacheAudioUrl = URL.createObjectURL(raw.toBlob());
+          } catch (blobErr) {
+            console.warn('[Kokoro TTS] toBlob failed:', blobErr);
+          }
+        }
+        setStatus('Ready (cached)', false);
+        return true;
       })
       .catch(function (e) {
         if (seq !== synthSeq) return;
@@ -207,41 +246,68 @@
   function tryPlay() {
     if (!live.speak || !live.text) return;
     var key = contentKey(live.text, live.voice, live.device);
-    if (cacheKey !== key || !cacheBuffer) return;
+    if (cacheKey !== key || !cachePcm) return;
 
-    function startNow(ctx) {
+    function doneSpeaking() {
+      setStatus('Ready (cached)', false);
+      resetSpeakProp();
+    }
+
+    function tryPcmWithContext() {
+      var ctx;
       try {
-        stopPlayback();
-        var src = ctx.createBufferSource();
-        src.buffer = cacheBuffer;
-        src.connect(ctx.destination);
-        playingSource = src;
-        setStatus('Speaking...', false);
-        src.onended = function () {
-          playingSource = null;
-          setStatus('Ready (cached)', false);
-          resetSpeakProp();
-        };
-        src.start(0);
+        ctx = ensureAudioContext();
       } catch (e) {
-        console.error('[Kokoro TTS] play failed:', e);
         setStatus('Playback error', true);
         resetSpeakProp();
+        return;
+      }
+      function runPcm() {
+        if (!playPcmFallback(ctx)) {
+          setStatus('Playback error', true);
+          resetSpeakProp();
+        }
+      }
+      if (ctx.state === 'suspended' && ctx.resume) {
+        ctx.resume().then(runPcm).catch(function (err) {
+          console.error('[Kokoro TTS] AudioContext.resume failed:', err);
+          setStatus('Tap the dashboard once, then speak again', true);
+          resetSpeakProp();
+        });
+      } else {
+        runPcm();
       }
     }
 
-    var ctx = ensureAudioContext();
-    if (ctx.state === 'suspended' && ctx.resume) {
-      ctx.resume().then(function () {
-        startNow(ctx);
-      }).catch(function (e) {
-        console.error('[Kokoro TTS] AudioContext.resume failed:', e);
-        setStatus('Playback blocked (click page / allow audio)', true);
-        resetSpeakProp();
-      });
-    } else {
-      startNow(ctx);
+    stopPlayback();
+
+    if (cacheAudioUrl) {
+      var a = new Audio();
+      a.preload = 'auto';
+      a.src = cacheAudioUrl;
+      htmlAudio = a;
+      setStatus('Speaking...', false);
+      a.onended = function () {
+        htmlAudio = null;
+        doneSpeaking();
+      };
+      a.onerror = function () {
+        console.warn('[Kokoro TTS] <audio> error, using Web Audio fallback');
+        htmlAudio = null;
+        tryPcmWithContext();
+      };
+      var pr = a.play();
+      if (pr && typeof pr.catch === 'function') {
+        pr.catch(function (err) {
+          console.warn('[Kokoro TTS] audio.play() rejected:', err);
+          htmlAudio = null;
+          tryPcmWithContext();
+        });
+      }
+      return;
     }
+
+    tryPcmWithContext();
   }
 
   function render(data) {
