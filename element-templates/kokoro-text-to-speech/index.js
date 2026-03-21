@@ -1,4 +1,4 @@
-// Kokoro TTS via dynamic ESM import; generate() returns RawAudio (Transformers.js: .data Float32Array, .sampling_rate).
+// Kokoro TTS via dynamic ESM import; generate() returns RawAudio (.audio Float32Array, .sampling_rate). Prefer WAV decode for playback.
 (function () {
   var KOKORO_IMPORT = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm';
   var MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
@@ -83,22 +83,47 @@
     }
   }
 
-  function rawToAudioBuffer(raw) {
+  function getRawSamples(raw) {
+    var samples = raw.audio || raw.data;
+    if (samples && samples.data instanceof Float32Array) {
+      samples = samples.data;
+    }
+    if (!(samples instanceof Float32Array) || samples.length === 0) {
+      return null;
+    }
+    return samples;
+  }
+
+  function pcmToBuffer(ctx, samples, sr) {
+    var copy = new Float32Array(samples);
+    var buffer = ctx.createBuffer(1, copy.length, sr);
+    buffer.getChannelData(0).set(copy);
+    return buffer;
+  }
+
+  /** Prefer float WAV decode; fall back to PCM buffer if decodeAudioData fails. */
+  function rawToDecodedBuffer(raw) {
     var ctx = ensureAudioContext();
     var sr = raw.sampling_rate || raw.sample_rate || 24000;
-    var samples = raw.data;
-    if (!(samples instanceof Float32Array)) {
-      samples = raw.audio;
-      if (samples && samples.data instanceof Float32Array) {
-        samples = samples.data;
-      }
+    if (raw && typeof raw.toBlob === 'function') {
+      return raw
+        .toBlob()
+        .arrayBuffer()
+        .then(function (ab) {
+          return ctx.decodeAudioData(ab.slice(0));
+        })
+        .catch(function (e) {
+          console.warn('[Kokoro TTS] decodeAudioData failed, using PCM path:', e);
+          var samples = getRawSamples(raw);
+          if (!samples) throw e;
+          return pcmToBuffer(ctx, samples, sr);
+        });
     }
-    if (!(samples instanceof Float32Array)) {
-      throw new Error('Unexpected Kokoro audio format');
+    var samples = getRawSamples(raw);
+    if (!samples) {
+      return Promise.reject(new Error('Unexpected Kokoro audio format'));
     }
-    var buffer = ctx.createBuffer(1, samples.length, sr);
-    buffer.getChannelData(0).set(samples);
-    return buffer;
+    return Promise.resolve(pcmToBuffer(ctx, samples, sr));
   }
 
   function getModel(backend, mode) {
@@ -162,11 +187,13 @@
       })
       .then(function (raw) {
         if (seq !== synthSeq || !raw) return null;
-        var buf = rawToAudioBuffer(raw);
-        cacheKey = key;
-        cacheBuffer = buf;
-        setStatus('Ready (cached)', false);
-        return buf;
+        return rawToDecodedBuffer(raw).then(function (buf) {
+          if (seq !== synthSeq || !buf) return null;
+          cacheKey = key;
+          cacheBuffer = buf;
+          setStatus('Ready (cached)', false);
+          return buf;
+        });
       })
       .catch(function (e) {
         if (seq !== synthSeq) return;
@@ -182,27 +209,38 @@
     var key = contentKey(live.text, live.voice, live.device);
     if (cacheKey !== key || !cacheBuffer) return;
 
-    try {
-      stopPlayback();
-      var ctx = ensureAudioContext();
-      if (ctx.state === 'suspended' && ctx.resume) {
-        ctx.resume();
-      }
-      var src = ctx.createBufferSource();
-      src.buffer = cacheBuffer;
-      src.connect(ctx.destination);
-      playingSource = src;
-      setStatus('Speaking...', false);
-      src.onended = function () {
-        playingSource = null;
-        setStatus('Ready (cached)', false);
+    function startNow(ctx) {
+      try {
+        stopPlayback();
+        var src = ctx.createBufferSource();
+        src.buffer = cacheBuffer;
+        src.connect(ctx.destination);
+        playingSource = src;
+        setStatus('Speaking...', false);
+        src.onended = function () {
+          playingSource = null;
+          setStatus('Ready (cached)', false);
+          resetSpeakProp();
+        };
+        src.start(0);
+      } catch (e) {
+        console.error('[Kokoro TTS] play failed:', e);
+        setStatus('Playback error', true);
         resetSpeakProp();
-      };
-      src.start(0);
-    } catch (e) {
-      console.error('[Kokoro TTS] play failed:', e);
-      setStatus('Playback error', true);
-      resetSpeakProp();
+      }
+    }
+
+    var ctx = ensureAudioContext();
+    if (ctx.state === 'suspended' && ctx.resume) {
+      ctx.resume().then(function () {
+        startNow(ctx);
+      }).catch(function (e) {
+        console.error('[Kokoro TTS] AudioContext.resume failed:', e);
+        setStatus('Playback blocked (click page / allow audio)', true);
+        resetSpeakProp();
+      });
+    } else {
+      startNow(ctx);
     }
   }
 
