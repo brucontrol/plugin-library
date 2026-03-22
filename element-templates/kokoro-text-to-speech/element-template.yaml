@@ -5,4 +5,4 @@ version: 1.0.9
 supportedTypes:
   - globalVariable-string
   - generic
-beta: true
+beta: false
