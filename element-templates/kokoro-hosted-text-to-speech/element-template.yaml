@@ -1,8 +1,8 @@
 id: 1b5cf0f7-72d9-45ea-8f02-89ad303ece44
 name: Kokoro Hosted Text to Speech
 description: Speaks text using the hosted Kokoro TTS API (https://kokoro.samf.dev). Audio is pre-fetched when text or voice changes; set speak true to play. Resets speak to false after playback. Add kokoro.samf.dev to ExternalFetch:AllowedHosts if using BruControl server proxy.
-version: 1.0.0
+version: 1.0.1
 supportedTypes:
   - globalVariable-string
   - generic
-beta: false
+beta: true
