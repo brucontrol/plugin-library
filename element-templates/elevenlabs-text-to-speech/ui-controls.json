@@ -1,0 +1,38 @@
+{
+  "text": {
+    "type": "text",
+    "title": "Text",
+    "default": "Welcome to BruControl, I'm Bella, your personal text to speech assistant.",
+    "description": "Text to send to ElevenLabs"
+  },
+  "speak": {
+    "type": "boolean",
+    "title": "Speak",
+    "default": false,
+    "description": "Set true to play cached audio. Resets to false when playback ends."
+  },
+  "apiKey": {
+    "type": "text",
+    "title": "API key",
+    "default": "",
+    "description": "ElevenLabs xi-api-key. Stored in element data (visible to anyone with dashboard access). Prefer a proxy for production."
+  },
+  "voiceId": {
+    "type": "text",
+    "title": "Voice ID",
+    "default": "",
+    "description": "Voice ID from ElevenLabs (Profile → Voices, or API). Required."
+  },
+  "modelId": {
+    "type": "text",
+    "title": "Model ID",
+    "default": "eleven_multilingual_v2",
+    "description": "TTS model id (e.g. eleven_multilingual_v2, eleven_turbo_v2_5)."
+  },
+  "outputFormat": {
+    "type": "text",
+    "title": "Output format",
+    "default": "mp3_44100_128",
+    "description": "Query output_format (e.g. mp3_44100_128, mp3_22050_32). See ElevenLabs docs for your plan tier."
+  }
+}

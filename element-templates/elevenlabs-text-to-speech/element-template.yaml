@@ -1,0 +1,7 @@
+id: c7e8f9a0-1b2c-4d3e-5f6a-7b8c9d0e1f2a
+name: ElevenLabs Text to Speech
+description: Speaks text using the ElevenLabs cloud API via BruControl.fetchExternal server proxy (add api.elevenlabs.io to ExternalFetch:AllowedHosts). Set API key and voice ID in element settings. Audio is pre-fetched when text or voice changes; set speak true to play. Resets speak to false after playback.
+version: 1.1.0
+supportedTypes:
+  - globalVariable-string
+  - generic
