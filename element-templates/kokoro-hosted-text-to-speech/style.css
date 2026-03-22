@@ -24,3 +24,24 @@ html, body { height: 100%; }
   line-height: 1.4;
   word-break: break-word;
 }
+
+#speak-btn {
+  align-self: flex-start;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary, #e0e0e0);
+  background: var(--accent, #3b82f6);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#speak-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+#speak-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
