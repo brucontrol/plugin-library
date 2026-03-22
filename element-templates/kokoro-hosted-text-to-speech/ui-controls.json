@@ -1,4 +1,10 @@
 {
+  "serverUrl": {
+    "type": "text",
+    "title": "Server URL",
+    "default": "https://kokoro.samf.dev",
+    "description": "Kokoro TTS API base URL (e.g. https://kokoro.samf.dev)"
+  },
   "text": {
     "type": "text",
     "title": "Text",

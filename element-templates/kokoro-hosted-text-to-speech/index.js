@@ -1,10 +1,10 @@
-// Kokoro Hosted TTS via https://kokoro.samf.dev/v1/audio/speech (OpenAI-compatible)
+// Kokoro Hosted TTS via configurable server URL (OpenAI-compatible /v1/audio/speech)
 (function () {
-  var API_BASE = 'https://kokoro.samf.dev';
-  var API_SPEECH = API_BASE + '/v1/audio/speech';
+  var DEFAULT_SERVER = 'https://kokoro.samf.dev';
 
   var statusEl = document.getElementById('status');
   var textEl = document.getElementById('text-display');
+  var speakBtn = document.getElementById('speak-btn');
 
   var synthSeq = 0;
   var cacheKey = '';
@@ -15,10 +15,21 @@
   var live = {
     text: '',
     speak: false,
+    serverUrl: DEFAULT_SERVER,
     voice: 'af_heart',
     speed: 1.0,
     responseFormat: 'mp3',
   };
+
+  function normalizeServerUrl(url) {
+    var s = String(url || '').trim() || DEFAULT_SERVER;
+    if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+    return s.replace(/\/+$/, '');
+  }
+
+  function getSpeechUrl(serverUrl) {
+    return normalizeServerUrl(serverUrl) + '/v1/audio/speech';
+  }
 
   function setStatus(msg, isError) {
     if (statusEl) {
@@ -32,14 +43,15 @@
       elementType: 'globalVariable',
       text: "Welcome to BruControl, I'm Bella, your personal text to speech assistant.",
       speak: false,
+      serverUrl: DEFAULT_SERVER,
       voice: 'af_heart',
       speed: 1.0,
       responseFormat: 'mp3',
     };
   }
 
-  function contentKey(text, voice, speed, responseFormat) {
-    return [text, voice, speed, responseFormat].join('\n');
+  function contentKey(text, serverUrl, voice, speed, responseFormat) {
+    return [text, normalizeServerUrl(serverUrl), voice, speed, responseFormat].join('\n');
   }
 
   function resetSpeakProp() {
@@ -88,7 +100,7 @@
     }
   }
 
-  function fetchSpeechViaProxy(text, voice, speed, responseFormat) {
+  function fetchSpeechViaProxy(text, serverUrl, voice, speed, responseFormat) {
     var bodyJson = JSON.stringify({
       model: 'kokoro',
       input: text,
@@ -99,7 +111,7 @@
     });
     return window.BruControl.fetchExternal({
       method: 'POST',
-      url: API_SPEECH,
+      url: getSpeechUrl(serverUrl),
       headers: {
         'Content-Type': 'application/json',
         Accept: getMimeType(responseFormat),
@@ -126,8 +138,8 @@
     });
   }
 
-  function fetchSpeechDirect(text, voice, speed, responseFormat) {
-    return fetch(API_SPEECH, {
+  function fetchSpeechDirect(text, serverUrl, voice, speed, responseFormat) {
+    return fetch(getSpeechUrl(serverUrl), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -160,14 +172,14 @@
     });
   }
 
-  function fetchSpeech(text, voice, speed, responseFormat) {
+  function fetchSpeech(text, serverUrl, voice, speed, responseFormat) {
     if (window.BruControl && typeof window.BruControl.fetchExternal === 'function') {
-      return fetchSpeechViaProxy(text, voice, speed, responseFormat);
+      return fetchSpeechViaProxy(text, serverUrl, voice, speed, responseFormat);
     }
-    return fetchSpeechDirect(text, voice, speed, responseFormat);
+    return fetchSpeechDirect(text, serverUrl, voice, speed, responseFormat);
   }
 
-  function ensureSynth(text, voice, speed, responseFormat) {
+  function ensureSynth(text, serverUrl, voice, speed, responseFormat) {
     if (!text) {
       synthSeq++;
       cacheKey = '';
@@ -176,11 +188,12 @@
       return Promise.resolve(null);
     }
 
+    var baseUrl = normalizeServerUrl(serverUrl);
     var v = String(voice || 'af_heart').trim() || 'af_heart';
     var s = typeof speed === 'number' ? Math.max(0.25, Math.min(4, speed)) : 1.0;
     var fmt = String(responseFormat || 'mp3').trim() || 'mp3';
 
-    var key = contentKey(text, v, s, fmt);
+    var key = contentKey(text, baseUrl, v, s, fmt);
     if (cacheKey === key && cacheAudioUrl) {
       setStatus('Ready (cached)', false);
       return Promise.resolve(true);
@@ -190,7 +203,7 @@
     var seq = synthSeq;
     setStatus('Requesting audio…', false);
 
-    return fetchSpeech(text, v, s, fmt)
+    return fetchSpeech(text, baseUrl, v, s, fmt)
       .then(function (blob) {
         if (seq !== synthSeq) return null;
         revokeCacheAudio();
@@ -204,7 +217,7 @@
         console.error('[Kokoro Hosted TTS]', e);
         var msg = e && e.message ? String(e.message) : 'Request failed';
         if (msg.indexOf('Failed to fetch') !== -1 || msg.indexOf('NetworkError') !== -1) {
-          msg = 'Network error — add kokoro.samf.dev to ExternalFetch:AllowedHosts for server proxy.';
+          msg = 'Network error — add the server host to ExternalFetch:AllowedHosts or use ["*"].';
         }
         setStatus(msg, true);
         revokeCacheAudio();
@@ -218,6 +231,7 @@
     if (!live.speak || !live.text) return;
     var key = contentKey(
       live.text,
+      live.serverUrl,
       String(live.voice || 'af_heart').trim() || 'af_heart',
       live.speed,
       live.responseFormat
@@ -256,12 +270,14 @@
     data = data || {};
     var text = String(data.text || '').trim();
     var speak = data.speak === true;
+    var serverUrl = String(data.serverUrl != null ? data.serverUrl : DEFAULT_SERVER).trim() || DEFAULT_SERVER;
     var voice = String(data.voice != null ? data.voice : 'af_heart').trim() || 'af_heart';
     var speed = typeof data.speed === 'number' ? data.speed : 1.0;
     var responseFormat = String(data.responseFormat != null ? data.responseFormat : 'mp3').trim() || 'mp3';
 
     live.text = text;
     live.speak = speak;
+    live.serverUrl = serverUrl;
     live.voice = voice;
     live.speed = speed;
     live.responseFormat = responseFormat;
@@ -274,7 +290,7 @@
       return;
     }
 
-    ensureSynth(text, voice, speed, responseFormat)
+    ensureSynth(text, serverUrl, voice, speed, responseFormat)
       .then(function () {
         tryPlay();
       })
@@ -283,10 +299,26 @@
     if (!speak && !text) {
       setStatus('Ready', false);
     }
+
+    if (speakBtn) speakBtn.disabled = !text;
+  }
+
+  function onSpeakClick() {
+    if (!live.text) return;
+    if (window.BruControl && window.BruControl.updateProperties) {
+      window.BruControl.updateProperties({ speak: true });
+    } else {
+      live.speak = true;
+      ensureSynth(live.text, live.serverUrl, live.voice, live.speed, live.responseFormat)
+        .then(function () { tryPlay(); })
+        .catch(function () {});
+    }
   }
 
   function bootstrap() {
     setStatus('Kokoro Hosted TTS', false);
+
+    if (speakBtn) speakBtn.addEventListener('click', onSpeakClick);
 
     if (window.BruControl) {
       if (window.BruControl.getData) {
